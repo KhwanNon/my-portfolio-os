@@ -1,26 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ธีมที่ 1: Cyber Blue (Default) */
+  --os-bg: #182035;
+  --os-accent: #52d3d6;
+  --os-surface: #151e2f;
+  --os-header: #1c2b3e;
+
+  --background: var(--os-bg);
+  --foreground: var(--os-accent);
+}
+
+/* ธีมที่ 2: Matrix Green (ดำ-เขียว) */
+[data-theme="matrix"] {
+  --os-bg: #020502;
+  --os-accent: #00ff41;
+  --os-surface: #0a0f0a;
+  --os-header: #121a12;
+}
+
+/* ธีมที่ 3: Minimal Light (ขาวสบายตา) */
+[data-theme="light"] {
+  --os-bg: #f0f2f5;
+  --os-accent: #2d3436;
+  --os-surface: #ffffff;
+  --os-header: #dfe6e9;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-os-bg: var(--os-bg);
+  --color-os-accent: var(--os-accent);
+  --color-os-surface: var(--os-surface);
+  --color-os-header: var(--os-header);
+  --font-os-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--os-bg);
+  color: var(--os-accent);
+  font-family: var(--font-os-mono);
+  overflow: hidden;
+  transition: all 0.3s ease; /* เพิ่ม Transition เพื่อให้เวลาเปลี่ยนธีมแล้วสีสมูทขึ้น */
+}
+
+/* ปิด Scanline ถ้าเป็นธีม Light เพื่อความสบายตา */
+[data-theme="light"]::before {
+  display: none;
 }
