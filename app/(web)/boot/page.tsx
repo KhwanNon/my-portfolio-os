@@ -32,7 +32,7 @@ export default function BootScreen() {
     <main className="fixed inset-0 z-50 flex flex-col bg-os-bg text-os-accent font-os-mono overflow-hidden uppercase">
       {/* Visual FX Layers */}
       <div className="absolute inset-0 pointer-events-none z-60 bg-scanlines opacity-20" />
-      <MatrixRain opacity={0.15} speedMultiplier={0.8} />
+      <MatrixRain opacity={0.4} />
 
       <LogViewer logs={logs} />
 

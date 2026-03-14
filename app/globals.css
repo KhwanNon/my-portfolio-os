@@ -47,3 +47,20 @@ body {
 [data-theme="light"]::before {
   display: none;
 }
+
+/* ใส่ใน globals.css */
+.rotate-270 {
+  transform: rotate(-90deg);
+}
+
+/* ปรับ Scrollbar ให้เข้ากับธีม OS */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--os-accent);
+  opacity: 0.2;
+}

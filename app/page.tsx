@@ -6,7 +6,7 @@ export default function Root() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/boot-screen");
+    router.push("/boot");
   }, [router]);
 
   return <div className="bg-black h-screen w-full" />;
