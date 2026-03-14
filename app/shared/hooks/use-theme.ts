@@ -5,7 +5,7 @@ export const useTheme = () => {
 
   const changeTheme = (themeName: "default" | "matrix" | "light") => {
     setTheme(themeName);
-    const root = window.document.documentElement; // เข้าถึงแท็ก <html>
+    const root = window.document.documentElement;
 
     if (themeName === "default") {
       root.removeAttribute("data-theme");
