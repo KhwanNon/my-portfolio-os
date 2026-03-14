@@ -33,7 +33,13 @@ function Desktop() {
   const fileMap = Object.fromEntries(desktopFileSystem.map((f) => [f.id, f]));
 
   return (
-    <div className="relative h-screen w-full bg-os-bg text-os-accent font-os-mono overflow-hidden flex flex-col">
+    <div
+      className="relative h-screen w-full bg-os-bg text-os-accent font-os-mono overflow-hidden flex flex-col"
+      onClick={() => {
+        // Click on empty desktop → deselect all icons (blur focused element)
+        (document.activeElement as HTMLElement)?.blur();
+      }}
+    >
       {/* Desktop icon sections */}
       <motion.main
         variants={containerVariants}

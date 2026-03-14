@@ -9,7 +9,7 @@ export function PdfRenderer({ data }: { data: PdfFileData }) {
     >
       {/* Toolbar */}
       <div
-        className="flex items-center justify-between px-4 py-2 flex-shrink-0 text-xs tracking-widest"
+        className="flex items-center justify-between px-4 py-2 shrink-0 text-xs tracking-widest"
         style={{
           background: "var(--os-header)",
           borderBottom: "1px solid rgba(82,211,214,0.2)",

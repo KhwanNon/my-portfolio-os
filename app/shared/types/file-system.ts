@@ -42,6 +42,8 @@ export interface SlideFileData {
 export interface UiFileData {
   kind: "ui";
   component: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  props?: Record<string, any>;
 }
 
 export interface FolderData {

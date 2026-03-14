@@ -1,59 +1,128 @@
 "use client";
-import Image from "next/image";
-import type { FolderData } from "@/app/shared/types/file-system";
+import { useState } from "react";
+import type { FileNode, FolderData } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
+import { DesktopIcon } from "../desktop-icon";
+
+interface StackEntry {
+  name: string;
+  data: FolderData;
+}
 
 export function FolderRenderer({ data }: { data: FolderData }) {
   const { openFile } = useWindowManager();
 
+  // Stack of folders navigated into — first entry is always the root
+  const [stack, setStack] = useState<StackEntry[]>([{ name: "root", data }]);
+
+  const current = stack[stack.length - 1];
+
+  const handleClick = (child: FileNode) => {
+    if (child.type === "folder" && child.data?.kind === "folder") {
+      // Navigate into folder — push to stack (same window)
+      setStack((prev) => [...prev, { name: child.name, data: child.data as FolderData }]);
+    } else if (child.type === "link" && child.data?.kind === "link") {
+      // Links open externally
+      window.open(child.data.url, "_blank", "noopener,noreferrer");
+    } else {
+      // All other file types open in a new window
+      openFile(child);
+    }
+  };
+
+  const navigateTo = (index: number) => {
+    setStack((prev) => prev.slice(0, index + 1));
+  };
+
   return (
     <div
-      className="h-full w-full overflow-y-auto custom-scrollbar p-4"
+      className="h-full w-full flex flex-col font-os-mono"
       style={{ background: "var(--os-surface)" }}
     >
-      {data.children.length === 0 ? (
-        <div
-          className="flex items-center justify-center h-full text-xs tracking-widest opacity-40"
-          style={{ color: "var(--os-accent)" }}
+      {/* Breadcrumb toolbar */}
+      <div
+        className="flex items-center gap-1 px-3 py-2 shrink-0 overflow-x-auto"
+        style={{
+          borderBottom: "1px solid rgba(82,211,214,0.15)",
+          background: "var(--os-header)",
+          minHeight: 36,
+        }}
+      >
+        {/* Back button */}
+        <button
+          className="px-2 py-0.5 text-[10px] tracking-widest rounded-sm transition-opacity disabled:opacity-20 hover:opacity-100 opacity-60 cursor-pointer shrink-0"
+          style={{ border: "1px solid rgba(82,211,214,0.25)", color: "var(--os-accent)" }}
+          onClick={() => setStack((prev) => prev.slice(0, -1))}
+          disabled={stack.length <= 1}
         >
-          FOLDER_EMPTY
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-1">
-          {data.children.map((child) => (
-            <button
-              key={child.id}
-              className="flex flex-col items-center gap-2 p-3 rounded group cursor-pointer transition-all duration-200 outline-none"
-              style={{ width: 96, background: "transparent" }}
-              onDoubleClick={() => openFile(child)}
-              onClick={() => openFile(child)}
-              title={child.name}
-            >
-              <div
-                className="relative w-12 h-12 flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
-                style={{
-                  filter:
-                    "drop-shadow(0 0 0px rgba(82,211,214,0)) group-hover:drop-shadow(0 0 8px rgba(82,211,214,0.7))",
-                }}
-              >
-                <Image
-                  src={child.iconPath ?? "/assets/images/drive.png"}
-                  alt={child.name}
-                  width={48}
-                  height={48}
-                  className="object-contain group-hover:drop-shadow-[0_0_8px_rgba(82,211,214,0.7)] transition-all duration-200"
-                />
-              </div>
-              <span
-                className="text-[10px] text-center leading-tight tracking-wide break-words w-full"
-                style={{ color: "var(--os-accent)" }}
-              >
-                {child.name}
+          ◀
+        </button>
+
+        {/* Breadcrumb path */}
+        <div className="flex items-center gap-1 text-[10px] tracking-widest overflow-hidden">
+          {stack.map((entry, i) => {
+            const isLast = i === stack.length - 1;
+            return (
+              <span key={i} className="flex items-center gap-1 shrink-0">
+                {i > 0 && (
+                  <span className="opacity-30" style={{ color: "var(--os-accent)" }}>
+                    /
+                  </span>
+                )}
+                <button
+                  className="uppercase transition-opacity hover:opacity-100 cursor-pointer"
+                  style={{
+                    color: "var(--os-accent)",
+                    opacity: isLast ? 1 : 0.5,
+                    fontWeight: isLast ? "bold" : "normal",
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                  }}
+                  onClick={() => navigateTo(i)}
+                >
+                  {i === 0 ? "root" : entry.name}
+                </button>
               </span>
-            </button>
-          ))}
+            );
+          })}
         </div>
-      )}
+      </div>
+
+      {/* File grid */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4">
+        {current.data.children.length === 0 ? (
+          <div
+            className="flex items-center justify-center h-full text-xs tracking-widest opacity-30"
+            style={{ color: "var(--os-accent)" }}
+          >
+            FOLDER_EMPTY
+          </div>
+        ) : (
+          <div className="flex flex-wrap">
+            {current.data.children.map((child) => (
+              <DesktopIcon
+                key={child.id}
+                fileNode={child}
+                onOpen={handleClick}
+                size={48}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Status bar */}
+      <div
+        className="flex items-center justify-between px-3 py-1 shrink-0 text-[10px] tracking-widest opacity-40"
+        style={{
+          borderTop: "1px solid rgba(82,211,214,0.1)",
+          color: "var(--os-accent)",
+        }}
+      >
+        <span>{current.data.children.length} item{current.data.children.length !== 1 ? "s" : ""}</span>
+        <span className="uppercase">{current.name === "root" ? "root" : current.name}</span>
+      </div>
     </div>
   );
 }

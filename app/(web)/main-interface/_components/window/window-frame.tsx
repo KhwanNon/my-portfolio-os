@@ -9,8 +9,15 @@ interface WindowFrameProps {
 }
 
 export function WindowFrame({ window: win, children }: WindowFrameProps) {
-  const { closeWindow, minimizeWindow, maximizeWindow, focusWindow, moveWindow } =
-    useWindowManager();
+  const {
+    closeWindow,
+    minimizeWindow,
+    maximizeWindow,
+    focusWindow,
+    moveWindow,
+  } = useWindowManager();
+
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const dragState = useRef({
     isDragging: false,
@@ -19,8 +26,11 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     startPosX: 0,
     startPosY: 0,
   });
+
   const moveRef = useRef(moveWindow);
-  moveRef.current = moveWindow;
+  useEffect(() => {
+    moveRef.current = moveWindow;
+  });
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
@@ -79,13 +89,26 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
         ...style,
         border: "1px solid rgba(82,211,214,0.3)",
         background: "var(--os-surface)",
-        boxShadow: "0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(82,211,214,0.15)",
+        boxShadow:
+          "0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(82,211,214,0.15)",
       }}
-      onMouseDown={() => focusWindow(win.id)}
+      onMouseDown={() => {
+        focusWindow(win.id);
+        setTimeout(() => {
+          if (
+            !document.activeElement ||
+            document.activeElement === document.body
+          ) {
+            const input =
+              contentRef.current?.querySelector<HTMLInputElement>("input");
+            input?.focus();
+          }
+        }, 0);
+      }}
     >
       {/* Title Bar */}
       <div
-        className="flex items-center justify-between px-3 select-none cursor-move flex-shrink-0"
+        className="flex items-center justify-between px-3 select-none cursor-move shrink-0"
         style={{
           height: 36,
           background: "var(--os-header)",
@@ -155,7 +178,9 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-hidden">{children}</div>
+      <div ref={contentRef} className="flex-1 overflow-hidden">
+        {children}
+      </div>
     </div>
   );
 }

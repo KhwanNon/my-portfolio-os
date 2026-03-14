@@ -36,9 +36,7 @@ function OsVersionSection() {
         <div className="opacity-30 mb-2" style={{ color: "var(--os-accent)" }}>
           ──────────────────────────────────────────────────────
         </div>
-        <div style={{ color: "var(--os-accent)" }}>
-          [ ICON ] Portfolio OS
-        </div>
+        <div style={{ color: "var(--os-accent)" }}>[ ICON ] Portfolio OS</div>
         <div className="ml-7 opacity-80" style={{ color: "var(--os-accent)" }}>
           Version 2.4.0 (Build 2024.Alpha)
         </div>
@@ -69,7 +67,7 @@ function OsVersionSection() {
             className="flex gap-3"
             style={{ color: "var(--os-accent)" }}
           >
-            <span className="opacity-60 w-28 flex-shrink-0">{k}:</span>
+            <span className="opacity-60 w-28 shrink-0">{k}:</span>
             <span>{v}</span>
           </div>
         ))}
@@ -94,7 +92,7 @@ function OsVersionSection() {
             className="flex gap-3"
             style={{ color: "var(--os-accent)" }}
           >
-            <span className="opacity-60 w-28 flex-shrink-0">{k}:</span>
+            <span className="opacity-60 w-28 shrink-0">{k}:</span>
             <span>{v}</span>
           </div>
         ))}
@@ -146,7 +144,7 @@ function ThemeSection() {
             <div className="flex items-center gap-3">
               {/* Color swatch */}
               <div
-                className="w-4 h-4 rounded-sm flex-shrink-0"
+                className="w-4 h-4 rounded-sm shrink-0"
                 style={{
                   background: t.preview,
                   border: "1px solid rgba(82,211,214,0.3)",
@@ -160,7 +158,10 @@ function ThemeSection() {
               </span>
             </div>
             {isActive && (
-              <span className="text-[10px] tracking-widest" style={{ color: "#e8a21a" }}>
+              <span
+                className="text-[10px] tracking-widest"
+                style={{ color: "#e8a21a" }}
+              >
                 active now
               </span>
             )}
@@ -199,7 +200,10 @@ function LanguageSection() {
               {l.label}
             </span>
             {isActive && (
-              <span className="text-[10px] tracking-widest" style={{ color: "#e8a21a" }}>
+              <span
+                className="text-[10px] tracking-widest"
+                style={{ color: "#e8a21a" }}
+              >
                 active now
               </span>
             )}
@@ -220,7 +224,7 @@ export function PreferencesApp() {
     >
       {/* Sidebar Nav */}
       <div
-        className="flex-shrink-0 flex flex-col"
+        className="shrink-0 flex flex-col"
         style={{
           width: 160,
           borderRight: "1px solid rgba(82,211,214,0.2)",

@@ -30,7 +30,7 @@ export function FileRenderer({ fileNode }: FileRendererProps) {
   // ── UI Component ──────────────────────────────────────────────────────────
   if (type === "ui" && data?.kind === "ui") {
     const Component = UI_COMPONENT_REGISTRY[data.component];
-    if (Component) return <Component />;
+    if (Component) return <Component {...(data.props ?? {})} />;
     return <ErrorView message={`Unknown UI component: ${data.component}`} />;
   }
 
