@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { FileNode, FolderData } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
-import { DesktopIcon } from "../desktop-icon";
+import { FileIcon } from "../file-icon";
 
 interface StackEntry {
   name: string;
@@ -90,7 +90,7 @@ export function FolderRenderer({ data }: { data: FolderData }) {
       </div>
 
       {/* File grid */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-4">
+      <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-4">
         {current.data.children.length === 0 ? (
           <div
             className="flex items-center justify-center h-full text-xs tracking-widest opacity-30"
@@ -99,13 +99,13 @@ export function FolderRenderer({ data }: { data: FolderData }) {
             FOLDER_EMPTY
           </div>
         ) : (
-          <div className="flex flex-wrap">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, max-content)", gap: 8, justifyContent: "start" }}>
             {current.data.children.map((child) => (
-              <DesktopIcon
+              <FileIcon
                 key={child.id}
                 fileNode={child}
                 onOpen={handleClick}
-                size={48}
+                variant="folder"
               />
             ))}
           </div>

@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Taskbar } from "./_components/taskbar";
-import { DesktopIcon } from "./_components/desktop-icon";
+import { FileIcon } from "./_components/file-icon";
 import { DesktopSection } from "./_components/desktop-section";
 import { WindowFrame } from "./_components/window/window-frame";
 import { FileRenderer } from "./_components/file-renderer";
@@ -56,7 +56,9 @@ function Desktop() {
             <DesktopSection title={section.title} variant={section.variant}>
               {section.ids.map((id) => {
                 const node = fileMap[id];
-                return node ? <DesktopIcon key={id} fileNode={node} /> : null;
+                return node ? (
+                  <FileIcon key={id} fileNode={node} variant="desktop" />
+                ) : null;
               })}
             </DesktopSection>
           </motion.div>

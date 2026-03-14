@@ -39,7 +39,7 @@ export const DesktopSection = ({
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-12 items-start overflow-x-auto">
+      <div className="flex flex-wrap items-start content-start overflow-x-auto">
         {children}
       </div>
     </div>
