@@ -36,7 +36,7 @@ export function FileRenderer({ fileNode }: FileRendererProps) {
 
   // ── Folder ────────────────────────────────────────────────────────────────
   if (type === "folder" && data?.kind === "folder") {
-    return <FolderRenderer data={data} />;
+    return <FolderRenderer fileNode={fileNode} />;
   }
 
   // ── Text File ─────────────────────────────────────────────────────────────

@@ -2,6 +2,26 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { desktopFileSystem } from "../../_data/file-system-data";
+import {
+  resolvePath,
+  walkPath,
+  canonicalizePath,
+  getDisplayPath,
+  getCompletionContext,
+  matchPartial,
+  type Path,
+} from "../../_lib/path-resolver";
+import {
+  buildTree,
+  findByName,
+  fakeDate,
+  fakeSize,
+  humanSize,
+  permString,
+  cowsay,
+  MAN_PAGES,
+  COMMAND_NAMES,
+} from "../../_lib/terminal-utils";
 import type { FileNode } from "@/app/shared/types/file-system";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -9,11 +29,6 @@ import type { FileNode } from "@/app/shared/types/file-system";
 interface HistoryLine {
   type: "system" | "input" | "output" | "error" | "success";
   text: string;
-}
-
-interface CwdEntry {
-  name: string;
-  children: FileNode[];
 }
 
 // ─── Boot sequence ────────────────────────────────────────────────────────────
@@ -24,27 +39,40 @@ const BOOT_LINES: HistoryLine[] = [
   { type: "system",  text: "> Establishing admin @ portfolio session... [SUCCESS]" },
   { type: "output",  text: "" },
   { type: "output",  text: "  Welcome to Portfolio OS Terminal." },
-  { type: "output",  text: "  Type 'help' for available commands." },
+  { type: "output",  text: "  Type 'help' for commands. Try 'man <cmd>' for details." },
   { type: "output",  text: "" },
 ];
 
 // ─── Help text ────────────────────────────────────────────────────────────────
 
 const HELP_TEXT = `
-  COMMANDS
+  COMMANDS — run 'man <cmd>' for details
   ────────────────────────────────────────────────
-  help              Show this message
-  pwd               Print working directory
-  ls                List files in current folder
-  ls <folder>       List files in a specific folder
-  cd <folder>       Navigate into a folder
-  cd ..             Go up one level
-  cat <file>        Read a .txt file
-  open <file>       Open any file in the GUI
-  whoami            Show user profile
-  neofetch          System information
-  clear             Clear the terminal
-  exit              Close this terminal
+  Filesystem   ls   cd   pwd   cat   open   tree   find   file
+  Text         head tail cat   echo
+  System       whoami  neofetch  date  uptime  history
+  Reference    help    man <cmd>      which <cmd>
+  Misc         clear   exit    cowsay
+  ────────────────────────────────────────────────
+
+  PATH SYNTAX
+  ────────────────────────────────────────────────
+    ~                 root (home)
+    /                 root
+    .                 current directory
+    ..                parent directory
+    foo/bar           relative, nested
+    ~/c-drive/skills  absolute, nested
+  ────────────────────────────────────────────────
+
+  EXAMPLES
+  ────────────────────────────────────────────────
+    cd c-drive/projects/mobile
+    ls -l ~/c-drive/about
+    tree ~/c-drive/skills
+    find resume
+    cat ~/profile.txt
+    open ~/c-drive/about/me.ui
   ────────────────────────────────────────────────
 `;
 
@@ -76,14 +104,7 @@ const NEOFETCH_TEXT = `
   ████    ████         Uptime  :  Available now
 `;
 
-// ─── File system helpers ──────────────────────────────────────────────────────
-
-function findChild(children: FileNode[], name: string): FileNode | undefined {
-  return children.find(
-    (c) => c.name.toLowerCase() === name.toLowerCase() ||
-           c.name.toLowerCase().replace(/\s+/g, "-") === name.toLowerCase()
-  );
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function typeLabel(type: string): string {
   const map: Record<string, string> = {
@@ -98,13 +119,91 @@ function typeLabel(type: string): string {
   return map[type] ?? type.toUpperCase().padEnd(5);
 }
 
+function childrenAt(path: Path): FileNode[] | null {
+  const walked = walkPath(desktopFileSystem, path);
+  if (!walked) return null;
+  if (walked.kind === "root") return walked.children;
+  if (walked.node.type === "folder" && walked.node.data?.kind === "folder") {
+    return walked.node.data.children;
+  }
+  return null;
+}
+
+function formatCompletionName(n: FileNode): string {
+  const safe = n.name.replace(/\s+/g, "-");
+  return n.type === "folder" ? `${safe}/` : safe;
+}
+
+function longestCommonPrefix(strs: string[]): string {
+  if (strs.length === 0) return "";
+  let lcp = strs[0];
+  for (const s of strs) {
+    while (!s.toLowerCase().startsWith(lcp.toLowerCase())) {
+      lcp = lcp.slice(0, -1);
+      if (lcp === "") return "";
+    }
+  }
+  return lcp;
+}
+
+/** Pull short single-letter flags out of args: "ls -la foo" → flags={l,a}, rest=["foo"]. */
+function splitFlags(args: string[]): { flags: Set<string>; rest: string[] } {
+  const flags = new Set<string>();
+  const rest: string[] = [];
+  for (const a of args) {
+    if (a.length > 1 && a.startsWith("-") && !a.startsWith("--") && !/^-\d/.test(a)) {
+      for (const ch of a.slice(1)) flags.add(ch);
+    } else {
+      rest.push(a);
+    }
+  }
+  return { flags, rest };
+}
+
+/** Extract `-n N` (or `-nN`) from args, with sane default. */
+function extractN(args: string[], defaultN = 10): { n: number; rest: string[] } {
+  let n = defaultN;
+  const rest: string[] = [];
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+    if (a === "-n" && i + 1 < args.length) {
+      const parsed = parseInt(args[++i], 10);
+      if (!isNaN(parsed) && parsed > 0) n = parsed;
+    } else if (a.startsWith("-n") && a.length > 2) {
+      const parsed = parseInt(a.slice(2), 10);
+      if (!isNaN(parsed) && parsed > 0) n = parsed;
+    } else {
+      rest.push(a);
+    }
+  }
+  return { n, rest };
+}
+
+function formatUptime(ms: number): string {
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  const h = Math.floor(m / 60);
+  if (h > 0) return `${h}h ${m % 60}m ${s % 60}s`;
+  if (m > 0) return `${m}m ${s % 60}s`;
+  return `${s}s`;
+}
+
+const FILE_KIND_DESC: Record<string, string> = {
+  folder:  "directory",
+  txt:     "ASCII text",
+  pdf:     "PDF document",
+  ui:      "Portfolio UI component",
+  slide:   "Image slideshow",
+  link:    "URL shortcut",
+  program: "Executable program",
+};
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function SystemCommandApp() {
-  const { openFile, closeWindow } = useWindowManager();
+  const { openFile, closeWindow, terminalCdRequest } = useWindowManager();
 
-  const ROOT: CwdEntry = { name: "~", children: desktopFileSystem };
-  const [cwdStack, setCwdStack] = useState<CwdEntry[]>([ROOT]);
+  const [cwd, setCwd] = useState<Path>([]);
   const [history, setHistory] = useState<HistoryLine[]>(BOOT_LINES);
   const [input, setInput] = useState("");
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
@@ -112,6 +211,7 @@ export function SystemCommandApp() {
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [startTime] = useState(() => Date.now());
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -121,59 +221,84 @@ export function SystemCommandApp() {
     inputRef.current?.focus();
   }, []);
 
-  // ── Derived state ──────────────────────────────────────────────────────────
-
-  const currentDir = cwdStack[cwdStack.length - 1];
-
-  const pwd = useCallback(() => {
-    return cwdStack.map((e) => e.name).join("/").replace("~/", "~/");
-  }, [cwdStack]);
-
-  const prompt = `admin@portfolio:${pwd()} %`;
+  const displayPath = getDisplayPath(desktopFileSystem, cwd);
+  const prompt = `admin@portfolio:${displayPath} %`;
 
   // ── Output helpers ─────────────────────────────────────────────────────────
 
   const push = useCallback((lines: HistoryLine[]) => {
     setHistory((prev) => [...prev, ...lines]);
   }, []);
-
   const out = useCallback(
     (text: string) => push([{ type: "output", text }]),
-    [push]
+    [push],
   );
-
   const err = useCallback(
     (text: string) => push([{ type: "error", text: `  error: ${text}` }]),
-    [push]
+    [push],
   );
-
   const ok = useCallback(
     (text: string) => push([{ type: "success", text: `  ${text}` }]),
-    [push]
+    [push],
+  );
+  const outBlock = useCallback(
+    (text: string) =>
+      push(
+        text.split("\n").map((t) => ({ type: "output" as const, text: t })),
+      ),
+    [push],
   );
 
-  // ── Commands ───────────────────────────────────────────────────────────────
+  // Sync cwd with external cd intent (from the "Open in Terminal" context menu action).
+  // Token-guarded so only fresh requests trigger a state update.
+  const lastCdTokenRef = useRef(0);
+  useEffect(() => {
+    if (!terminalCdRequest) return;
+    if (terminalCdRequest.token === lastCdTokenRef.current) return;
+    lastCdTokenRef.current = terminalCdRequest.token;
+
+    const target = terminalCdRequest.path;
+    const walked = walkPath(desktopFileSystem, target);
+    if (!walked) return;
+    if (
+      walked.kind === "node" &&
+      (walked.node.type !== "folder" || walked.node.data?.kind !== "folder")
+    ) {
+      return;
+    }
+    const canonical = canonicalizePath(desktopFileSystem, target);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCwd(canonical);
+    const label =
+      canonical.length === 0 ? "~" : `~/${canonical.join("/")}`;
+    push([{ type: "system", text: `> cd ${label}` }]);
+  }, [terminalCdRequest, push]);
+
+  // ── Filesystem commands ────────────────────────────────────────────────────
 
   const cmdPwd = useCallback(() => {
-    out(`  ${pwd()}`);
+    out(`  ${displayPath}`);
     out("");
-  }, [pwd, out]);
+  }, [displayPath, out]);
 
   const cmdLs = useCallback(
-    (arg: string) => {
-      let children = currentDir.children;
-      let label = pwd();
+    (args: string[]) => {
+      const { flags, rest } = splitFlags(args);
+      const arg = rest[0] ?? "";
+      const targetPath = arg ? resolvePath(cwd, arg) : cwd;
+      const children = childrenAt(targetPath);
 
-      if (arg) {
-        const target = findChild(currentDir.children, arg);
-        if (!target) { err(`no such file or directory: ${arg}`); return; }
-        if (target.type !== "folder" || target.data?.kind !== "folder") {
-          err(`not a directory: ${arg}`); return;
+      if (children === null) {
+        const walked = walkPath(desktopFileSystem, targetPath);
+        if (walked?.kind === "node" && walked.node.type !== "folder") {
+          err(`not a directory: ${arg}`);
+        } else {
+          err(`no such file or directory: ${arg}`);
         }
-        children = target.data.children;
-        label = `${pwd()}/${arg}`;
+        return;
       }
 
+      const label = getDisplayPath(desktopFileSystem, targetPath);
       out("");
       out(`  ${label}`);
       out("  ─────────────────────────────────────────");
@@ -181,75 +306,261 @@ export function SystemCommandApp() {
       if (children.length === 0) {
         out("  (empty)");
       } else {
-        // Folders first, then files
         const sorted = [
           ...children.filter((c) => c.type === "folder"),
           ...children.filter((c) => c.type !== "folder"),
         ];
-        for (const child of sorted) {
-          const icon = child.type === "folder" ? "📁" : "📄";
-          out(`  ${icon}  [${typeLabel(child.type)}]  ${child.name}`);
+
+        if (flags.has("l")) {
+          out(`  total ${sorted.length}`);
+          for (const c of sorted) {
+            out(
+              `  ${permString(c)}  ${humanSize(fakeSize(c))}  ${fakeDate(c)}  ${c.name}`,
+            );
+          }
+        } else {
+          for (const c of sorted) {
+            const icon = c.type === "folder" ? "📁" : "📄";
+            out(`  ${icon}  [${typeLabel(c.type)}]  ${c.name}`);
+          }
         }
       }
       out("");
     },
-    [currentDir, pwd, out, err]
+    [cwd, out, err],
   );
 
   const cmdCd = useCallback(
-    (arg: string) => {
-      if (!arg || arg === "~") {
-        setCwdStack([ROOT]);
+    (args: string[]) => {
+      const arg = args[0] ?? "";
+      const target = resolvePath(cwd, arg);
+      const walked = walkPath(desktopFileSystem, target);
+      if (!walked) {
+        err(`no such directory: ${arg || "(empty)"}`);
         return;
       }
-      if (arg === "..") {
-        if (cwdStack.length > 1) setCwdStack((prev) => prev.slice(0, -1));
-        else err("already at root");
+      if (
+        walked.kind === "node" &&
+        (walked.node.type !== "folder" || walked.node.data?.kind !== "folder")
+      ) {
+        err(`not a directory: ${arg}`);
         return;
       }
-
-      const target = findChild(currentDir.children, arg);
-      if (!target) { err(`no such directory: ${arg}`); return; }
-      if (target.type !== "folder" || target.data?.kind !== "folder") {
-        err(`not a directory: ${arg}`); return;
-      }
-
-      setCwdStack((prev) => [
-        ...prev,
-        { name: target.name, children: target.data!.kind === "folder" ? (target.data as { kind: "folder"; children: FileNode[] }).children : [] },
-      ]);
+      setCwd(canonicalizePath(desktopFileSystem, target));
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentDir, cwdStack, err]
+    [cwd, err],
   );
 
   const cmdCat = useCallback(
-    (arg: string) => {
-      if (!arg) { err("usage: cat <filename>"); return; }
-      const target = findChild(currentDir.children, arg);
-      if (!target) { err(`no such file: ${arg}`); return; }
-      if (target.type !== "txt" || target.data?.kind !== "txt") {
-        err(`cannot cat file of type '${target.type}'. Use 'open' instead.`); return;
+    (args: string[]) => {
+      const arg = args[0];
+      if (!arg) { err("usage: cat <path>"); return; }
+      const target = resolvePath(cwd, arg);
+      const walked = walkPath(desktopFileSystem, target);
+      if (!walked || walked.kind === "root") {
+        err(`no such file: ${arg}`);
+        return;
+      }
+      if (walked.node.type !== "txt" || walked.node.data?.kind !== "txt") {
+        err(`cannot cat file of type '${walked.node.type}'. Use 'open' instead.`);
+        return;
       }
       out("");
-      for (const line of target.data.content.split("\n")) {
-        out(`  ${line}`);
-      }
+      for (const line of walked.node.data.content.split("\n")) out(`  ${line}`);
       out("");
     },
-    [currentDir, out, err]
+    [cwd, out, err],
   );
 
   const cmdOpen = useCallback(
-    (arg: string) => {
-      if (!arg) { err("usage: open <filename>"); return; }
-      const target = findChild(currentDir.children, arg);
-      if (!target) { err(`no such file: ${arg}`); return; }
-      openFile(target);
-      ok(`Opening "${target.name}"...`);
+    (args: string[]) => {
+      const arg = args[0];
+      if (!arg) { err("usage: open <path>"); return; }
+      const target = resolvePath(cwd, arg);
+      const walked = walkPath(desktopFileSystem, target);
+      if (!walked || walked.kind === "root") {
+        err(`no such file: ${arg}`);
+        return;
+      }
+      openFile(walked.node);
+      ok(`Opening "${walked.node.name}"...`);
       out("");
     },
-    [currentDir, openFile, ok, err, out]
+    [cwd, openFile, ok, err, out],
+  );
+
+  const cmdTree = useCallback(
+    (args: string[]) => {
+      const arg = args[0] ?? "";
+      const targetPath = arg ? resolvePath(cwd, arg) : cwd;
+      const children = childrenAt(targetPath);
+      if (children === null) {
+        err(`no such directory: ${arg}`);
+        return;
+      }
+      const label = getDisplayPath(desktopFileSystem, targetPath);
+      out("");
+      for (const line of buildTree(label, children, 3)) out(`  ${line}`);
+      out("");
+    },
+    [cwd, out, err],
+  );
+
+  const cmdFind = useCallback(
+    (args: string[]) => {
+      const needle = args[0];
+      if (!needle) { err("usage: find <name> [path]"); return; }
+      const startArg = args[1] ?? "";
+      const startPath = startArg ? resolvePath(cwd, startArg) : cwd;
+      const children = childrenAt(startPath);
+      if (children === null) {
+        err(`no such directory: ${startArg}`);
+        return;
+      }
+      const canonical = canonicalizePath(desktopFileSystem, startPath);
+      const matches = findByName(canonical, children, needle);
+      out("");
+      if (matches.length === 0) {
+        out(`  no matches for "${needle}"`);
+      } else {
+        for (const m of matches) out(`  ${m}`);
+      }
+      out("");
+    },
+    [cwd, out, err],
+  );
+
+  const cmdFile = useCallback(
+    (args: string[]) => {
+      const arg = args[0];
+      if (!arg) { err("usage: file <path>"); return; }
+      const target = resolvePath(cwd, arg);
+      const walked = walkPath(desktopFileSystem, target);
+      if (!walked) { err(`no such file: ${arg}`); return; }
+
+      if (walked.kind === "root") {
+        out(`  ${arg}: directory (root)`);
+      } else {
+        const desc = FILE_KIND_DESC[walked.node.type] ?? walked.node.type;
+        out(`  ${arg}: ${desc}`);
+      }
+      out("");
+    },
+    [cwd, out, err],
+  );
+
+  const cmdHead = useCallback(
+    (args: string[]) => {
+      const { n, rest } = extractN(args, 10);
+      const arg = rest[0];
+      if (!arg) { err("usage: head [-n N] <path>"); return; }
+      const target = resolvePath(cwd, arg);
+      const walked = walkPath(desktopFileSystem, target);
+      if (!walked || walked.kind === "root") { err(`no such file: ${arg}`); return; }
+      if (walked.node.type !== "txt" || walked.node.data?.kind !== "txt") {
+        err(`not a text file: ${arg}`);
+        return;
+      }
+      const lines = walked.node.data.content.split("\n").slice(0, n);
+      out("");
+      for (const line of lines) out(`  ${line}`);
+      out("");
+    },
+    [cwd, out, err],
+  );
+
+  const cmdTail = useCallback(
+    (args: string[]) => {
+      const { n, rest } = extractN(args, 10);
+      const arg = rest[0];
+      if (!arg) { err("usage: tail [-n N] <path>"); return; }
+      const target = resolvePath(cwd, arg);
+      const walked = walkPath(desktopFileSystem, target);
+      if (!walked || walked.kind === "root") { err(`no such file: ${arg}`); return; }
+      if (walked.node.type !== "txt" || walked.node.data?.kind !== "txt") {
+        err(`not a text file: ${arg}`);
+        return;
+      }
+      const all = walked.node.data.content.split("\n");
+      const lines = all.slice(Math.max(0, all.length - n));
+      out("");
+      for (const line of lines) out(`  ${line}`);
+      out("");
+    },
+    [cwd, out, err],
+  );
+
+  // ── System / utility commands ──────────────────────────────────────────────
+
+  const cmdEcho = useCallback(
+    (args: string[]) => {
+      out(`  ${args.join(" ")}`);
+      out("");
+    },
+    [out],
+  );
+
+  const cmdDate = useCallback(() => {
+    out(`  ${new Date().toString()}`);
+    out("");
+  }, [out]);
+
+  const cmdUptime = useCallback(() => {
+    out(`  terminal up ${formatUptime(Date.now() - startTime)}`);
+    out("");
+  }, [out, startTime]);
+
+  const cmdHistoryCmd = useCallback(() => {
+    out("");
+    if (cmdHistory.length === 0) {
+      out("  (no commands yet)");
+    } else {
+      // cmdHistory[0] is the most recent; reverse so oldest prints first.
+      const ordered = [...cmdHistory].reverse();
+      ordered.forEach((h, i) => {
+        const n = String(i + 1).padStart(3, " ");
+        out(`  ${n}  ${h}`);
+      });
+    }
+    out("");
+  }, [cmdHistory, out]);
+
+  const cmdMan = useCallback(
+    (args: string[]) => {
+      const arg = args[0];
+      if (!arg) { err("usage: man <command>"); return; }
+      const page = MAN_PAGES[arg.toLowerCase()];
+      if (!page) { err(`no manual entry for ${arg}`); return; }
+      out("");
+      out(`  ${arg.toUpperCase()}(1)`);
+      out("  ─────────────────────────────────────────");
+      for (const line of page.split("\n")) out(`  ${line}`);
+      out("");
+    },
+    [out, err],
+  );
+
+  const cmdWhich = useCallback(
+    (args: string[]) => {
+      const arg = args[0];
+      if (!arg) { err("usage: which <command>"); return; }
+      if (COMMAND_NAMES.includes(arg.toLowerCase())) {
+        out(`  /usr/local/bin/${arg.toLowerCase()}`);
+        out("");
+      } else {
+        err(`${arg} not found`);
+      }
+    },
+    [out, err],
+  );
+
+  const cmdCowsay = useCallback(
+    (args: string[]) => {
+      out("");
+      for (const line of cowsay(args.join(" "))) out(`  ${line}`);
+      out("");
+    },
+    [out],
   );
 
   // ── Command dispatcher ─────────────────────────────────────────────────────
@@ -258,61 +569,89 @@ export function SystemCommandApp() {
     (raw: string) => {
       const trimmed = raw.trim();
       push([{ type: "input", text: `${prompt} ${raw}` }]);
-
       if (!trimmed) return;
 
       setCmdHistory((prev) => [trimmed, ...prev].slice(0, 100));
       setHistoryIdx(-1);
 
-      const [cmd, ...args] = trimmed.split(/\s+/);
-      const arg = args.join(" ");
+      // ── Whole-line Easter eggs ──
+      if (trimmed === "make me a sandwich") {
+        err("What? Make it yourself.");
+        return;
+      }
+      if (trimmed === "sudo make me a sandwich") {
+        ok("Okay.");
+        return;
+      }
+      if (/^sudo\s+rm\s+-rf\s+\/?\s*$/.test(trimmed)) {
+        err("Nope. This portfolio is staying right where it is.");
+        return;
+      }
 
-      switch (cmd.toLowerCase()) {
-        case "help":
-          push(HELP_TEXT.split("\n").map((t) => ({ type: "output" as const, text: t })));
+      const tokens = trimmed.split(/\s+/);
+      const [cmd, ...args] = tokens;
+      const cmdLower = cmd.toLowerCase();
+
+      switch (cmdLower) {
+        case "help":     outBlock(HELP_TEXT); break;
+        case "pwd":      cmdPwd(); break;
+        case "ls":       cmdLs(args); break;
+        case "cd":       cmdCd(args); break;
+        case "cat":      cmdCat(args); break;
+        case "open":     cmdOpen(args); break;
+        case "tree":     cmdTree(args); break;
+        case "find":     cmdFind(args); break;
+        case "file":     cmdFile(args); break;
+        case "head":     cmdHead(args); break;
+        case "tail":     cmdTail(args); break;
+        case "echo":     cmdEcho(args); break;
+        case "date":     cmdDate(); break;
+        case "uptime":   cmdUptime(); break;
+        case "history":  cmdHistoryCmd(); break;
+        case "man":      cmdMan(args); break;
+        case "which":    cmdWhich(args); break;
+        case "cowsay":   cmdCowsay(args); break;
+        case "whoami":   outBlock(WHOAMI_TEXT); break;
+        case "neofetch": outBlock(NEOFETCH_TEXT); break;
+        case "clear":    setHistory(BOOT_LINES); break;
+        case "exit":     closeWindow("system-command"); break;
+
+        // ── Refusals / hints ──
+        case "sudo":
+          err("permission denied: this is a read-only portfolio. (nice try.)");
           break;
-
-        case "pwd":
-          cmdPwd();
+        case "rm":
+        case "mv":
+        case "cp":
+        case "mkdir":
+        case "touch":
+          err(`${cmdLower}: refusing to mutate a portfolio filesystem.`);
           break;
-
-        case "ls":
-          cmdLs(arg);
+        case "vim":
+        case "vi":
+        case "nano":
+        case "emacs":
+          out(`  ${cmdLower}: try 'open <file>' to view files in the GUI.`);
+          out("");
           break;
-
-        case "cd":
-          cmdCd(arg);
-          break;
-
-        case "cat":
-          cmdCat(arg);
-          break;
-
-        case "open":
-          cmdOpen(arg);
-          break;
-
-        case "whoami":
-          push(WHOAMI_TEXT.split("\n").map((t) => ({ type: "output" as const, text: t })));
-          break;
-
-        case "neofetch":
-          push(NEOFETCH_TEXT.split("\n").map((t) => ({ type: "output" as const, text: t })));
-          break;
-
-        case "clear":
-          setHistory(BOOT_LINES);
-          break;
-
-        case "exit":
-          closeWindow("system-command");
+        case "ssh":
+        case "telnet":
+        case "curl":
+        case "wget":
+          err(`${cmdLower}: no network here — this OS lives in your browser.`);
           break;
 
         default:
-          err(`command not found: ${cmd}. Type 'help' for available commands.`);
+          err(`command not found: ${cmd}. Type 'help' or 'man <cmd>'.`);
       }
     },
-    [prompt, push, cmdPwd, cmdLs, cmdCd, cmdCat, cmdOpen, closeWindow, err]
+    [
+      prompt, push, outBlock,
+      cmdPwd, cmdLs, cmdCd, cmdCat, cmdOpen, cmdTree, cmdFind, cmdFile,
+      cmdHead, cmdTail, cmdEcho, cmdDate, cmdUptime, cmdHistoryCmd, cmdMan,
+      cmdWhich, cmdCowsay,
+      closeWindow, err, ok, out,
+    ],
   );
 
   // ── Keyboard handler ───────────────────────────────────────────────────────
@@ -321,31 +660,72 @@ export function SystemCommandApp() {
     if (e.key === "Enter") {
       handleCommand(input);
       setInput("");
-    } else if (e.key === "ArrowUp") {
+      return;
+    }
+    if (e.key === "ArrowUp") {
       e.preventDefault();
       const next = Math.min(historyIdx + 1, cmdHistory.length - 1);
       setHistoryIdx(next);
       setInput(cmdHistory[next] ?? "");
-    } else if (e.key === "ArrowDown") {
+      return;
+    }
+    if (e.key === "ArrowDown") {
       e.preventDefault();
       const next = Math.max(historyIdx - 1, -1);
       setHistoryIdx(next);
       setInput(next === -1 ? "" : cmdHistory[next]);
-    } else if (e.key === "Tab") {
-      e.preventDefault();
-      // Tab completion
-      const partial = input.split(/\s/).pop() ?? "";
-      if (!partial) return;
-      const matches = currentDir.children.filter((c) =>
-        c.name.toLowerCase().startsWith(partial.toLowerCase())
-      );
+      return;
+    }
+    if (e.key !== "Tab") return;
+
+    e.preventDefault();
+
+    // Complete command name when still on the first token.
+    if (!/\s/.test(input)) {
+      if (input.length === 0) return;
+      const partial = input.toLowerCase();
+      const matches = COMMAND_NAMES.filter((c) => c.startsWith(partial));
+      if (matches.length === 0) return;
       if (matches.length === 1) {
-        setInput(input.slice(0, input.lastIndexOf(partial)) + matches[0].name);
-      } else if (matches.length > 1) {
+        setInput(matches[0] + " ");
+        return;
+      }
+      const lcp = longestCommonPrefix(matches);
+      if (lcp.length > partial.length) {
+        setInput(lcp);
+      } else {
         out("");
-        push(matches.map((m) => ({ type: "output" as const, text: `  ${m.name}` })));
+        push(matches.map((m) => ({ type: "output" as const, text: `  ${m}` })));
         out("");
       }
+      return;
+    }
+
+    // Otherwise, path completion against the current directory.
+    const ctx = getCompletionContext(desktopFileSystem, cwd, input);
+    if (!ctx) return;
+
+    const matches = matchPartial(ctx.directoryChildren, ctx.partial);
+    if (matches.length === 0) return;
+
+    if (matches.length === 1) {
+      setInput(ctx.prefixBeforePartial + formatCompletionName(matches[0]));
+      return;
+    }
+
+    const names = matches.map(formatCompletionName);
+    const lcp = longestCommonPrefix(names);
+    if (lcp.length > ctx.partial.length) {
+      setInput(ctx.prefixBeforePartial + lcp);
+    } else {
+      out("");
+      push(
+        matches.map((m) => ({
+          type: "output" as const,
+          text: `  ${m.type === "folder" ? "📁" : "📄"}  ${m.name}`,
+        })),
+      );
+      out("");
     }
   };
 
@@ -356,7 +736,6 @@ export function SystemCommandApp() {
       className="h-full flex flex-col font-os-mono text-xs"
       style={{ background: "#0d1117" }}
       onMouseDown={(e) => {
-        // Prevent blur when clicking anywhere inside the terminal except the input itself
         if (e.target !== inputRef.current) {
           e.preventDefault();
         }
@@ -377,7 +756,7 @@ export function SystemCommandApp() {
               : "var(--os-accent)",
             }}
           >
-            {line.text || "\u00A0"}
+            {line.text || " "}
           </div>
         ))}
         <div ref={bottomRef} />

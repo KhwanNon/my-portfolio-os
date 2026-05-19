@@ -3,6 +3,8 @@ import React, {
   createContext,
   useContext,
   useReducer,
+  useState,
+  useRef,
   useCallback,
 } from "react";
 import type { FileNode } from "@/app/shared/types/file-system";
@@ -47,6 +49,7 @@ const DEFAULT_WINDOW_SIZES: Record<string, { width: number; height: number }> =
   };
 
 function getDefaultSize(fileNode: FileNode): { width: number; height: number } {
+  if (fileNode.id.startsWith("props-")) return { width: 420, height: 360 };
   return DEFAULT_WINDOW_SIZES[fileNode.id] ?? { width: 640, height: 460 };
 }
 
@@ -75,7 +78,7 @@ function reducer(
           ),
         };
       }
-      const id = `win-${Date.now()}`;
+      const id = `win-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
       const position =
         action.position ?? getDefaultPosition(state.windows.length);
       const size = action.size ?? getDefaultSize(action.fileNode);
@@ -155,6 +158,36 @@ function reducer(
   }
 }
 
+// ─── Toast / context-menu / terminal-intent types ────────────────────────────
+
+export type ToastKind = "info" | "success" | "error";
+
+export interface Toast {
+  id: number;
+  text: string;
+  kind: ToastKind;
+}
+
+export interface ContextMenuItem {
+  /** Visible label. Ignored when `separator` is true. */
+  label?: string;
+  onSelect?: () => void;
+  disabled?: boolean;
+  /** When true, this entry renders as a divider only. */
+  separator?: boolean;
+}
+
+export interface ContextMenuState {
+  x: number;
+  y: number;
+  items: ContextMenuItem[];
+}
+
+export interface TerminalCdRequest {
+  token: number;
+  path: string[];
+}
+
 interface WindowManagerContextValue {
   windows: WindowInstance[];
   openFile: (fileNode: FileNode) => void;
@@ -164,6 +197,17 @@ interface WindowManagerContextValue {
   maximizeWindow: (id: string) => void;
   focusWindow: (id: string) => void;
   moveWindow: (id: string, x: number, y: number) => void;
+  resizeWindow: (id: string, width: number, height: number) => void;
+
+  toasts: Toast[];
+  showToast: (text: string, kind?: ToastKind) => void;
+
+  contextMenu: ContextMenuState | null;
+  showContextMenu: (x: number, y: number, items: ContextMenuItem[]) => void;
+  hideContextMenu: () => void;
+
+  terminalCdRequest: TerminalCdRequest | null;
+  requestTerminalCd: (path: string[]) => void;
 }
 
 const WindowManagerContext = createContext<WindowManagerContextValue | null>(
@@ -180,6 +224,39 @@ export function WindowManagerProvider({
     nextZIndex: 100,
   });
 
+  // ── Toast state ──────────────────────────────────────────────────────────
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const toastIdRef = useRef(0);
+
+  const showToast = useCallback((text: string, kind: ToastKind = "info") => {
+    const id = ++toastIdRef.current;
+    setToasts((prev) => [...prev, { id, text, kind }]);
+    window.setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 2200);
+  }, []);
+
+  // ── Context menu ─────────────────────────────────────────────────────────
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
+
+  const showContextMenu = useCallback(
+    (x: number, y: number, items: ContextMenuItem[]) =>
+      setContextMenu({ x, y, items }),
+    [],
+  );
+  const hideContextMenu = useCallback(() => setContextMenu(null), []);
+
+  // ── Terminal cd intent ───────────────────────────────────────────────────
+  const [terminalCdRequest, setTerminalCdRequest] =
+    useState<TerminalCdRequest | null>(null);
+  const cdTokenRef = useRef(0);
+
+  const requestTerminalCd = useCallback((path: string[]) => {
+    cdTokenRef.current += 1;
+    setTerminalCdRequest({ token: cdTokenRef.current, path });
+  }, []);
+
+  // ── Window actions ───────────────────────────────────────────────────────
   const openFile = useCallback((fileNode: FileNode) => {
     if (fileNode.type === "link" && fileNode.data?.kind === "link") {
       window.open(fileNode.data.url, "_blank", "noopener,noreferrer");
@@ -212,6 +289,11 @@ export function WindowManagerProvider({
     (id: string, x: number, y: number) => dispatch({ type: "MOVE", id, x, y }),
     [],
   );
+  const resizeWindow = useCallback(
+    (id: string, width: number, height: number) =>
+      dispatch({ type: "RESIZE", id, width, height }),
+    [],
+  );
 
   return (
     <WindowManagerContext.Provider
@@ -224,6 +306,14 @@ export function WindowManagerProvider({
         maximizeWindow,
         focusWindow,
         moveWindow,
+        resizeWindow,
+        toasts,
+        showToast,
+        contextMenu,
+        showContextMenu,
+        hideContextMenu,
+        terminalCdRequest,
+        requestTerminalCd,
       }}
     >
       {children}

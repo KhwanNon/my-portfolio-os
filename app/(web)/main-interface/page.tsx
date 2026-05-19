@@ -5,11 +5,14 @@ import { FileIcon } from "./_components/file-icon";
 import { DesktopSection } from "./_components/desktop-section";
 import { WindowFrame } from "./_components/window/window-frame";
 import { FileRenderer } from "./_components/file-renderer";
+import { ContextMenu } from "./_components/context-menu";
+import { ToastStack } from "./_components/toast-stack";
 import {
   WindowManagerProvider,
   useWindowManager,
 } from "@/app/modules/desktop/context/window-manager-context";
 import { desktopFileSystem, desktopSections } from "./_data/file-system-data";
+import type { FileNode } from "@/app/shared/types/file-system";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -28,23 +31,78 @@ const itemVariants = {
   },
 };
 
+const TERMINAL_ID = "system-command";
+
+const ABOUT_OS_NODE: FileNode = {
+  id: "about-os",
+  name: "About Portfolio OS",
+  type: "ui",
+  iconPath: "/assets/images/system-command.png",
+  data: { kind: "ui", component: "AboutOSUI", props: {} },
+};
+
 function Desktop() {
-  const { windows } = useWindowManager();
+  const {
+    windows,
+    contextMenu,
+    showContextMenu,
+    hideContextMenu,
+    toasts,
+    showToast,
+    openFile,
+  } = useWindowManager();
   const fileMap = Object.fromEntries(desktopFileSystem.map((f) => [f.id, f]));
+
+  const handleDesktopContextMenu = (e: React.MouseEvent) => {
+    // Only fire when the user right-clicks bare desktop background (not an icon, window, etc.)
+    // FileIcon/WindowFrame already stop propagation on right-click where appropriate.
+    e.preventDefault();
+    showContextMenu(e.clientX, e.clientY, [
+      {
+        label: "Open System Command",
+        onSelect: () => {
+          const term = desktopFileSystem.find((n) => n.id === TERMINAL_ID);
+          if (term) openFile(term);
+        },
+      },
+      {
+        label: "Refresh",
+        onSelect: () => showToast("Desktop refreshed ✓", "success"),
+      },
+      { separator: true },
+      {
+        label: "About Portfolio OS",
+        onSelect: () => openFile(ABOUT_OS_NODE),
+      },
+    ]);
+  };
 
   return (
     <div
       className="relative h-screen w-full bg-os-bg text-os-accent font-os-mono overflow-hidden flex flex-col"
       onClick={() => {
-        // Click on empty desktop → deselect all icons (blur focused element)
-        (document.activeElement as HTMLElement)?.blur();
+        // Click on empty desktop → deselect any focused icon.
+        // Skip inputs / textareas / contenteditable so we don't steal
+        // focus from things like the terminal prompt or folder address bar.
+        const active = document.activeElement as HTMLElement | null;
+        if (!active) return;
+        if (
+          active.tagName === "INPUT" ||
+          active.tagName === "TEXTAREA" ||
+          active.isContentEditable
+        ) {
+          return;
+        }
+        active.blur();
       }}
     >
-      {/* Desktop icon sections */}
+      {/* Desktop icon sections. onContextMenu lives here so right-clicks
+          inside open windows aren't captured. */}
       <motion.main
         variants={containerVariants}
         initial="hidden"
         animate="visible"
+        onContextMenu={handleDesktopContextMenu}
         className="relative z-20 flex-1 flex flex-col overflow-y-auto custom-scrollbar pt-4 min-h-0"
       >
         {desktopSections.map((section) => (
@@ -71,6 +129,14 @@ function Desktop() {
           <FileRenderer fileNode={win.fileNode} />
         </WindowFrame>
       ))}
+
+      {/* Toast notifications */}
+      <ToastStack toasts={toasts} />
+
+      {/* Context menu (rendered last so it sits above everything except the taskbar handlers) */}
+      {contextMenu && (
+        <ContextMenu menu={contextMenu} onClose={hideContextMenu} />
+      )}
 
       {/* Taskbar */}
       <motion.div

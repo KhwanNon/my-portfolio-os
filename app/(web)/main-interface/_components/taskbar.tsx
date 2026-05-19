@@ -29,11 +29,9 @@ function useClock() {
 }
 
 export const Taskbar = () => {
-  const { windows, restoreWindow, minimizeWindow, focusWindow } =
-    useWindowManager();
+  const { windows } = useWindowManager();
   const { date, time } = useClock();
 
-  // windows array only contains open windows — closed ones are removed from state
   return (
     <footer
       style={{
@@ -43,7 +41,7 @@ export const Taskbar = () => {
       }}
       className="relative flex items-center justify-between px-4 z-50 backdrop-blur-md shrink-0"
     >
-      {/* Left: Start label + open window tabs */}
+      {/* Left: Start label + open window indicators (display-only) */}
       <div className="flex items-center gap-2 min-w-0 overflow-hidden">
         <span
           className="text-xs font-black tracking-[0.4em] shrink-0"
@@ -52,14 +50,14 @@ export const Taskbar = () => {
           Taskbar
         </span>
 
-        {/* Open window buttons */}
+        {/* Open window tabs — purely informational, not clickable */}
         <div className="flex items-center gap-1 overflow-x-auto">
           {windows.map((win) => (
-            <button
+            <div
               key={win.id}
-              className="flex items-center gap-2 px-3 h-8 rounded-sm text-[10px] tracking-widest transition-all duration-150 shrink-0 cursor-pointer"
+              className="flex items-center gap-2 px-3 h-8 rounded-sm text-[10px] tracking-widest shrink-0 select-none"
               style={{
-                maxWidth: 160,
+                maxWidth: 180,
                 background: win.isMinimized
                   ? "rgba(82,211,214,0.06)"
                   : "rgba(82,211,214,0.15)",
@@ -69,17 +67,8 @@ export const Taskbar = () => {
                 color: "var(--os-accent)",
                 opacity: win.isMinimized ? 0.55 : 1,
               }}
-              onClick={() => {
-                if (win.isMinimized) {
-                  restoreWindow(win.id);
-                } else {
-                  focusWindow(win.id);
-                  minimizeWindow(win.id);
-                }
-              }}
               title={win.fileNode.name}
             >
-              {/* Status dot */}
               <span
                 className="w-2 h-2 rounded-full shrink-0"
                 style={{
@@ -92,7 +81,7 @@ export const Taskbar = () => {
                 }}
               />
               <span className="truncate uppercase">{win.fileNode.name}</span>
-            </button>
+            </div>
           ))}
         </div>
       </div>

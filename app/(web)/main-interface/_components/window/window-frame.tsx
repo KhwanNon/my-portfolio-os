@@ -8,6 +8,9 @@ interface WindowFrameProps {
   children: React.ReactNode;
 }
 
+const MIN_WIDTH = 280;
+const MIN_HEIGHT = 180;
+
 export function WindowFrame({ window: win, children }: WindowFrameProps) {
   const {
     closeWindow,
@@ -15,10 +18,12 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     maximizeWindow,
     focusWindow,
     moveWindow,
+    resizeWindow,
   } = useWindowManager();
 
   const contentRef = useRef<HTMLDivElement>(null);
 
+  // ── Drag state ─────────────────────────────────────────────────────────────
   const dragState = useRef({
     isDragging: false,
     startX: 0,
@@ -32,17 +37,41 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     moveRef.current = moveWindow;
   });
 
+  // ── Resize state ───────────────────────────────────────────────────────────
+  const resizeState = useRef({
+    isResizing: false,
+    startX: 0,
+    startY: 0,
+    startW: 0,
+    startH: 0,
+  });
+
+  const resizeRef = useRef(resizeWindow);
+  useEffect(() => {
+    resizeRef.current = resizeWindow;
+  });
+
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      if (!dragState.current.isDragging) return;
-      const dx = e.clientX - dragState.current.startX;
-      const dy = e.clientY - dragState.current.startY;
-      const newX = dragState.current.startPosX + dx;
-      const newY = dragState.current.startPosY + dy;
-      moveRef.current(win.id, Math.max(0, newX), Math.max(0, newY));
+      if (dragState.current.isDragging) {
+        const dx = e.clientX - dragState.current.startX;
+        const dy = e.clientY - dragState.current.startY;
+        const newX = dragState.current.startPosX + dx;
+        const newY = dragState.current.startPosY + dy;
+        moveRef.current(win.id, Math.max(0, newX), Math.max(0, newY));
+      } else if (resizeState.current.isResizing) {
+        const dx = e.clientX - resizeState.current.startX;
+        const dy = e.clientY - resizeState.current.startY;
+        const w = Math.max(MIN_WIDTH, resizeState.current.startW + dx);
+        const h = Math.max(MIN_HEIGHT, resizeState.current.startH + dy);
+        resizeRef.current(win.id, w, h);
+      }
     };
     const onMouseUp = () => {
       dragState.current.isDragging = false;
+      resizeState.current.isResizing = false;
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
     };
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
@@ -54,6 +83,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
 
   const handleTitleBarMouseDown = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest("button")) return;
+    if (win.isMaximized) return;
     dragState.current = {
       isDragging: true,
       startX: e.clientX,
@@ -61,6 +91,23 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       startPosX: win.position.x,
       startPosY: win.position.y,
     };
+    document.body.style.userSelect = "none";
+    focusWindow(win.id);
+  };
+
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (win.isMaximized) return;
+    resizeState.current = {
+      isResizing: true,
+      startX: e.clientX,
+      startY: e.clientY,
+      startW: win.size.width,
+      startH: win.size.height,
+    };
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "nwse-resize";
     focusWindow(win.id);
   };
 
@@ -115,6 +162,10 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
           borderBottom: "1px solid rgba(82,211,214,0.2)",
         }}
         onMouseDown={handleTitleBarMouseDown}
+        onDoubleClick={(e) => {
+          if ((e.target as HTMLElement).closest("button")) return;
+          maximizeWindow(win.id);
+        }}
       >
         {/* Title */}
         <span
@@ -181,6 +232,24 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       <div ref={contentRef} className="flex-1 overflow-hidden">
         {children}
       </div>
+
+      {/* Resize handle (bottom-right). Hidden when maximised. */}
+      {!win.isMaximized && (
+        <div
+          onMouseDown={handleResizeMouseDown}
+          className="absolute select-none"
+          style={{
+            right: 0,
+            bottom: 0,
+            width: 16,
+            height: 16,
+            cursor: "nwse-resize",
+            background:
+              "linear-gradient(135deg, transparent 0%, transparent 50%, rgba(82,211,214,0.45) 50%, rgba(82,211,214,0.45) 60%, transparent 60%, transparent 70%, rgba(82,211,214,0.45) 70%, rgba(82,211,214,0.45) 80%, transparent 80%)",
+          }}
+          title="Resize"
+        />
+      )}
     </div>
   );
 }

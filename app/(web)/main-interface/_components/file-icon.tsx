@@ -3,7 +3,16 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { FileNode } from "@/app/shared/types/file-system";
-import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
+import {
+  useWindowManager,
+  type ContextMenuItem,
+} from "@/app/modules/desktop/context/window-manager-context";
+import { desktopFileSystem } from "../_data/file-system-data";
+import {
+  makePropertiesNode,
+  absolutePathOf,
+  pathSegmentsOf,
+} from "../_lib/properties-node";
 
 interface FileIconProps {
   fileNode: FileNode;
@@ -18,12 +27,19 @@ const VARIANT_SIZE: Record<"desktop" | "folder", number> = {
   folder: 56,
 };
 
+const TERMINAL_ID = "system-command";
+
 export const FileIcon = ({
   fileNode,
   variant = "desktop",
   onOpen,
 }: FileIconProps) => {
-  const { openFile } = useWindowManager();
+  const {
+    openFile,
+    showContextMenu,
+    showToast,
+    requestTerminalCd,
+  } = useWindowManager();
   const [selected, setSelected] = useState(false);
 
   const open = onOpen ?? openFile;
@@ -39,12 +55,66 @@ export const FileIcon = ({
     open(fileNode);
   };
 
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelected(true);
+
+    const absPath = absolutePathOf(fileNode);
+    const segments = pathSegmentsOf(fileNode);
+    const isFolder = fileNode.type === "folder";
+
+    const items: ContextMenuItem[] = [
+      {
+        label: fileNode.type === "link" ? "Open Link" : "Open",
+        onSelect: () => open(fileNode),
+      },
+      {
+        label: "Open in Terminal",
+        disabled: absPath === null,
+        onSelect: () => {
+          const terminalNode = desktopFileSystem.find(
+            (n) => n.id === TERMINAL_ID,
+          );
+          if (!terminalNode || absPath === null) return;
+          // For folders cd into them; for files cd into their parent.
+          const targetPath = isFolder ? segments : segments.slice(0, -1);
+          requestTerminalCd(targetPath);
+          openFile(terminalNode);
+        },
+      },
+      {
+        label: "Copy Path",
+        disabled: absPath === null,
+        onSelect: () => {
+          if (absPath === null) return;
+          if (navigator.clipboard?.writeText) {
+            navigator.clipboard.writeText(absPath).then(
+              () => showToast(`Copied: ${absPath}`, "success"),
+              () => showToast("Copy failed", "error"),
+            );
+          } else {
+            showToast("Clipboard unavailable", "error");
+          }
+        },
+      },
+      { separator: true },
+      {
+        label: "Properties",
+        onSelect: () => openFile(makePropertiesNode(fileNode)),
+      },
+    ];
+
+    showContextMenu(e.clientX, e.clientY, items);
+  };
+
   return (
     <div
       className="flex flex-col items-center justify-center group outline-none cursor-pointer transition-all duration-300"
       style={{ margin: variant === "folder" ? 4 : 16 }}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
+      onContextMenu={handleContextMenu}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && open(fileNode)}
