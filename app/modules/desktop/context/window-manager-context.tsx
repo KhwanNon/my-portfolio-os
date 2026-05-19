@@ -49,13 +49,29 @@ const DEFAULT_WINDOW_SIZES: Record<string, { width: number; height: number }> =
   };
 
 function getDefaultSize(fileNode: FileNode): { width: number; height: number } {
-  if (fileNode.id.startsWith("props-")) return { width: 420, height: 360 };
-  return DEFAULT_WINDOW_SIZES[fileNode.id] ?? { width: 640, height: 460 };
+  const target = fileNode.id.startsWith("props-")
+    ? { width: 420, height: 360 }
+    : DEFAULT_WINDOW_SIZES[fileNode.id] ?? { width: 640, height: 460 };
+  if (typeof window === "undefined") return target;
+  // Clamp to viewport (leave room for the system bar / taskbar / a bit of margin).
+  return {
+    width: Math.min(target.width, Math.max(280, window.innerWidth - 32)),
+    height: Math.min(target.height, Math.max(200, window.innerHeight - 120)),
+  };
 }
 
-function getDefaultPosition(count: number): { x: number; y: number } {
+function getDefaultPosition(
+  count: number,
+  size: { width: number; height: number },
+): { x: number; y: number } {
+  if (typeof window === "undefined") return { x: 80, y: 60 };
   const offset = (count % 8) * 28;
-  return { x: 80 + offset, y: 60 + offset };
+  const maxX = Math.max(0, window.innerWidth - size.width - 20);
+  const maxY = Math.max(0, window.innerHeight - size.height - 80);
+  return {
+    x: Math.min(80 + offset, maxX),
+    y: Math.min(60 + offset, maxY),
+  };
 }
 
 function reducer(
@@ -79,9 +95,9 @@ function reducer(
         };
       }
       const id = `win-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-      const position =
-        action.position ?? getDefaultPosition(state.windows.length);
       const size = action.size ?? getDefaultSize(action.fileNode);
+      const position =
+        action.position ?? getDefaultPosition(state.windows.length, size);
       return {
         windows: [
           ...state.windows,

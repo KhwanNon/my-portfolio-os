@@ -1,4 +1,5 @@
 "use client";
+import { FileGraphic } from "../file-graphic";
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
 
@@ -413,13 +414,13 @@ export function ProjectDescriptionUI({
 }
 
 // ─── PropertiesUI ────────────────────────────────────────────────────────────
-// Props: { targetName, targetType, targetKind, iconPath?, absolutePath, sizeText, dateText, itemCount? }
+// Props: { targetName, targetType, targetKind, icon?, absolutePath, sizeText, dateText, itemCount? }
 
 interface PropertiesUIProps extends Record<string, unknown> {
   targetName?: string;
   targetType?: string;
   targetKind?: string;
-  iconPath?: string;
+  icon?: string;
   absolutePath?: string;
   sizeText?: string;
   dateText?: string;
@@ -429,7 +430,7 @@ interface PropertiesUIProps extends Record<string, unknown> {
 export function PropertiesUI({
   targetName = "",
   targetKind = "",
-  iconPath,
+  icon,
   absolutePath = "",
   sizeText = "",
   dateText = "",
@@ -438,10 +439,12 @@ export function PropertiesUI({
   return (
     <Wrapper>
       <div className="flex items-center gap-3 mb-3">
-        {iconPath && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={iconPath} alt="" width={40} height={40} style={{ objectFit: "contain" }} />
-        )}
+        <div
+          className="flex items-center justify-center shrink-0"
+          style={{ width: 40, height: 40, color: "var(--os-accent)" }}
+        >
+          <FileGraphic icon={icon} size={32} strokeWidth={1.4} />
+        </div>
         <div>
           <div className="font-bold tracking-wide text-sm break-all">{targetName}</div>
           <div className="opacity-50 mt-0.5 text-[10px] tracking-widest uppercase">{targetKind}</div>

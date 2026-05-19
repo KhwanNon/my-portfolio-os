@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import type { WindowInstance } from "@/app/modules/desktop/context/window-manager-context";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
+import { useIsSmallViewport } from "../../_lib/use-viewport";
 
 interface WindowFrameProps {
   window: WindowInstance;
@@ -20,6 +22,10 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     moveWindow,
     resizeWindow,
   } = useWindowManager();
+
+  // Small viewport → treat every window as maximised. Drag/resize disabled.
+  const isMobile = useIsSmallViewport();
+  const effectivelyMaximized = win.isMaximized || isMobile;
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -83,7 +89,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
 
   const handleTitleBarMouseDown = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest("button")) return;
-    if (win.isMaximized) return;
+    if (effectivelyMaximized) return;
     dragState.current = {
       isDragging: true,
       startX: e.clientX,
@@ -98,7 +104,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
   const handleResizeMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (win.isMaximized) return;
+    if (effectivelyMaximized) return;
     resizeState.current = {
       isResizing: true,
       startX: e.clientX,
@@ -113,12 +119,12 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
 
   if (win.isMinimized) return null;
 
-  const style = win.isMaximized
+  const style = effectivelyMaximized
     ? {
         left: 0,
         top: 0,
         width: "100%",
-        height: "calc(100% - 50px)",
+        height: "100%",
         zIndex: win.zIndex,
       }
     : {
@@ -130,14 +136,19 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       };
 
   return (
-    <div
+    <motion.div
+      layout={false}
+      initial={{ opacity: 0, scale: 0.92, y: 14 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.94, y: 6 }}
+      transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.6 }}
       className="absolute flex flex-col rounded-sm overflow-hidden shadow-2xl"
       style={{
         ...style,
         border: "1px solid rgba(82,211,214,0.3)",
         background: "var(--os-surface)",
         boxShadow:
-          "0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(82,211,214,0.15)",
+          "0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(82,211,214,0.15), 0 0 28px rgba(82,211,214,0.08)",
       }}
       onMouseDown={() => {
         focusWindow(win.id);
@@ -155,15 +166,17 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     >
       {/* Title Bar */}
       <div
-        className="flex items-center justify-between px-3 select-none cursor-move shrink-0"
+        className="flex items-center justify-between px-3 select-none shrink-0"
         style={{
           height: 36,
           background: "var(--os-header)",
           borderBottom: "1px solid rgba(82,211,214,0.2)",
+          cursor: effectivelyMaximized ? "default" : "move",
         }}
         onMouseDown={handleTitleBarMouseDown}
         onDoubleClick={(e) => {
           if ((e.target as HTMLElement).closest("button")) return;
+          if (isMobile) return;
           maximizeWindow(win.id);
         }}
       >
@@ -193,22 +206,24 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
           >
             _
           </button>
-          {/* Maximize */}
-          <button
-            className="w-4 h-4 rounded-sm flex items-center justify-center text-[10px] font-bold transition-opacity hover:opacity-100 opacity-70 cursor-pointer"
-            style={{
-              background: "rgba(82,211,214,0.15)",
-              border: "1px solid rgba(82,211,214,0.3)",
-              color: "var(--os-accent)",
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              maximizeWindow(win.id);
-            }}
-            title={win.isMaximized ? "Restore" : "Maximize"}
-          >
-            {win.isMaximized ? "❐" : "□"}
-          </button>
+          {/* Maximize — hidden on mobile (auto-maximised already) */}
+          {!isMobile && (
+            <button
+              className="w-4 h-4 rounded-sm flex items-center justify-center text-[10px] font-bold transition-opacity hover:opacity-100 opacity-70 cursor-pointer"
+              style={{
+                background: "rgba(82,211,214,0.15)",
+                border: "1px solid rgba(82,211,214,0.3)",
+                color: "var(--os-accent)",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                maximizeWindow(win.id);
+              }}
+              title={win.isMaximized ? "Restore" : "Maximize"}
+            >
+              {win.isMaximized ? "❐" : "□"}
+            </button>
+          )}
           {/* Close */}
           <button
             className="w-4 h-4 rounded-sm flex items-center justify-center text-[10px] font-bold transition-colors hover:opacity-100 opacity-70 cursor-pointer"
@@ -233,8 +248,8 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
         {children}
       </div>
 
-      {/* Resize handle (bottom-right). Hidden when maximised. */}
-      {!win.isMaximized && (
+      {/* Resize handle (bottom-right). Hidden when maximised or on mobile. */}
+      {!effectivelyMaximized && (
         <div
           onMouseDown={handleResizeMouseDown}
           className="absolute select-none"
@@ -250,6 +265,6 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
           title="Resize"
         />
       )}
-    </div>
+    </motion.div>
   );
 }

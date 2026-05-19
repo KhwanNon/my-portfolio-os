@@ -1,17 +1,18 @@
 import type { FileNode } from "@/app/shared/types/file-system";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
+// Keys correspond to entries in the FileGraphic registry.
 const ICONS = {
-  folder: "/assets/images/folder.png",
-  cdrive: "/assets/images/c-drive.png",
-  recycle: "/assets/images/recycle-bin.png",
-  txt: "/assets/images/file-txt.png",
-  pdf: "/assets/images/file-pdf.png",
-  ui: "/assets/images/file-ui.png",
-  slide: "/assets/images/file-slide.png",
-  link: "/assets/images/file-link.png",
-  sysCmd: "/assets/images/system-command.png",
-  prefs: "/assets/images/preferences.png",
+  folder:  "folder",
+  cdrive:  "cdrive",
+  recycle: "recycle",
+  txt:     "txt",
+  pdf:     "pdf",
+  ui:      "ui",
+  slide:   "slide",
+  link:    "link",
+  sysCmd:  "sysCmd",
+  prefs:   "prefs",
 } as const;
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -36,7 +37,7 @@ function makeProject(
     id: `${prefix}-folder`,
     name: opts.name,
     type: "folder",
-    iconPath: ICONS.folder,
+    icon: ICONS.folder,
     data: {
       kind: "folder",
       children: [
@@ -44,7 +45,7 @@ function makeProject(
           id: `${prefix}-images`,
           name: "images.slide",
           type: "slide",
-          iconPath: ICONS.slide,
+          icon: ICONS.slide,
           data: {
             kind: "slide",
             title: `${opts.name} — Screenshots`,
@@ -64,7 +65,7 @@ function makeProject(
           id: `${prefix}-desc`,
           name: "description.ui",
           type: "ui",
-          iconPath: ICONS.ui,
+          icon: ICONS.ui,
           data: {
             kind: "ui",
             component: "ProjectDescriptionUI",
@@ -84,7 +85,7 @@ function makeProject(
           id: `${prefix}-link`,
           name: "project.link",
           type: "link",
-          iconPath: ICONS.link,
+          icon: ICONS.link,
           data: { kind: "link", url: opts.githubUrl },
         },
       ],
@@ -96,7 +97,7 @@ const mobileWorkFolder: FileNode = {
   id: "mobile-work",
   name: "Work",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
@@ -144,7 +145,7 @@ const mobilePersonalFolder: FileNode = {
   id: "mobile-personal",
   name: "Personal",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
@@ -180,7 +181,7 @@ const mobileFolder: FileNode = {
   id: "mobile",
   name: "Mobile",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [mobileWorkFolder, mobilePersonalFolder],
@@ -191,7 +192,7 @@ const webFolder: FileNode = {
   id: "web-projects",
   name: "Web",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: { kind: "folder", children: [] },
 };
 
@@ -199,7 +200,7 @@ const openSourceFolder: FileNode = {
   id: "open-source",
   name: "Open Source",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: { kind: "folder", children: [] },
 };
 
@@ -207,7 +208,7 @@ const projectsFolder: FileNode = {
   id: "projects",
   name: "Projects",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [mobileFolder, webFolder, openSourceFolder],
@@ -222,7 +223,7 @@ const technicalFolder: FileNode = {
   id: "skills-technical",
   name: "Technical",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
@@ -230,7 +231,7 @@ const technicalFolder: FileNode = {
         id: "skill-languages",
         name: "Languages.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "SkillsUI",
@@ -251,7 +252,7 @@ const technicalFolder: FileNode = {
         id: "skill-frameworks",
         name: "Frameworks.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "SkillsUI",
@@ -272,7 +273,7 @@ const technicalFolder: FileNode = {
         id: "skill-backend",
         name: "Backend_Service.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "SkillsUI",
@@ -295,7 +296,7 @@ const technicalFolder: FileNode = {
         id: "skill-english",
         name: "English.txt",
         type: "txt",
-        iconPath: ICONS.txt,
+        icon: ICONS.txt,
         data: {
           kind: "txt",
           content: `> ENGLISH_PROFICIENCY.TXT
@@ -320,7 +321,7 @@ const technicalFolder: FileNode = {
         id: "skill-design",
         name: "Design_Tools.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "SkillsUI",
@@ -340,7 +341,7 @@ const technicalFolder: FileNode = {
         id: "skill-devops",
         name: "DevOps_Tools.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "SkillsUI",
@@ -369,7 +370,7 @@ const skillsFolder: FileNode = {
   id: "skills",
   name: "Skills",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
@@ -378,7 +379,7 @@ const skillsFolder: FileNode = {
         id: "skill-soft",
         name: "Soft_Skills.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "SoftSkillsUI",
@@ -437,7 +438,7 @@ function makeCompanyFolder(
     id,
     name,
     type: "folder",
-    iconPath: ICONS.folder,
+    icon: ICONS.folder,
     data: {
       kind: "folder",
       children: [
@@ -445,7 +446,7 @@ function makeCompanyFolder(
           id: `${id}-desc`,
           name: "description.ui",
           type: "ui",
-          iconPath: ICONS.ui,
+          icon: ICONS.ui,
           data: {
             kind: "ui",
             component: "ExperienceDescriptionUI",
@@ -456,14 +457,14 @@ function makeCompanyFolder(
           id: `${id}-stack`,
           name: "tech_stack.ui",
           type: "ui",
-          iconPath: ICONS.ui,
+          icon: ICONS.ui,
           data: { kind: "ui", component: "TechStackUI", props: stackProps },
         },
         {
           id: `${id}-link`,
           name: "company.link",
           type: "link",
-          iconPath: ICONS.link,
+          icon: ICONS.link,
           data: { kind: "link", url: link },
         },
       ],
@@ -475,7 +476,7 @@ const experienceFolder: FileNode = {
   id: "experience",
   name: "Experience",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
@@ -560,7 +561,7 @@ const educationFolder: FileNode = {
   id: "education",
   name: "Education",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
@@ -568,7 +569,7 @@ const educationFolder: FileNode = {
         id: "edu-high-school",
         name: "High_School.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "EducationUI",
@@ -593,7 +594,7 @@ const educationFolder: FileNode = {
         id: "edu-bachelor",
         name: "Bachelor_Degree.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "EducationUI",
@@ -628,7 +629,7 @@ const connectivityFolder: FileNode = {
   id: "about-connectivity",
   name: "Connectivity",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
@@ -636,7 +637,7 @@ const connectivityFolder: FileNode = {
         id: "about-resume-pdf",
         name: "resume.pdf",
         type: "pdf",
-        iconPath: ICONS.pdf,
+        icon: ICONS.pdf,
         data: {
           kind: "pdf",
           url: "/assets/resume.pdf",
@@ -647,7 +648,7 @@ const connectivityFolder: FileNode = {
         id: "about-contact",
         name: "contact.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "ContactUI",
@@ -681,14 +682,14 @@ const connectivityFolder: FileNode = {
         id: "about-line-link",
         name: "line.link",
         type: "link",
-        iconPath: ICONS.link,
+        icon: ICONS.link,
         data: { kind: "link", url: "https://line.me/ti/p/~your-line-id" },
       },
       {
         id: "about-git-link",
         name: "git.link",
         type: "link",
-        iconPath: ICONS.link,
+        icon: ICONS.link,
         data: { kind: "link", url: "https://github.com/your-username" },
       },
     ],
@@ -699,7 +700,7 @@ const aboutFolder: FileNode = {
   id: "about",
   name: "About",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
@@ -707,7 +708,7 @@ const aboutFolder: FileNode = {
         id: "about-me",
         name: "me.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "PersonalBioUI",
@@ -730,7 +731,7 @@ const aboutFolder: FileNode = {
         id: "about-hobbies",
         name: "hobbies.ui",
         type: "ui",
-        iconPath: ICONS.ui,
+        icon: ICONS.ui,
         data: {
           kind: "ui",
           component: "HobbiesUI",
@@ -779,7 +780,7 @@ const aboutFolder: FileNode = {
         id: "about-setup",
         name: "setup.txt",
         type: "txt",
-        iconPath: ICONS.txt,
+        icon: ICONS.txt,
         data: {
           kind: "txt",
           content: `> WORKSTATION_SETUP.TXT
@@ -823,7 +824,7 @@ const downloadFolder: FileNode = {
   id: "download",
   name: "Download",
   type: "folder",
-  iconPath: ICONS.folder,
+  icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
@@ -831,7 +832,7 @@ const downloadFolder: FileNode = {
         id: "download-resume",
         name: "resume.pdf",
         type: "pdf",
-        iconPath: ICONS.pdf,
+        icon: ICONS.pdf,
         data: {
           kind: "pdf",
           url: "/assets/resume.pdf",
@@ -850,7 +851,7 @@ const cDrive: FileNode = {
   id: "c-drive",
   name: "C-DRIVE",
   type: "folder",
-  iconPath: ICONS.cdrive,
+  icon: ICONS.cdrive,
   data: {
     kind: "folder",
     children: [
@@ -872,7 +873,7 @@ const recycleBin: FileNode = {
   id: "recycle-bin",
   name: "Recycle Bin",
   type: "folder",
-  iconPath: ICONS.recycle,
+  icon: ICONS.recycle,
   data: {
     kind: "folder",
     children: [
@@ -880,7 +881,7 @@ const recycleBin: FileNode = {
         id: "deleted-dreams",
         name: "deleted-dreams.txt",
         type: "txt",
-        iconPath: ICONS.txt,
+        icon: ICONS.txt,
         data: {
           kind: "txt",
           content: `> RECYCLE BIN — SYSTEM DUMP LOG
@@ -914,7 +915,7 @@ EOF`,
         id: "old-bugs",
         name: "old-bugs.log",
         type: "txt",
-        iconPath: ICONS.txt,
+        icon: ICONS.txt,
         data: {
           kind: "txt",
           content: `> BUG ARCHIVE — GRAVEYARD OF ISSUES
@@ -962,7 +963,7 @@ export const desktopFileSystem: FileNode[] = [
     id: "profile-txt",
     name: "Profile.txt",
     type: "txt",
-    iconPath: ICONS.txt,
+    icon: ICONS.txt,
     data: {
       kind: "txt",
       content: `> PROFILE.TXT — SYSTEM USER DATA
@@ -997,14 +998,14 @@ export const desktopFileSystem: FileNode[] = [
     id: "system-command",
     name: "System Command",
     type: "program",
-    iconPath: ICONS.sysCmd,
+    icon: ICONS.sysCmd,
     data: { kind: "program", component: "SystemCommand" },
   },
   {
     id: "preferences",
     name: "Preferences",
     type: "program",
-    iconPath: ICONS.prefs,
+    icon: ICONS.prefs,
     data: { kind: "program", component: "Preferences" },
   },
 ];

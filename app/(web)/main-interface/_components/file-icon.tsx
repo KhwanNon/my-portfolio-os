@@ -1,7 +1,6 @@
 "use client";
 // FileIcon — shared icon component for desktop and folder views
 import { useState } from "react";
-import Image from "next/image";
 import type { FileNode } from "@/app/shared/types/file-system";
 import {
   useWindowManager,
@@ -13,6 +12,7 @@ import {
   absolutePathOf,
   pathSegmentsOf,
 } from "../_lib/properties-node";
+import { FileGraphic } from "./file-graphic";
 
 interface FileIconProps {
   fileNode: FileNode;
@@ -122,16 +122,18 @@ export const FileIcon = ({
     >
       {/* Icon */}
       <div
-        style={{ width: size, height: size }}
-        className="relative flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+        style={{
+          width: size,
+          height: size,
+          color: "var(--os-accent)",
+          opacity: selected ? 0.75 : 1,
+        }}
+        className="relative flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(82,211,214,0.85)]"
       >
-        <Image
-          src={fileNode.iconPath ?? "/assets/images/c-drive.png"}
-          alt={fileNode.name}
-          width={size}
-          height={size}
-          className="object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(82,211,214,0.85)]"
-          style={{ opacity: selected ? 0.7 : 1 }}
+        <FileGraphic
+          icon={fileNode.icon}
+          size={Math.round(size * 0.7)}
+          strokeWidth={1.4}
         />
         {selected && (
           <div

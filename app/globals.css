@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* ธีมที่ 1: Cyber Blue (Default) */
+  /* Theme 1: Cyber Blue (Default) */
   --os-bg: #182035;
   --os-accent: #52d3d6;
   --os-surface: #151e2f;
@@ -11,7 +11,7 @@
   --foreground: var(--os-accent);
 }
 
-/* ธีมที่ 2: Matrix Green (ดำ-เขียว) */
+/* Theme 2: Matrix Green */
 [data-theme="matrix"] {
   --os-bg: #020502;
   --os-accent: #00ff41;
@@ -19,7 +19,7 @@
   --os-header: #121a12;
 }
 
-/* ธีมที่ 3: Minimal Light (ขาวสบายตา) */
+/* Theme 3: Minimal Light */
 [data-theme="light"] {
   --os-bg: #f0f2f5;
   --os-accent: #2d3436;
@@ -40,27 +40,114 @@ body {
   color: var(--os-accent);
   font-family: var(--font-os-mono);
   overflow: hidden;
-  transition: all 0.3s ease; /* เพิ่ม Transition เพื่อให้เวลาเปลี่ยนธีมแล้วสีสมูทขึ้น */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ปิด Scanline ถ้าเป็นธีม Light เพื่อความสบายตา */
-[data-theme="light"]::before {
+/* ─── Utility classes used across boot + desktop ────────────────────────────── */
+
+/* CRT scanlines overlay — wear over any layer with z-index */
+.bg-scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.04) 0px,
+    rgba(255, 255, 255, 0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+/* Faint dot/grid pattern for the desktop background */
+.bg-ambient-grid {
+  background-image:
+    radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--os-accent) 18%, transparent) 1px,
+      transparent 1.4px
+    );
+  background-size: 28px 28px;
+}
+
+/* Soft vignette pulled toward the corners */
+.bg-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+}
+
+/* Glowing text — used for titles + the boot status header */
+.glow-text {
+  text-shadow:
+    0 0 6px color-mix(in srgb, var(--os-accent) 60%, transparent),
+    0 0 14px color-mix(in srgb, var(--os-accent) 35%, transparent);
+}
+
+/* Pulsing soft glow used by the boot button / focused windows */
+@keyframes os-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--os-accent) 0%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 18px 0 color-mix(in srgb, var(--os-accent) 35%, transparent);
+  }
+}
+.animate-pulse-glow {
+  animation: os-pulse-glow 2.4s ease-in-out infinite;
+}
+
+/* Slow horizontal sweep — adds life to backgrounds without distracting */
+@keyframes os-sweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-sweep {
+  animation: os-sweep 8s linear infinite;
+}
+
+/* Vertical CRT-style scan beam — a thin horizontal line that drifts top→bottom */
+@keyframes os-scan-y {
+  0%   { transform: translateY(-30vh); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+.animate-scan-y {
+  animation: os-scan-y 8s linear infinite;
+}
+
+/* Subtle flicker for the system bar / decorative elements */
+@keyframes os-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.7; }
+}
+.animate-flicker {
+  animation: os-flicker 5s infinite;
+}
+
+/* Light theme softens the visual fx so they don't fight the bright bg */
+[data-theme="light"] .bg-scanlines,
+[data-theme="light"] .bg-vignette,
+[data-theme="light"] .bg-ambient-grid {
   display: none;
 }
+[data-theme="light"] .glow-text {
+  text-shadow: none;
+}
 
-/* ใส่ใน globals.css */
+/* Custom scrollbar (already used by file/folder panes) */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--os-accent) 25%, transparent);
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--os-accent) 45%, transparent);
+}
+
+/* Misc helpers preserved from previous version */
 .rotate-270 {
   transform: rotate(-90deg);
-}
-
-/* ปรับ Scrollbar ให้เข้ากับธีม OS */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--os-accent);
-  opacity: 0.2;
 }

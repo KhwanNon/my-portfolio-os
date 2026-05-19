@@ -4,7 +4,8 @@ export interface FileNode {
   id: string;
   name: string;
   type: FileType;
-  iconPath?: string;
+  /** Key into the FileGraphic icon registry (e.g. "folder", "txt", "sysCmd"). */
+  icon?: string;
   data?: FileData;
 }
 

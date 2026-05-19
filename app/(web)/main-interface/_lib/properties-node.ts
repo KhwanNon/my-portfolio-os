@@ -31,7 +31,7 @@ export function makePropertiesNode(target: FileNode): FileNode {
     id: `props-${target.id}`,
     name: `Properties — ${target.name}`,
     type: "ui",
-    iconPath: target.iconPath,
+    icon: target.icon,
     data: {
       kind: "ui",
       component: "PropertiesUI",
@@ -39,7 +39,7 @@ export function makePropertiesNode(target: FileNode): FileNode {
         targetName: target.name,
         targetType: target.type,
         targetKind: KIND_LABELS[target.type] ?? target.type,
-        iconPath: target.iconPath,
+        icon: target.icon,
         absolutePath,
         sizeText: humanSize(fakeSize(target)),
         dateText: fakeDate(target),
