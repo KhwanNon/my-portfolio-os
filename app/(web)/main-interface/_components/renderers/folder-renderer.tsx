@@ -7,7 +7,6 @@ import { desktopFileSystem } from "../../_data/file-system-data";
 import {
   findPath,
   walkPath,
-  resolvePath,
   getDisplayPath,
   canonicalizePath,
   type Path,
@@ -38,21 +37,13 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
   const [path, setPath] = useState<Path>(initialPath);
   const [back, setBack] = useState<Path[]>([]);
-  const [forward, setForward] = useState<Path[]>([]);
-
-  const [editing, setEditing] = useState(false);
-  const [addressInput, setAddressInput] = useState("");
-  const [addressInvalid, setAddressInvalid] = useState(false);
 
   const displayPath = getDisplayPath(desktopFileSystem, path);
   const children = childrenAt(path);
 
-  // ── Navigation ─────────────────────────────────────────────────────────────
-
   const navigate = (next: Path) => {
     if (pathEquals(next, path)) return;
     setBack((b) => [...b, path]);
-    setForward([]);
     setPath(canonicalizePath(desktopFileSystem, next));
   };
 
@@ -60,59 +51,13 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
     if (back.length === 0) return;
     const prev = back[back.length - 1];
     setBack((b) => b.slice(0, -1));
-    setForward((f) => [...f, path]);
     setPath(prev);
-  };
-
-  const goForward = () => {
-    if (forward.length === 0) return;
-    const next = forward[forward.length - 1];
-    setForward((f) => f.slice(0, -1));
-    setBack((b) => [...b, path]);
-    setPath(next);
-  };
-
-  const goUp = () => {
-    if (path.length === 0) return;
-    navigate(path.slice(0, -1));
   };
 
   const navigateToCrumb = (idx: number) => {
     // idx -1 = root, 0..n-1 = path[idx]
     navigate(idx < 0 ? [] : path.slice(0, idx + 1));
   };
-
-  // ── Address bar ────────────────────────────────────────────────────────────
-
-  const beginEdit = () => {
-    setAddressInput(displayPath);
-    setAddressInvalid(false);
-    setEditing(true);
-  };
-
-  const cancelEdit = () => {
-    setEditing(false);
-    setAddressInvalid(false);
-  };
-
-  const submitAddress = () => {
-    const target = resolvePath([], addressInput);
-    const walked = walkPath(desktopFileSystem, target);
-    const isFolder =
-      walked?.kind === "root" ||
-      (walked?.kind === "node" &&
-        walked.node.type === "folder" &&
-        walked.node.data?.kind === "folder");
-    if (!isFolder) {
-      setAddressInvalid(true);
-      return;
-    }
-    navigate(target);
-    setEditing(false);
-    setAddressInvalid(false);
-  };
-
-  // ── Child click ────────────────────────────────────────────────────────────
 
   const handleChildClick = (child: FileNode) => {
     if (child.type === "folder" && child.data?.kind === "folder") {
@@ -124,8 +69,6 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
     }
   };
 
-  // ── Render ─────────────────────────────────────────────────────────────────
-
   const accent = "var(--os-accent)";
 
   return (
@@ -133,60 +76,71 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
       className="h-full w-full flex flex-col font-os-mono"
       style={{ background: "var(--os-surface)" }}
     >
-      {/* Toolbar */}
+      {/* Toolbar — back button + clickable breadcrumbs */}
       <div
-        className="flex items-center gap-1.5 px-2 py-2 shrink-0"
+        className="flex items-center gap-2 px-3 py-2 shrink-0"
         style={{
           borderBottom: "1px solid rgba(82,211,214,0.15)",
           background: "var(--os-header)",
           minHeight: 40,
         }}
       >
-        <NavButton onClick={goBack} disabled={back.length === 0} label="◀" title="Back" />
-        <NavButton onClick={goForward} disabled={forward.length === 0} label="▶" title="Forward" />
-        <NavButton onClick={goUp} disabled={path.length === 0} label="▲" title="Up" />
-
-        {/* Address bar */}
-        <div
-          className="flex-1 min-w-0 ml-1 px-2 py-1 rounded-sm"
+        <button
+          onClick={goBack}
+          disabled={back.length === 0}
+          title="Back"
+          className="px-2 py-0.5 text-[10px] tracking-widest rounded-sm transition-opacity disabled:opacity-20 hover:opacity-100 opacity-60 cursor-pointer shrink-0"
           style={{
-            border: `1px solid ${addressInvalid ? "rgba(255,107,107,0.6)" : "rgba(82,211,214,0.25)"}`,
-            background: "rgba(0,0,0,0.25)",
+            border: "1px solid rgba(82,211,214,0.25)",
+            color: accent,
+            background: "transparent",
           }}
         >
-          {editing ? (
-            <input
-              autoFocus
-              value={addressInput}
-              onChange={(e) => {
-                setAddressInput(e.target.value);
-                if (addressInvalid) setAddressInvalid(false);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") submitAddress();
-                else if (e.key === "Escape") cancelEdit();
-              }}
-              onBlur={cancelEdit}
-              spellCheck={false}
-              autoComplete="off"
-              className="w-full bg-transparent outline-none text-[11px] tracking-wider"
-              style={{ color: accent }}
-            />
-          ) : (
-            <div
-              onClick={beginEdit}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") beginEdit();
-              }}
-              role="textbox"
-              tabIndex={0}
-              className="w-full text-left text-[11px] tracking-wider truncate cursor-text outline-none"
-              style={{ color: accent }}
-              title="Click to edit path"
-            >
-              {renderBreadcrumb(path, navigateToCrumb)}
-            </div>
-          )}
+          ◀
+        </button>
+
+        {/* Breadcrumbs */}
+        <div className="flex items-center gap-1 min-w-0 overflow-x-auto text-[11px] tracking-widest">
+          <button
+            onClick={() => navigateToCrumb(-1)}
+            disabled={path.length === 0}
+            className="uppercase hover:underline cursor-pointer shrink-0 disabled:no-underline disabled:cursor-default"
+            style={{
+              color: accent,
+              opacity: path.length === 0 ? 1 : 0.55,
+              fontWeight: path.length === 0 ? "bold" : "normal",
+              background: "none",
+              border: "none",
+              padding: 0,
+            }}
+          >
+            ~
+          </button>
+          {path.map((seg, i) => {
+            const isLast = i === path.length - 1;
+            return (
+              <span key={i} className="inline-flex items-center gap-1 shrink-0">
+                <span className="opacity-30" style={{ color: accent }}>
+                  /
+                </span>
+                <button
+                  onClick={() => navigateToCrumb(i)}
+                  disabled={isLast}
+                  className="uppercase hover:underline cursor-pointer disabled:no-underline disabled:cursor-default truncate max-w-35"
+                  style={{
+                    color: accent,
+                    opacity: isLast ? 1 : 0.55,
+                    fontWeight: isLast ? "bold" : "normal",
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                  }}
+                >
+                  {seg}
+                </button>
+              </span>
+            );
+          })}
         </div>
       </div>
 
@@ -222,7 +176,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
         className="flex items-center justify-between px-3 py-1 shrink-0 text-[10px] tracking-widest opacity-50"
         style={{
           borderTop: "1px solid rgba(82,211,214,0.1)",
-          color: accent,
+          color: "var(--os-accent)",
         }}
       >
         <span>
@@ -234,36 +188,6 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
   );
 }
 
-// ─── Subcomponents ────────────────────────────────────────────────────────────
-
-function NavButton({
-  onClick,
-  disabled,
-  label,
-  title,
-}: {
-  onClick: () => void;
-  disabled?: boolean;
-  label: string;
-  title: string;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      title={title}
-      className="px-2 py-0.5 text-[10px] tracking-widest rounded-sm transition-opacity disabled:opacity-20 hover:opacity-100 opacity-60 cursor-pointer shrink-0"
-      style={{
-        border: "1px solid rgba(82,211,214,0.25)",
-        color: "var(--os-accent)",
-        background: "transparent",
-      }}
-    >
-      {label}
-    </button>
-  );
-}
-
 function CenterMessage({ text }: { text: string }) {
   return (
     <div
@@ -272,49 +196,6 @@ function CenterMessage({ text }: { text: string }) {
     >
       {text}
     </div>
-  );
-}
-
-function renderBreadcrumb(path: Path, onClick: (idx: number) => void) {
-  // Visible as buttons inside the address bar's idle state.
-  const accent = "var(--os-accent)";
-  return (
-    <span className="inline-flex items-center gap-1">
-      <span
-        onClick={(e) => {
-          e.stopPropagation();
-          onClick(-1);
-        }}
-        className="uppercase hover:underline cursor-pointer"
-        style={{ color: accent, opacity: path.length === 0 ? 1 : 0.6 }}
-      >
-        ~
-      </span>
-      {path.map((seg, i) => {
-        const isLast = i === path.length - 1;
-        return (
-          <span key={i} className="inline-flex items-center gap-1">
-            <span className="opacity-30" style={{ color: accent }}>
-              /
-            </span>
-            <span
-              onClick={(e) => {
-                e.stopPropagation();
-                onClick(i);
-              }}
-              className="uppercase hover:underline cursor-pointer"
-              style={{
-                color: accent,
-                opacity: isLast ? 1 : 0.6,
-                fontWeight: isLast ? "bold" : "normal",
-              }}
-            >
-              {seg}
-            </span>
-          </span>
-        );
-      })}
-    </span>
   );
 }
 
