@@ -56,7 +56,14 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
   const navigateToCrumb = (idx: number) => {
     // idx -1 = root, 0..n-1 = path[idx]
-    navigate(idx < 0 ? [] : path.slice(0, idx + 1));
+    const target = idx < 0 ? [] : path.slice(0, idx + 1);
+    if (pathEquals(target, path)) return;
+    const canonical = canonicalizePath(desktopFileSystem, target);
+    // Breadcrumbs always go up. Drop back-stack entries that sit inside the
+    // subtree we're leaving — otherwise "back" would jump forward into the
+    // deeper folder we just navigated up from.
+    setBack((b) => b.filter((entry) => !isPathPrefix(canonical, entry)));
+    setPath(canonical);
   };
 
   const handleChildClick = (child: FileNode) => {
@@ -202,5 +209,12 @@ function CenterMessage({ text }: { text: string }) {
 function pathEquals(a: Path, b: Path) {
   if (a.length !== b.length) return false;
   for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+
+/** True when `prefix` is an ancestor of (or equal to) `path`. */
+function isPathPrefix(prefix: Path, path: Path) {
+  if (path.length < prefix.length) return false;
+  for (let i = 0; i < prefix.length; i++) if (prefix[i] !== path[i]) return false;
   return true;
 }
