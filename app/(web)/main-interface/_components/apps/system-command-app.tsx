@@ -19,184 +19,24 @@ import {
   humanSize,
   permString,
   cowsay,
+  typeLabel,
+  childrenAt,
+  formatCompletionName,
+  longestCommonPrefix,
+  splitFlags,
+  extractN,
+  formatUptime,
+  FILE_KIND_DESC,
   MAN_PAGES,
   COMMAND_NAMES,
 } from "../../_lib/terminal-utils";
-import type { FileNode } from "@/app/shared/types/file-system";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface HistoryLine {
-  type: "system" | "input" | "output" | "error" | "success";
-  text: string;
-}
-
-// ─── Boot sequence ────────────────────────────────────────────────────────────
-
-const BOOT_LINES: HistoryLine[] = [
-  { type: "system",  text: "> Initializing System_Command..." },
-  { type: "system",  text: "> Loading C-DRIVE modules... [OK]" },
-  { type: "system",  text: "> Establishing admin @ portfolio session... [SUCCESS]" },
-  { type: "output",  text: "" },
-  { type: "output",  text: "  Welcome to Portfolio OS Terminal." },
-  { type: "output",  text: "  Type 'help' for commands. Try 'man <cmd>' for details." },
-  { type: "output",  text: "" },
-];
-
-// ─── Help text ────────────────────────────────────────────────────────────────
-
-const HELP_TEXT = `
-  COMMANDS — run 'man <cmd>' for details
-  ────────────────────────────────────────────────
-  Filesystem   ls   cd   pwd   cat   open   tree   find   file
-  Text         head tail cat   echo
-  System       whoami  neofetch  date  uptime  history
-  Reference    help    man <cmd>      which <cmd>
-  Misc         clear   exit    cowsay
-  ────────────────────────────────────────────────
-
-  PATH SYNTAX
-  ────────────────────────────────────────────────
-    ~                 root (home)
-    /                 root
-    .                 current directory
-    ..                parent directory
-    foo/bar           relative, nested
-    ~/c-drive/skills  absolute, nested
-  ────────────────────────────────────────────────
-
-  EXAMPLES
-  ────────────────────────────────────────────────
-    cd c-drive/projects/mobile
-    ls -l ~/c-drive/about
-    tree ~/c-drive/skills
-    find resume
-    cat ~/profile.txt
-    open ~/c-drive/about/me.ui
-  ────────────────────────────────────────────────
-`;
-
-// ─── Static info ──────────────────────────────────────────────────────────────
-
-const WHOAMI_TEXT = `
-  ┌─────────────────────────────────────────────┐
-  │  USER PROFILE                               │
-  ├─────────────────────────────────────────────┤
-  │  Name        :  Khwanchai Nontawichit       │
-  │  Alias       :  Khwan                       │
-  │  Role        :  Mobile Developer (Flutter)  │
-  │  Experience  :  3+ Years                    │
-  │  Location    :  Thailand                    │
-  │  Status      :  Open to Opportunities       │
-  └─────────────────────────────────────────────┘
-`;
-
-const NEOFETCH_TEXT = `
-                         admin@portfolio
-  ██████████           ─────────────────────────────
-  ██████████           OS      :  Portfolio OS 2.4.0
-  ██████████           Build   :  2024.Alpha
-  ██████████           Shell   :  sys-cmd v1.0
-  ██████████           Stack   :  Flutter · React · Next.js
-                       Lang    :  Dart · TypeScript
-  ████    ████         Arch    :  Clean Architecture
-  ████    ████         Memory  :  3+ years of experience
-  ████    ████         Uptime  :  Available now
-`;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function typeLabel(type: string): string {
-  const map: Record<string, string> = {
-    folder:  "DIR  ",
-    txt:     "TXT  ",
-    pdf:     "PDF  ",
-    ui:      "UI   ",
-    slide:   "SLIDE",
-    link:    "LINK ",
-    program: "EXE  ",
-  };
-  return map[type] ?? type.toUpperCase().padEnd(5);
-}
-
-function childrenAt(path: Path): FileNode[] | null {
-  const walked = walkPath(desktopFileSystem, path);
-  if (!walked) return null;
-  if (walked.kind === "root") return walked.children;
-  if (walked.node.type === "folder" && walked.node.data?.kind === "folder") {
-    return walked.node.data.children;
-  }
-  return null;
-}
-
-function formatCompletionName(n: FileNode): string {
-  const safe = n.name.replace(/\s+/g, "-");
-  return n.type === "folder" ? `${safe}/` : safe;
-}
-
-function longestCommonPrefix(strs: string[]): string {
-  if (strs.length === 0) return "";
-  let lcp = strs[0];
-  for (const s of strs) {
-    while (!s.toLowerCase().startsWith(lcp.toLowerCase())) {
-      lcp = lcp.slice(0, -1);
-      if (lcp === "") return "";
-    }
-  }
-  return lcp;
-}
-
-/** Pull short single-letter flags out of args: "ls -la foo" → flags={l,a}, rest=["foo"]. */
-function splitFlags(args: string[]): { flags: Set<string>; rest: string[] } {
-  const flags = new Set<string>();
-  const rest: string[] = [];
-  for (const a of args) {
-    if (a.length > 1 && a.startsWith("-") && !a.startsWith("--") && !/^-\d/.test(a)) {
-      for (const ch of a.slice(1)) flags.add(ch);
-    } else {
-      rest.push(a);
-    }
-  }
-  return { flags, rest };
-}
-
-/** Extract `-n N` (or `-nN`) from args, with sane default. */
-function extractN(args: string[], defaultN = 10): { n: number; rest: string[] } {
-  let n = defaultN;
-  const rest: string[] = [];
-  for (let i = 0; i < args.length; i++) {
-    const a = args[i];
-    if (a === "-n" && i + 1 < args.length) {
-      const parsed = parseInt(args[++i], 10);
-      if (!isNaN(parsed) && parsed > 0) n = parsed;
-    } else if (a.startsWith("-n") && a.length > 2) {
-      const parsed = parseInt(a.slice(2), 10);
-      if (!isNaN(parsed) && parsed > 0) n = parsed;
-    } else {
-      rest.push(a);
-    }
-  }
-  return { n, rest };
-}
-
-function formatUptime(ms: number): string {
-  const s = Math.floor(ms / 1000);
-  const m = Math.floor(s / 60);
-  const h = Math.floor(m / 60);
-  if (h > 0) return `${h}h ${m % 60}m ${s % 60}s`;
-  if (m > 0) return `${m}m ${s % 60}s`;
-  return `${s}s`;
-}
-
-const FILE_KIND_DESC: Record<string, string> = {
-  folder:  "directory",
-  txt:     "ASCII text",
-  pdf:     "PDF document",
-  ui:      "Portfolio UI component",
-  slide:   "Image slideshow",
-  link:    "URL shortcut",
-  program: "Executable program",
-};
+import {
+  type HistoryLine,
+  BOOT_LINES,
+  HELP_TEXT,
+  WHOAMI_TEXT,
+  NEOFETCH_TEXT,
+} from "../../_lib/terminal-content";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -286,7 +126,7 @@ export function SystemCommandApp() {
       const { flags, rest } = splitFlags(args);
       const arg = rest[0] ?? "";
       const targetPath = arg ? resolvePath(cwd, arg) : cwd;
-      const children = childrenAt(targetPath);
+      const children = childrenAt(desktopFileSystem, targetPath);
 
       if (children === null) {
         const walked = walkPath(desktopFileSystem, targetPath);
@@ -393,7 +233,7 @@ export function SystemCommandApp() {
     (args: string[]) => {
       const arg = args[0] ?? "";
       const targetPath = arg ? resolvePath(cwd, arg) : cwd;
-      const children = childrenAt(targetPath);
+      const children = childrenAt(desktopFileSystem, targetPath);
       if (children === null) {
         err(`no such directory: ${arg}`);
         return;
@@ -412,7 +252,7 @@ export function SystemCommandApp() {
       if (!needle) { err("usage: find <name> [path]"); return; }
       const startArg = args[1] ?? "";
       const startPath = startArg ? resolvePath(cwd, startArg) : cwd;
-      const children = childrenAt(startPath);
+      const children = childrenAt(desktopFileSystem, startPath);
       if (children === null) {
         err(`no such directory: ${startArg}`);
         return;

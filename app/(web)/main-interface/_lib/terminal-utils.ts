@@ -1,5 +1,5 @@
 import type { FileNode } from "@/app/shared/types/file-system";
-import type { Path } from "./path-resolver";
+import { walkPath, type Path } from "./path-resolver";
 
 // ─── Deterministic mock metadata (so `ls -l` looks real) ─────────────────────
 
@@ -145,3 +145,104 @@ export const MAN_PAGES: Record<string, string> = {
 };
 
 export const COMMAND_NAMES = Object.keys(MAN_PAGES);
+
+// ─── Display labels ──────────────────────────────────────────────────────────
+
+const TYPE_LABELS: Record<string, string> = {
+  folder:  "DIR  ",
+  txt:     "TXT  ",
+  pdf:     "PDF  ",
+  ui:      "UI   ",
+  slide:   "SLIDE",
+  link:    "LINK ",
+  program: "EXE  ",
+};
+
+export function typeLabel(type: string): string {
+  return TYPE_LABELS[type] ?? type.toUpperCase().padEnd(5);
+}
+
+export const FILE_KIND_DESC: Record<string, string> = {
+  folder:  "directory",
+  txt:     "ASCII text",
+  pdf:     "PDF document",
+  ui:      "Portfolio UI component",
+  slide:   "Image slideshow",
+  link:    "URL shortcut",
+  program: "Executable program",
+};
+
+// ─── Filesystem navigation ───────────────────────────────────────────────────
+
+/** Children of the folder at `path`, or null if it isn't a folder. */
+export function childrenAt(tree: FileNode[], path: Path): FileNode[] | null {
+  const walked = walkPath(tree, path);
+  if (!walked) return null;
+  if (walked.kind === "root") return walked.children;
+  if (walked.node.type === "folder" && walked.node.data?.kind === "folder") {
+    return walked.node.data.children;
+  }
+  return null;
+}
+
+/** Filename for tab-completion: spaces hyphenated, trailing slash on folders. */
+export function formatCompletionName(n: FileNode): string {
+  const safe = n.name.replace(/\s+/g, "-");
+  return n.type === "folder" ? `${safe}/` : safe;
+}
+
+// ─── Argument parsing ────────────────────────────────────────────────────────
+
+export function longestCommonPrefix(strs: string[]): string {
+  if (strs.length === 0) return "";
+  let lcp = strs[0];
+  for (const s of strs) {
+    while (!s.toLowerCase().startsWith(lcp.toLowerCase())) {
+      lcp = lcp.slice(0, -1);
+      if (lcp === "") return "";
+    }
+  }
+  return lcp;
+}
+
+/** Pull short single-letter flags out of args: "ls -la foo" → flags={l,a}, rest=["foo"]. */
+export function splitFlags(args: string[]): { flags: Set<string>; rest: string[] } {
+  const flags = new Set<string>();
+  const rest: string[] = [];
+  for (const a of args) {
+    if (a.length > 1 && a.startsWith("-") && !a.startsWith("--") && !/^-\d/.test(a)) {
+      for (const ch of a.slice(1)) flags.add(ch);
+    } else {
+      rest.push(a);
+    }
+  }
+  return { flags, rest };
+}
+
+/** Extract `-n N` (or `-nN`) from args, with sane default. */
+export function extractN(args: string[], defaultN = 10): { n: number; rest: string[] } {
+  let n = defaultN;
+  const rest: string[] = [];
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+    if (a === "-n" && i + 1 < args.length) {
+      const parsed = parseInt(args[++i], 10);
+      if (!isNaN(parsed) && parsed > 0) n = parsed;
+    } else if (a.startsWith("-n") && a.length > 2) {
+      const parsed = parseInt(a.slice(2), 10);
+      if (!isNaN(parsed) && parsed > 0) n = parsed;
+    } else {
+      rest.push(a);
+    }
+  }
+  return { n, rest };
+}
+
+export function formatUptime(ms: number): string {
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  const h = Math.floor(m / 60);
+  if (h > 0) return `${h}h ${m % 60}m ${s % 60}s`;
+  if (m > 0) return `${m}m ${s % 60}s`;
+  return `${s}s`;
+}
