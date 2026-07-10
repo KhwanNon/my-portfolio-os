@@ -4,7 +4,7 @@ import { SectionTitle, Badge, Bar, Card, Wrapper } from "./primitives";
 // SkillsUI — Props: { title, items: { name, level? }[], layout?: "bars" | "badges" }
 
 interface SkillItem { name: string; level?: number }
-interface SkillsUIProps extends Record<string, unknown> {
+interface SkillsUIProps {
   title?: string;
   items?: SkillItem[];
   layout?: "bars" | "badges";
@@ -25,7 +25,7 @@ export function SkillsUI({ title = "Skills", items = [], layout = "bars" }: Skil
 // SoftSkillsUI — Props: { skills: { name, description? }[] }
 
 interface SoftSkill { name: string; description?: string }
-interface SoftSkillsUIProps extends Record<string, unknown> {
+interface SoftSkillsUIProps {
   skills?: SoftSkill[];
 }
 

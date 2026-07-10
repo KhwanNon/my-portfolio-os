@@ -4,7 +4,7 @@ import { Card, Wrapper, Row } from "./primitives";
 
 // PropertiesUI — Props: { targetName, targetKind, icon?, absolutePath, sizeText, dateText, itemCount? }
 
-interface PropertiesUIProps extends Record<string, unknown> {
+interface PropertiesUIProps {
   targetName?: string;
   targetType?: string;
   targetKind?: string;

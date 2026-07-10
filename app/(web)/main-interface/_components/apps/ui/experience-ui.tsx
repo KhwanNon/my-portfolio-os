@@ -3,7 +3,7 @@ import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 
 // ExperienceDescriptionUI — Props: { role, company, period, duration, description, highlights[] }
 
-interface ExperienceDescriptionUIProps extends Record<string, unknown> {
+interface ExperienceDescriptionUIProps {
   role?: string;
   company?: string;
   period?: string;
@@ -52,7 +52,7 @@ export function ExperienceDescriptionUI({
 
 // TechStackUI — Props: { title?, techs: string[] }
 
-interface TechStackUIProps extends Record<string, unknown> {
+interface TechStackUIProps {
   title?: string;
   techs?: string[];
 }

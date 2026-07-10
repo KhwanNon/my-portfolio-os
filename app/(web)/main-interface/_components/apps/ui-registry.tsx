@@ -8,8 +8,9 @@ import { PersonalBioUI, HobbiesUI, ContactUI } from "./ui/about-ui";
 import { ProjectDescriptionUI } from "./ui/project-ui";
 import { PropertiesUI, AboutOSUI } from "./ui/system-ui";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const UI_COMPONENT_REGISTRY: Record<string, React.ComponentType<any>> = {
+// Single source of truth: component name → component. Both the runtime renderer
+// and the compile-time authoring types below are derived from this one object.
+const REGISTRY = {
   SkillsUI,
   SoftSkillsUI,
   ExperienceDescriptionUI,
@@ -22,3 +23,15 @@ export const UI_COMPONENT_REGISTRY: Record<string, React.ComponentType<any>> = {
   PropertiesUI,
   AboutOSUI,
 };
+
+// Widened view for the renderer, which dispatches on a runtime `component` string.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const UI_COMPONENT_REGISTRY: Record<string, React.ComponentType<any>> = REGISTRY;
+
+/** Every valid `component` name — e.g. `"SkillsUI"`. */
+export type UiComponentName = keyof typeof REGISTRY;
+
+/** The exact props a given UI component expects, derived from the component itself. */
+export type UiComponentProps<K extends UiComponentName> = React.ComponentProps<
+  (typeof REGISTRY)[K]
+>;

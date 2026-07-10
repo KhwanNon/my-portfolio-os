@@ -3,7 +3,7 @@ import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 
 // EducationUI — Props: { type, institution, field, period, description?, subjects?, gpa? }
 
-interface EducationUIProps extends Record<string, unknown> {
+interface EducationUIProps {
   type?: string;
   institution?: string;
   field?: string;

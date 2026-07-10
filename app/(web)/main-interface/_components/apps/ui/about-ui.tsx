@@ -4,7 +4,7 @@ import { SectionTitle, Card, Wrapper } from "./primitives";
 // PersonalBioUI — Props: { bio, facts?: { label, value }[] }
 
 interface Fact { label: string; value: string }
-interface PersonalBioUIProps extends Record<string, unknown> {
+interface PersonalBioUIProps {
   bio?: string;
   facts?: Fact[];
 }
@@ -39,7 +39,7 @@ export function PersonalBioUI({ bio = "", facts = [] }: PersonalBioUIProps) {
 // HobbiesUI — Props: { items: { name, emoji?, description? }[] }
 
 interface HobbyItem { name: string; emoji?: string; description?: string }
-interface HobbiesUIProps extends Record<string, unknown> {
+interface HobbiesUIProps {
   items?: HobbyItem[];
 }
 
@@ -67,7 +67,7 @@ export function HobbiesUI({ items = [] }: HobbiesUIProps) {
 // ContactUI — Props: { links: { label, value, href }[] }
 
 interface ContactLink { label: string; value: string; href: string }
-interface ContactUIProps extends Record<string, unknown> {
+interface ContactUIProps {
   links?: ContactLink[];
 }
 

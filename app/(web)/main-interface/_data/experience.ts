@@ -1,12 +1,14 @@
 import type { FileNode } from "@/app/shared/types/file-system";
+import type { UiComponentProps } from "../_components/apps/ui-registry";
 import { ICONS } from "./icons";
+import { uiNode } from "./ui-node";
 
 /** Build a company folder: role description UI + tech-stack UI + company link. */
 function makeCompanyFolder(
   id: string,
   name: string,
-  descProps: object,
-  stackProps: object,
+  descProps: UiComponentProps<"ExperienceDescriptionUI">,
+  stackProps: UiComponentProps<"TechStackUI">,
   link: string,
 ): FileNode {
   return {
@@ -17,24 +19,16 @@ function makeCompanyFolder(
     data: {
       kind: "folder",
       children: [
-        {
-          id: `${id}-desc`,
-          name: "description.ui",
-          type: "ui",
-          icon: ICONS.ui,
-          data: {
-            kind: "ui",
-            component: "ExperienceDescriptionUI",
-            props: descProps,
-          },
-        },
-        {
-          id: `${id}-stack`,
-          name: "tech_stack.ui",
-          type: "ui",
-          icon: ICONS.ui,
-          data: { kind: "ui", component: "TechStackUI", props: stackProps },
-        },
+        uiNode(
+          { id: `${id}-desc`, name: "description.ui" },
+          "ExperienceDescriptionUI",
+          descProps,
+        ),
+        uiNode(
+          { id: `${id}-stack`, name: "tech_stack.ui" },
+          "TechStackUI",
+          stackProps,
+        ),
         {
           id: `${id}-link`,
           name: "company.link",

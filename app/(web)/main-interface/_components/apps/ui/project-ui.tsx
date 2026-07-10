@@ -3,7 +3,7 @@ import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 
 // ProjectDescriptionUI — Props: { name, type?, description, highlights[], stack[], status, year, platform? }
 
-interface ProjectDescriptionUIProps extends Record<string, unknown> {
+interface ProjectDescriptionUIProps {
   name?: string;
   type?: string;
   description?: string;

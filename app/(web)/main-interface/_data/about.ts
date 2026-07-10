@@ -1,5 +1,6 @@
 import type { FileNode } from "@/app/shared/types/file-system";
 import { ICONS } from "./icons";
+import { uiNode } from "./ui-node";
 
 const connectivityFolder: FileNode = {
   id: "about-connectivity",
@@ -20,40 +21,30 @@ const connectivityFolder: FileNode = {
           filename: "Khwanchai_Resume.pdf",
         },
       },
-      {
-        id: "about-contact",
-        name: "contact.ui",
-        type: "ui",
-        icon: ICONS.ui,
-        data: {
-          kind: "ui",
-          component: "ContactUI",
-          props: {
-            links: [
-              {
-                label: "Email",
-                value: "your.email@example.com",
-                href: "mailto:your.email@example.com",
-              },
-              {
-                label: "GitHub",
-                value: "github.com/your-username",
-                href: "https://github.com/your-username",
-              },
-              {
-                label: "LinkedIn",
-                value: "linkedin.com/in/your-profile",
-                href: "https://linkedin.com/in/your-profile",
-              },
-              {
-                label: "Line",
-                value: "@your-line-id",
-                href: "https://line.me/ti/p/~your-line-id",
-              },
-            ],
+      uiNode({ id: "about-contact", name: "contact.ui" }, "ContactUI", {
+        links: [
+          {
+            label: "Email",
+            value: "your.email@example.com",
+            href: "mailto:your.email@example.com",
           },
-        },
-      },
+          {
+            label: "GitHub",
+            value: "github.com/your-username",
+            href: "https://github.com/your-username",
+          },
+          {
+            label: "LinkedIn",
+            value: "linkedin.com/in/your-profile",
+            href: "https://linkedin.com/in/your-profile",
+          },
+          {
+            label: "Line",
+            value: "@your-line-id",
+            href: "https://line.me/ti/p/~your-line-id",
+          },
+        ],
+      }),
       {
         id: "about-line-link",
         name: "line.link",
@@ -80,78 +71,57 @@ export const aboutFolder: FileNode = {
   data: {
     kind: "folder",
     children: [
-      {
-        id: "about-me",
-        name: "me.ui",
-        type: "ui",
-        icon: ICONS.ui,
-        data: {
-          kind: "ui",
-          component: "PersonalBioUI",
-          props: {
-            bio: "Hello! I'm Khwanchai Nontawichit (Khwan) — a 26-year-old Mobile Developer from Thailand with 3+ years of professional Flutter experience. I specialize in Clean Architecture and love building apps that are fast, maintainable, and a joy to use. I lead teams, mentor juniors, and care deeply about code quality and shipping reliable products.",
-            facts: [
-              { label: "Name", value: "Khwanchai Nontawichit" },
-              { label: "Alias", value: "Khwan" },
-              { label: "Age", value: "26" },
-              { label: "Location", value: "Thailand" },
-              { label: "Role", value: "Mobile Developer" },
-              { label: "Experience", value: "3+ Years" },
-              { label: "Main Stack", value: "Flutter · Dart" },
-              { label: "Status", value: "Open to Opportunities" },
-            ],
+      uiNode({ id: "about-me", name: "me.ui" }, "PersonalBioUI", {
+        bio: "Hello! I'm Khwanchai Nontawichit (Khwan) — a 26-year-old Mobile Developer from Thailand with 3+ years of professional Flutter experience. I specialize in Clean Architecture and love building apps that are fast, maintainable, and a joy to use. I lead teams, mentor juniors, and care deeply about code quality and shipping reliable products.",
+        facts: [
+          { label: "Name", value: "Khwanchai Nontawichit" },
+          { label: "Alias", value: "Khwan" },
+          { label: "Age", value: "26" },
+          { label: "Location", value: "Thailand" },
+          { label: "Role", value: "Mobile Developer" },
+          { label: "Experience", value: "3+ Years" },
+          { label: "Main Stack", value: "Flutter · Dart" },
+          { label: "Status", value: "Open to Opportunities" },
+        ],
+      }),
+      uiNode({ id: "about-hobbies", name: "hobbies.ui" }, "HobbiesUI", {
+        items: [
+          {
+            name: "Coding",
+            emoji: "💻",
+            description:
+              "Side projects, exploring new frameworks, contributing to open source.",
           },
-        },
-      },
-      {
-        id: "about-hobbies",
-        name: "hobbies.ui",
-        type: "ui",
-        icon: ICONS.ui,
-        data: {
-          kind: "ui",
-          component: "HobbiesUI",
-          props: {
-            items: [
-              {
-                name: "Coding",
-                emoji: "💻",
-                description:
-                  "Side projects, exploring new frameworks, contributing to open source.",
-              },
-              {
-                name: "Gaming",
-                emoji: "🎮",
-                description:
-                  "Strategy and RPG games. Appreciates good UX even in games.",
-              },
-              {
-                name: "Coffee",
-                emoji: "☕",
-                description:
-                  "Serious about coffee. Prefers coding with a good pour-over.",
-              },
-              {
-                name: "Reading",
-                emoji: "📖",
-                description:
-                  "Tech blogs, architecture books, and the occasional manga.",
-              },
-              {
-                name: "Music",
-                emoji: "🎵",
-                description:
-                  "Lo-fi and jazz while coding. Silence for debugging.",
-              },
-              {
-                name: "Traveling",
-                emoji: "✈️",
-                description: "Exploring new cities and cultures when offline.",
-              },
-            ],
+          {
+            name: "Gaming",
+            emoji: "🎮",
+            description:
+              "Strategy and RPG games. Appreciates good UX even in games.",
           },
-        },
-      },
+          {
+            name: "Coffee",
+            emoji: "☕",
+            description:
+              "Serious about coffee. Prefers coding with a good pour-over.",
+          },
+          {
+            name: "Reading",
+            emoji: "📖",
+            description:
+              "Tech blogs, architecture books, and the occasional manga.",
+          },
+          {
+            name: "Music",
+            emoji: "🎵",
+            description: "Lo-fi and jazz while coding. Silence for debugging.",
+          },
+          {
+            name: "Traveling",
+            emoji: "✈️",
+            description: "Exploring new cities and cultures when offline.",
+          },
+        ],
+      }),
       {
         id: "about-setup",
         name: "setup.txt",
