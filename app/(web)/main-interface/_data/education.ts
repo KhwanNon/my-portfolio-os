@@ -15,11 +15,11 @@ export const educationFolder: FileNode = {
         "EducationUI",
         {
           type: "High School Diploma",
-          institution: "School Name, Thailand",
+          institution: "Sanam Chai Khet School — Chachoengsao, Thailand",
           field: "Science & Mathematics",
-          period: "2014 – 2017",
+          period: "2011 – 2017",
           description:
-            "Focused on mathematics, physics, and computer fundamentals.",
+            "Completed a comprehensive high school curriculum while participating in extracurricular activities that built interpersonal and leadership skills.",
           subjects: [
             "Mathematics",
             "Physics",
@@ -34,11 +34,11 @@ export const educationFolder: FileNode = {
         "EducationUI",
         {
           type: "Bachelor of Science",
-          institution: "University Name, Thailand",
-          field: "Computer Science / Information Technology",
-          period: "2018 – 2022",
+          institution: "Burapha University — Chonburi, Thailand",
+          field: "Software Engineering",
+          period: "2017 – 2021",
           description:
-            "4-year program covering software engineering fundamentals, data structures, algorithms, database systems, and software architecture.",
+            "Comprehensive software engineering curriculum — development, algorithms, and databases — with hands-on projects applying theory to real-world scenarios.",
           subjects: [
             "Data Structures & Algorithms",
             "OOP Design",

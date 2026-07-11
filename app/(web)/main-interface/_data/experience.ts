@@ -3,41 +3,43 @@ import type { UiComponentProps } from "../_components/apps/ui-registry";
 import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
 
-/** Build a company folder: role description UI + tech-stack UI + company link. */
+/** Build a company folder: role description UI + tech-stack UI + optional company link. */
 function makeCompanyFolder(
   id: string,
   name: string,
   descProps: UiComponentProps<"ExperienceDescriptionUI">,
   stackProps: UiComponentProps<"TechStackUI">,
-  link: string,
+  link?: string,
 ): FileNode {
+  const children: FileNode[] = [
+    uiNode(
+      { id: `${id}-desc`, name: "description.ui" },
+      "ExperienceDescriptionUI",
+      descProps,
+    ),
+    uiNode(
+      { id: `${id}-stack`, name: "tech_stack.ui" },
+      "TechStackUI",
+      stackProps,
+    ),
+  ];
+
+  if (link) {
+    children.push({
+      id: `${id}-link`,
+      name: "company.link",
+      type: "link",
+      icon: ICONS.link,
+      data: { kind: "link", url: link },
+    });
+  }
+
   return {
     id,
     name,
     type: "folder",
     icon: ICONS.folder,
-    data: {
-      kind: "folder",
-      children: [
-        uiNode(
-          { id: `${id}-desc`, name: "description.ui" },
-          "ExperienceDescriptionUI",
-          descProps,
-        ),
-        uiNode(
-          { id: `${id}-stack`, name: "tech_stack.ui" },
-          "TechStackUI",
-          stackProps,
-        ),
-        {
-          id: `${id}-link`,
-          name: "company.link",
-          type: "link",
-          icon: ICONS.link,
-          data: { kind: "link", url: link },
-        },
-      ],
-    },
+    data: { kind: "folder", children },
   };
 }
 
@@ -50,73 +52,80 @@ export const experienceFolder: FileNode = {
     kind: "folder",
     children: [
       makeCompanyFolder(
-        "exp-company-a",
-        "2022-Present — Company A",
+        "exp-learncloud",
+        "2024-Present — LearnCloud",
         {
-          role: "Senior Flutter Developer",
-          company: "Company A",
-          period: "2022 – Present",
-          duration: "3+ Years",
+          role: "Mobile App Developer / Mobile Team Lead",
+          company: "LEARNCLOUD CO., LTD. — Bangkok, Thailand",
+          period: "01/2024 – Present",
+          duration: "2.5+ Years",
           description:
-            "Lead developer responsible for architecture decisions, feature delivery, and team mentoring across multiple Flutter applications serving thousands of daily active users.",
+            "Leading Flutter development from scratch with Clean Architecture — from planning and UX/UI collaboration through store deployment and release management.",
           highlights: [
-            "Architected Clean Architecture foundation adopted across all mobile products",
-            "Led team of 4 developers — code reviews, sprint planning, and 1-on-1 mentoring",
-            "Reduced app crash rate by 60% through structured error handling and monitoring",
-            "Shipped 12 major releases with zero critical production incidents",
-            "Introduced BLoC pattern, cutting state-related bug reports by 40%",
-            "Integrated CI/CD with GitHub Actions + Fastlane for automated delivery",
+            "Led the development of Flutter applications from scratch, implementing Clean Architecture",
+            "Collaborated with backend, AI, and design teams, contributing ideas and assisting in UX/UI design",
+            "Participated in Scrum-based planning meetings to ensure smooth project execution",
+            "Managed app deployment to both the App Store & Play Store",
+            "Oversaw version control, release management, and test build distribution",
+            "Served as Mobile Team Lead, assigning tasks and managing workflows using Jira",
           ],
         },
         {
-          title: "Tech Stack — Company A",
+          title: "Tech Stack — LearnCloud",
           techs: [
             "Flutter",
             "Dart",
-            "BLoC",
             "Clean Architecture",
-            "Firebase",
-            "REST API",
-            "GitHub Actions",
-            "Fastlane",
-            "GetIt",
-            "Dio",
-            "Hive",
+            "Git",
+            "Jira",
+            "App Store Connect",
+            "Play Console",
           ],
         },
-        "https://company-a.com",
       ),
       makeCompanyFolder(
-        "exp-company-b",
-        "2021-2022 — Company B",
+        "exp-myorder",
+        "2023 — MyOrder",
         {
-          role: "Junior Flutter Developer",
-          company: "Company B",
-          period: "2021 – 2022",
-          duration: "1 Year",
+          role: "Mobile Developer",
+          company: "MYORDER MARKETING CO., LTD. — Chon Buri, Thailand",
+          period: "05/2023 – 10/2023",
+          duration: "6 Months",
           description:
-            "First professional role — contributed to feature development, API integrations, and bug fixing across two live mobile products.",
+            "Developed and maintained cross-platform mobile applications with Flutter and React Native in a collaborative product team.",
           highlights: [
-            "Developed 8 new feature screens from Figma designs to production",
-            "Integrated REST APIs with error handling and retry logic",
-            "Participated in 2-week agile sprints with daily standups",
-            "Wrote unit tests achieving 60% coverage on new features",
-            "Improved app startup time by 30% through lazy initialization",
+            "Developed mobile applications using Flutter and React Native",
+            "Worked with a team of developers to maintain and enhance applications",
+            "Contributed to project planning, design discussions, and team meetings",
           ],
         },
         {
-          title: "Tech Stack — Company B",
-          techs: [
-            "Flutter",
-            "Dart",
-            "Provider",
-            "REST API",
-            "Firebase",
-            "Git",
-            "Figma",
+          title: "Tech Stack — MyOrder",
+          techs: ["Flutter", "React Native", "TypeScript", "Dart", "Git"],
+        },
+      ),
+      makeCompanyFolder(
+        "exp-minerta",
+        "2021-2023 — Minerta",
+        {
+          role: "Mobile Developer",
+          company: "MINERTA TECHNOLOGY CO., LTD. — Bangkok, Thailand",
+          period: "09/2021 – 04/2023",
+          duration: "1 Year 8 Months",
+          description:
+            "Built mobile and web applications while mentoring junior developers on best practices, code reviews, and maintainability.",
+          highlights: [
+            "Developed mobile and web applications",
+            "Mentored junior developers, providing guidance on best practices, code reviews, and improving maintainability",
+            "Worked in a collaborative team to maintain and enhance applications",
+            "Assisted senior developers in coding, testing, and debugging mobile applications",
+            "Participated in team meetings and contributed to project planning & design discussions",
           ],
         },
-        "https://company-b.com",
+        {
+          title: "Tech Stack — Minerta",
+          techs: ["Flutter", "React Native", "Nuxt", "TypeScript", "Dart", "Git"],
+        },
       ),
     ],
   },
