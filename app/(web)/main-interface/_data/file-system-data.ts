@@ -34,8 +34,9 @@ const profileTxt: FileNode = {
     content: `> PROFILE.TXT — SYSTEM USER DATA
 > ─────────────────────────────────────────
 
-  Hello, my name is Khwan, a 26-year-old Mobile Developer
-  with over 3 years of experience in Flutter development.
+  Hello, my name is Khwan, a Mobile Developer with over
+  4 years of experience in Flutter development — currently
+  in a full-stack role owning the mobile product end-to-end.
 
   I have a strong background in leading development teams,
   structuring applications with Clean Architecture, and
@@ -50,10 +51,10 @@ const profileTxt: FileNode = {
 ──────────────────────────────────────────────────────
   Developer   :  Khwanchai Nontawichit
   Alias       :  Khwan
-  Role        :  Mobile Developer (Flutter)
-  Experience  :  3+ Years
+  Role        :  Mobile Developer (Flutter) · Full-Stack
+  Experience  :  4+ Years
   Location    :  Thailand
-  Stack       :  Flutter · Dart · React · Next.js · TypeScript
+  Stack       :  Flutter · Dart · Go · Vue · React · TypeScript
 ──────────────────────────────────────────────────────
 
 > END OF FILE`,

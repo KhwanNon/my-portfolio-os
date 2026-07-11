@@ -1,28 +1,38 @@
 "use client";
-import { SectionTitle, Badge, Bar, Card, Wrapper } from "./primitives";
+import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 import { TechIcon } from "./tech-icon";
 
-// SkillsUI — Props: { title, items: { name, level? }[], layout?: "bars" | "badges" }
+// SkillsUI — Props: { title, items: { name, note? }[], layout?: "list" | "badges" }
+// `note` states verifiable context ("production daily · since 2021"), not a made-up score.
 
-interface SkillItem { name: string; level?: number }
+interface SkillItem { name: string; note?: string }
 interface SkillsUIProps {
   title?: string;
   items?: SkillItem[];
-  layout?: "bars" | "badges";
+  layout?: "list" | "badges";
 }
 
-export function SkillsUI({ title = "Skills", items = [], layout = "bars" }: SkillsUIProps) {
+export function SkillsUI({ title = "Skills", items = [], layout = "list" }: SkillsUIProps) {
   return (
     <Wrapper>
       <SectionTitle>{title}</SectionTitle>
-      {layout === "bars"
+      {layout === "list"
         ? items.map((s) => (
-            <Bar
+            <div
               key={s.name}
-              label={s.name}
-              value={s.level ?? 80}
-              icon={<TechIcon name={s.name} />}
-            />
+              className="flex items-baseline justify-between gap-4 py-1.5 border-b last:border-b-0"
+              style={{ borderColor: "rgba(82,211,214,0.08)" }}
+            >
+              <span className="inline-flex items-center gap-2 text-[11px]">
+                <TechIcon name={s.name} />
+                {s.name}
+              </span>
+              {s.note && (
+                <span className="opacity-50 text-[10px] tracking-wider text-right uppercase">
+                  {s.note}
+                </span>
+              )}
+            </div>
           ))
         : (
             <div className="flex flex-wrap">

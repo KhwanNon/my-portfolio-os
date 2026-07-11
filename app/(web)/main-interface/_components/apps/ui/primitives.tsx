@@ -31,36 +31,6 @@ export function Badge({ text, icon }: { text: string; icon?: React.ReactNode }) 
   );
 }
 
-export function Bar({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: number;
-  icon?: React.ReactNode;
-}) {
-  const filled = Math.round(value / 10);
-  return (
-    <div className="flex items-center gap-3 mb-2">
-      <span
-        className="w-32 text-[11px] opacity-70 shrink-0 inline-flex items-center gap-1.5"
-        style={{ color: "var(--os-accent)" }}
-      >
-        {icon}
-        {label}
-      </span>
-      <span className="text-[11px] tracking-wider" style={{ color: "var(--os-accent)" }}>
-        {"█".repeat(filled)}
-        <span className="opacity-20">{"░".repeat(10 - filled)}</span>
-      </span>
-      <span className="text-[10px] opacity-40 shrink-0" style={{ color: "var(--os-accent)" }}>
-        {value}%
-      </span>
-    </div>
-  );
-}
-
 export function Card({ children }: { children: React.ReactNode }) {
   return (
     <div

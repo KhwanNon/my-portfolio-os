@@ -12,15 +12,45 @@ export const experienceFolder: FileNode = {
     kind: "folder",
     children: [
       uiNode(
-        { id: "exp-learncloud", name: "2024-Present — LearnCloud.ui" },
+        { id: "exp-zenith", name: "2025-Present — Zenith Comp.ui" },
+        "ExperienceUI",
+        {
+          role: "Full-Stack Developer (Mobile-focused)",
+          company: "ZENITH COMP COMPANY LIMITED — Bangkok, Thailand",
+          period: "09/2025 – Present",
+          duration: "10+ Months",
+          description:
+            "Full-stack role with end-to-end ownership of the mobile product — development, builds, delivery, and maintenance — plus backend, database design, web, and customer-facing work.",
+          highlights: [
+            "Own the Flutter mobile app end-to-end: development, builds, store delivery, and ongoing maintenance",
+            "Develop backend services in Go and design the SQL Server database schema",
+            "Build web features with Vue and design UX/UI for selected features",
+            "Adapted Open WebUI into the company's AI chat solution",
+            "Write system analysis (SA) documents for delivered features",
+            "Meet customers on-site to gather requirements and present solutions",
+          ],
+          stack: [
+            "Flutter",
+            "Dart",
+            "Go",
+            "Vue",
+            "SQL Server",
+            "Redis",
+            "RabbitMQ",
+            "Git",
+          ],
+        },
+      ),
+      uiNode(
+        { id: "exp-learncloud", name: "2024-2025 — LearnCloud.ui" },
         "ExperienceUI",
         {
           role: "Mobile App Developer / Mobile Team Lead",
           company: "LEARNCLOUD CO., LTD. — Bangkok, Thailand",
-          period: "01/2024 – Present",
-          duration: "2.5+ Years",
+          period: "01/2024 – 09/2025",
+          duration: "1 Year 9 Months",
           description:
-            "Leading Flutter development from scratch with Clean Architecture — from planning and UX/UI collaboration through store deployment and release management.",
+            "Led Flutter development from scratch with Clean Architecture — from planning and UX/UI collaboration through store deployment and release management.",
           highlights: [
             "Led the development of Flutter applications from scratch, implementing Clean Architecture",
             "Collaborated with backend, AI, and design teams, contributing ideas and assisting in UX/UI design",

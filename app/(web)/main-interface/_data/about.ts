@@ -12,15 +12,15 @@ export const aboutFolder: FileNode = {
     kind: "folder",
     children: [
       uiNode({ id: "about-me", name: "me.ui" }, "PersonalBioUI", {
-        bio: "Hello! I'm Khwanchai Nontawichit (Khwan) — a 26-year-old Mobile Developer from Thailand with 3+ years of professional Flutter experience. I specialize in Clean Architecture and love building apps that are fast, maintainable, and a joy to use. I lead teams, mentor juniors, and care deeply about code quality and shipping reliable products.",
+        bio: "Hello! I'm Khwanchai Nontawichit (Khwan) — a Mobile Developer from Thailand with 4+ years of professional Flutter experience, currently in a full-stack role where I own the mobile product end-to-end and also work across Go backends, database design, and web. I specialize in Clean Architecture and love building apps that are fast, maintainable, and a joy to use. I lead teams, mentor juniors, and care deeply about code quality and shipping reliable products.",
         facts: [
           { label: "Name", value: "Khwanchai Nontawichit" },
           { label: "Alias", value: "Khwan" },
-          { label: "Age", value: "26" },
           { label: "Location", value: "Bangkok, Thailand" },
-          { label: "Role", value: "Mobile Developer" },
-          { label: "Experience", value: "3+ Years" },
+          { label: "Role", value: "Mobile Developer · Full-Stack" },
+          { label: "Experience", value: "4+ Years" },
           { label: "Main Stack", value: "Flutter · Dart" },
+          { label: "Languages", value: "Thai · English" },
           { label: "Status", value: "Open to Opportunities" },
         ],
       }),
@@ -35,11 +35,6 @@ export const aboutFolder: FileNode = {
             label: "GitHub",
             value: "github.com/KhwanNon",
             href: "https://github.com/KhwanNon",
-          },
-          {
-            label: "Phone",
-            value: "+66 642-565-976",
-            href: "tel:+66642565976",
           },
           {
             label: "Location",
