@@ -1,5 +1,6 @@
 "use client";
 import { SectionTitle, Badge, Bar, Card, Wrapper } from "./primitives";
+import { TechIcon } from "./tech-icon";
 
 // SkillsUI — Props: { title, items: { name, level? }[], layout?: "bars" | "badges" }
 
@@ -15,8 +16,21 @@ export function SkillsUI({ title = "Skills", items = [], layout = "bars" }: Skil
     <Wrapper>
       <SectionTitle>{title}</SectionTitle>
       {layout === "bars"
-        ? items.map((s) => <Bar key={s.name} label={s.name} value={s.level ?? 80} />)
-        : <div className="flex flex-wrap">{items.map((s) => <Badge key={s.name} text={s.name} />)}</div>
+        ? items.map((s) => (
+            <Bar
+              key={s.name}
+              label={s.name}
+              value={s.level ?? 80}
+              icon={<TechIcon name={s.name} />}
+            />
+          ))
+        : (
+            <div className="flex flex-wrap">
+              {items.map((s) => (
+                <Badge key={s.name} text={s.name} icon={<TechIcon name={s.name} />} />
+              ))}
+            </div>
+          )
       }
     </Wrapper>
   );

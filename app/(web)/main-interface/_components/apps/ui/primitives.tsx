@@ -15,29 +15,39 @@ export function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Badge({ text }: { text: string }) {
+export function Badge({ text, icon }: { text: string; icon?: React.ReactNode }) {
   return (
     <span
-      className="inline-block px-2 py-0.5 text-[10px] tracking-widest rounded-sm mr-1 mb-1"
+      className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] tracking-widest rounded-sm mr-1 mb-1"
       style={{
         border: "1px solid rgba(82,211,214,0.35)",
         color: "var(--os-accent)",
         background: "rgba(82,211,214,0.06)",
       }}
     >
+      {icon}
       {text}
     </span>
   );
 }
 
-export function Bar({ label, value }: { label: string; value: number }) {
+export function Bar({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: number;
+  icon?: React.ReactNode;
+}) {
   const filled = Math.round(value / 10);
   return (
     <div className="flex items-center gap-3 mb-2">
       <span
-        className="w-32 text-[11px] opacity-70 shrink-0"
+        className="w-32 text-[11px] opacity-70 shrink-0 inline-flex items-center gap-1.5"
         style={{ color: "var(--os-accent)" }}
       >
+        {icon}
         {label}
       </span>
       <span className="text-[11px] tracking-wider" style={{ color: "var(--os-accent)" }}>

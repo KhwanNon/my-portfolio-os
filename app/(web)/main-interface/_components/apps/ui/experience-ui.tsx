@@ -1,5 +1,6 @@
 "use client";
 import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
+import { TechIcon } from "./tech-icon";
 
 // ExperienceDescriptionUI — Props: { role, company, period, duration, description, highlights[] }
 
@@ -62,7 +63,7 @@ export function TechStackUI({ title = "Tech Stack", techs = [] }: TechStackUIPro
     <Wrapper>
       <SectionTitle>{title}</SectionTitle>
       <div className="flex flex-wrap">
-        {techs.map((t) => <Badge key={t} text={t} />)}
+        {techs.map((t) => <Badge key={t} text={t} icon={<TechIcon name={t} />} />)}
       </div>
     </Wrapper>
   );

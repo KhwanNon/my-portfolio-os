@@ -1,5 +1,6 @@
 "use client";
 import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
+import { TechIcon } from "./tech-icon";
 
 // ProjectDescriptionUI — Props: { name, type?, description, highlights[], stack[], status, year, platform? }
 
@@ -24,6 +25,7 @@ export function ProjectDescriptionUI({
   year = "",
   platform,
 }: ProjectDescriptionUIProps) {
+  const shipped = status === "Completed" || status.startsWith("Live");
   return (
     <Wrapper>
       <SectionTitle>Project</SectionTitle>
@@ -38,8 +40,8 @@ export function ProjectDescriptionUI({
               <span
                 className="text-[10px] px-2 py-0.5 rounded-sm"
                 style={{
-                  color: status === "Completed" ? "var(--os-accent)" : "#e8a21a",
-                  border: `1px solid ${status === "Completed" ? "rgba(82,211,214,0.3)" : "rgba(232,162,26,0.3)"}`,
+                  color: shipped ? "var(--os-accent)" : "#e8a21a",
+                  border: `1px solid ${shipped ? "rgba(82,211,214,0.3)" : "rgba(232,162,26,0.3)"}`,
                 }}
               >
                 {status}
@@ -69,7 +71,7 @@ export function ProjectDescriptionUI({
         )}
 
         <div className="flex flex-wrap">
-          {stack.map((s) => <Badge key={s} text={s} />)}
+          {stack.map((s) => <Badge key={s} text={s} icon={<TechIcon name={s} />} />)}
         </div>
       </Card>
     </Wrapper>
