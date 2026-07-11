@@ -29,7 +29,7 @@ export const BootFooter: FC<BootFooterProps> = () => (
       <motion.div
         initial={{ width: "0%" }}
         animate={{ width: "100%" }}
-        transition={{ duration: 5, ease: "linear" }}
+        transition={{ duration: 3.3, ease: "linear" }}
         className="h-full bg-os-accent shadow-[0_0_15px_#52D3D6]"
       />
     </div>

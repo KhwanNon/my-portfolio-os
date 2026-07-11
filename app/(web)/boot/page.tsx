@@ -3,6 +3,7 @@
 import { MatrixRain } from "@/app/shared/components/matrix-rain";
 import { useRouter } from "next/navigation";
 import { useEffect, useCallback } from "react";
+import { STORAGE_KEYS } from "@/app/shared/constants/storage";
 import { useBootSequence } from "./_hooks/use-boot-sequence";
 import { BootFooter } from "./_components/boot-footer";
 import { LogViewer } from "./_components/log-viewer";
@@ -13,20 +14,19 @@ export default function BootScreen() {
   const { logs, currentStep, percent, isReady, stepText } = useBootSequence();
 
   const handleInitialize = useCallback(() => {
+    localStorage.setItem(STORAGE_KEYS.hasBooted, "1");
     router.push("/main-interface");
   }, [router]);
 
-  // Keyboard Event Listener
+  // Any key or click enters the desktop — mid-sequence it acts as a skip.
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (isReady && e.key === "Enter") {
-        handleInitialize();
-      }
+    window.addEventListener("keydown", handleInitialize);
+    window.addEventListener("pointerdown", handleInitialize);
+    return () => {
+      window.removeEventListener("keydown", handleInitialize);
+      window.removeEventListener("pointerdown", handleInitialize);
     };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isReady, handleInitialize]);
+  }, [handleInitialize]);
 
   return (
     <main className="fixed inset-0 z-50 flex flex-col bg-os-bg text-os-accent font-os-mono overflow-hidden uppercase">

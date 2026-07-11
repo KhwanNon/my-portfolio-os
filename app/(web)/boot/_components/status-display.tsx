@@ -44,6 +44,12 @@ export const StatusDisplay: FC<StatusDisplayProps> = ({
       )}
     </motion.h1>
 
+    {!isReady && (
+      <span className="mt-20 text-[10px] opacity-40 tracking-[0.2em] animate-pulse">
+        PRESS_ANY_KEY_TO_SKIP
+      </span>
+    )}
+
     {isReady && (
       <motion.div
         initial={{ opacity: 0, y: 20 }}

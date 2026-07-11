@@ -27,22 +27,22 @@ export function useBootSequence() {
 
     // 2. Main Boot Sequence
     const runSequence = async () => {
-      await new Promise((r) => setTimeout(r, 800));
+      await new Promise((r) => setTimeout(r, 400));
       setCurrentStep(1);
 
-      await new Promise((r) => setTimeout(r, 800));
+      await new Promise((r) => setTimeout(r, 400));
       setCurrentStep(2);
 
       // Framer Motion shared animation logic
       await animate(0, 100, {
-        duration: 1.5,
+        duration: 1.2,
         onUpdate: (v) => setPercent(Math.floor(v)),
       });
 
       setCurrentStep(3);
-      await new Promise((r) => setTimeout(r, 1200));
+      await new Promise((r) => setTimeout(r, 600));
       setCurrentStep(4);
-      await new Promise((r) => setTimeout(r, 800));
+      await new Promise((r) => setTimeout(r, 500));
       setCurrentStep(5);
 
       isFinal = true;
