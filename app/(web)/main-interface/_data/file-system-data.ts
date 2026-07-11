@@ -3,9 +3,8 @@ import { ICONS } from "./icons";
 import { projectsFolder } from "./projects";
 import { skillsFolder } from "./skills";
 import { experienceFolder } from "./experience";
-import { educationFolder } from "./education";
+import { educationFile } from "./education";
 import { aboutFolder } from "./about";
-import { downloadFolder } from "./download";
 import { recycleBin } from "./recycle-bin";
 
 const cDrive: FileNode = {
@@ -19,9 +18,8 @@ const cDrive: FileNode = {
       projectsFolder,
       skillsFolder,
       experienceFolder,
-      educationFolder,
+      educationFile,
       aboutFolder,
-      downloadFolder,
     ],
   },
 };
@@ -62,6 +60,18 @@ const profileTxt: FileNode = {
   },
 };
 
+const resumePdf: FileNode = {
+  id: "resume-pdf",
+  name: "Resume.pdf",
+  type: "pdf",
+  icon: ICONS.pdf,
+  data: {
+    kind: "pdf",
+    url: "/assets/resume.pdf",
+    filename: "Khwanchai_Resume.pdf",
+  },
+};
+
 const systemCommand: FileNode = {
   id: "system-command",
   name: "System Command",
@@ -82,6 +92,7 @@ export const desktopFileSystem: FileNode[] = [
   cDrive,
   recycleBin,
   profileTxt,
+  resumePdf,
   systemCommand,
   preferences,
 ];
@@ -93,7 +104,11 @@ export const desktopSections = [
     variant: "default" as const,
     ids: ["c-drive", "recycle-bin"],
   },
-  { title: "Assets", variant: "default" as const, ids: ["profile-txt"] },
+  {
+    title: "Assets",
+    variant: "default" as const,
+    ids: ["profile-txt", "resume-pdf"],
+  },
   {
     title: "Executables",
     variant: "active" as const,

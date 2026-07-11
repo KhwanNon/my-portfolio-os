@@ -2,9 +2,10 @@ import type { FileNode } from "@/app/shared/types/file-system";
 import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
 
-const technicalFolder: FileNode = {
-  id: "skills-technical",
-  name: "Technical",
+// Flat folder — every skill area is one click from the Skills window.
+export const skillsFolder: FileNode = {
+  id: "skills",
+  name: "Skills",
   type: "folder",
   icon: ICONS.folder,
   data: {
@@ -41,7 +42,7 @@ const technicalFolder: FileNode = {
         },
       ),
       uiNode(
-        { id: "skill-backend", name: "Backend_Service.ui" },
+        { id: "skill-backend", name: "Backend_Services.ui" },
         "SkillsUI",
         {
           title: "Backend & Services",
@@ -57,52 +58,17 @@ const technicalFolder: FileNode = {
           ],
         },
       ),
-      {
-        id: "skill-english",
-        name: "English.txt",
-        type: "txt",
-        icon: ICONS.txt,
-        data: {
-          kind: "txt",
-          content: `> ENGLISH_PROFICIENCY.TXT
-> ─────────────────────────────────────────
-
-  Level      :  Professional Working Proficiency
-  Reading    :  ████████████  Advanced
-  Writing    :  ████████████  Advanced
-  Speaking   :  ██████████░░  Upper-Intermediate
-  Listening  :  ████████████  Advanced
-
-──────────────────────────────────────────────────────
-  Can read and write technical documentation fluently.
-  Comfortable with English-language code reviews,
-  Slack communication, and async team collaboration.
-──────────────────────────────────────────────────────
-
-> EOF`,
-        },
-      },
       uiNode(
-        { id: "skill-design", name: "Design_Tools.ui" },
+        { id: "skill-tools", name: "Tools.ui" },
         "SkillsUI",
         {
-          title: "Design Tools",
+          title: "Design & DevOps Tools",
           layout: "badges",
           items: [
             { name: "Figma" },
             { name: "Adobe XD" },
             { name: "Zeplin" },
             { name: "InVision" },
-          ],
-        },
-      ),
-      uiNode(
-        { id: "skill-devops", name: "DevOps_Tools.ui" },
-        "SkillsUI",
-        {
-          title: "DevOps & Tools",
-          layout: "badges",
-          items: [
             { name: "Git" },
             { name: "GitHub Actions" },
             { name: "Fastlane" },
@@ -115,19 +81,6 @@ const technicalFolder: FileNode = {
           ],
         },
       ),
-    ],
-  },
-};
-
-export const skillsFolder: FileNode = {
-  id: "skills",
-  name: "Skills",
-  type: "folder",
-  icon: ICONS.folder,
-  data: {
-    kind: "folder",
-    children: [
-      technicalFolder,
       uiNode({ id: "skill-soft", name: "Soft_Skills.ui" }, "SoftSkillsUI", {
         skills: [
           {
@@ -162,6 +115,31 @@ export const skillsFolder: FileNode = {
           },
         ],
       }),
+      {
+        id: "skill-english",
+        name: "English.txt",
+        type: "txt",
+        icon: ICONS.txt,
+        data: {
+          kind: "txt",
+          content: `> ENGLISH_PROFICIENCY.TXT
+> ─────────────────────────────────────────
+
+  Level      :  Professional Working Proficiency
+  Reading    :  ████████████  Advanced
+  Writing    :  ████████████  Advanced
+  Speaking   :  ██████████░░  Upper-Intermediate
+  Listening  :  ████████████  Advanced
+
+──────────────────────────────────────────────────────
+  Can read and write technical documentation fluently.
+  Comfortable with English-language code reviews,
+  Slack communication, and async team collaboration.
+──────────────────────────────────────────────────────
+
+> EOF`,
+        },
+      },
     ],
   },
 };

@@ -2,25 +2,28 @@ import type { FileNode } from "@/app/shared/types/file-system";
 import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
 
-const connectivityFolder: FileNode = {
-  id: "about-connectivity",
-  name: "Connectivity",
+// Flat folder — bio and contact first, personality files after.
+export const aboutFolder: FileNode = {
+  id: "about",
+  name: "About",
   type: "folder",
   icon: ICONS.folder,
   data: {
     kind: "folder",
     children: [
-      {
-        id: "about-resume-pdf",
-        name: "resume.pdf",
-        type: "pdf",
-        icon: ICONS.pdf,
-        data: {
-          kind: "pdf",
-          url: "/assets/resume.pdf",
-          filename: "Khwanchai_Resume.pdf",
-        },
-      },
+      uiNode({ id: "about-me", name: "me.ui" }, "PersonalBioUI", {
+        bio: "Hello! I'm Khwanchai Nontawichit (Khwan) — a 26-year-old Mobile Developer from Thailand with 3+ years of professional Flutter experience. I specialize in Clean Architecture and love building apps that are fast, maintainable, and a joy to use. I lead teams, mentor juniors, and care deeply about code quality and shipping reliable products.",
+        facts: [
+          { label: "Name", value: "Khwanchai Nontawichit" },
+          { label: "Alias", value: "Khwan" },
+          { label: "Age", value: "26" },
+          { label: "Location", value: "Bangkok, Thailand" },
+          { label: "Role", value: "Mobile Developer" },
+          { label: "Experience", value: "3+ Years" },
+          { label: "Main Stack", value: "Flutter · Dart" },
+          { label: "Status", value: "Open to Opportunities" },
+        ],
+      }),
       uiNode({ id: "about-contact", name: "contact.ui" }, "ContactUI", {
         links: [
           {
@@ -43,38 +46,6 @@ const connectivityFolder: FileNode = {
             value: "Bangkok, Thailand",
             href: "https://maps.google.com/?q=Bangkok,Thailand",
           },
-        ],
-      }),
-      {
-        id: "about-git-link",
-        name: "git.link",
-        type: "link",
-        icon: ICONS.link,
-        data: { kind: "link", url: "https://github.com/KhwanNon" },
-      },
-    ],
-  },
-};
-
-export const aboutFolder: FileNode = {
-  id: "about",
-  name: "About",
-  type: "folder",
-  icon: ICONS.folder,
-  data: {
-    kind: "folder",
-    children: [
-      uiNode({ id: "about-me", name: "me.ui" }, "PersonalBioUI", {
-        bio: "Hello! I'm Khwanchai Nontawichit (Khwan) — a 26-year-old Mobile Developer from Thailand with 3+ years of professional Flutter experience. I specialize in Clean Architecture and love building apps that are fast, maintainable, and a joy to use. I lead teams, mentor juniors, and care deeply about code quality and shipping reliable products.",
-        facts: [
-          { label: "Name", value: "Khwanchai Nontawichit" },
-          { label: "Alias", value: "Khwan" },
-          { label: "Age", value: "26" },
-          { label: "Location", value: "Bangkok, Thailand" },
-          { label: "Role", value: "Mobile Developer" },
-          { label: "Experience", value: "3+ Years" },
-          { label: "Main Stack", value: "Flutter · Dart" },
-          { label: "Status", value: "Open to Opportunities" },
         ],
       }),
       uiNode({ id: "about-hobbies", name: "hobbies.ui" }, "HobbiesUI", {
@@ -150,7 +121,6 @@ export const aboutFolder: FileNode = {
 > EOF`,
         },
       },
-      connectivityFolder,
     ],
   },
 };

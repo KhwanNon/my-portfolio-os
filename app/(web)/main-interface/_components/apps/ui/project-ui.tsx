@@ -1,10 +1,11 @@
 "use client";
+import Image from "next/image";
 import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 import { TechIcon } from "./tech-icon";
 
-// ProjectDescriptionUI — Props: { name, type?, description, highlights[], stack[], status, year, platform? }
+// ProjectUI — one window per project: description, screenshots, stack, and link.
 
-interface ProjectDescriptionUIProps {
+interface ProjectUIProps {
   name?: string;
   type?: string;
   description?: string;
@@ -13,9 +14,12 @@ interface ProjectDescriptionUIProps {
   status?: string;
   year?: string;
   platform?: string;
+  /** Public paths to screenshots, rendered as a horizontal strip. */
+  images?: string[];
+  link?: { label: string; url: string };
 }
 
-export function ProjectDescriptionUI({
+export function ProjectUI({
   name = "",
   type,
   description = "",
@@ -24,7 +28,9 @@ export function ProjectDescriptionUI({
   status = "",
   year = "",
   platform,
-}: ProjectDescriptionUIProps) {
+  images = [],
+  link,
+}: ProjectUIProps) {
   const shipped = status === "Completed" || status.startsWith("Live");
   return (
     <Wrapper>
@@ -53,6 +59,23 @@ export function ProjectDescriptionUI({
 
         <p className="opacity-70 leading-relaxed mb-3">{description}</p>
 
+        {images.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2 mb-3">
+            {images.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt={`${name} screenshot ${i + 1}`}
+                width={0}
+                height={0}
+                sizes="400px"
+                className="h-56 w-auto shrink-0 rounded-sm"
+                style={{ border: "1px solid rgba(82,211,214,0.15)" }}
+              />
+            ))}
+          </div>
+        )}
+
         {highlights.length > 0 && (
           <ul className="space-y-1 mb-3">
             {highlights.map((h, i) => (
@@ -73,6 +96,22 @@ export function ProjectDescriptionUI({
         <div className="flex flex-wrap">
           {stack.map((s) => <Badge key={s} text={s} icon={<TechIcon name={s} />} />)}
         </div>
+
+        {link && (
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 text-[10px] tracking-widest uppercase rounded-sm transition-opacity opacity-80 hover:opacity-100"
+            style={{
+              border: "1px solid rgba(82,211,214,0.35)",
+              color: "var(--os-accent)",
+              background: "rgba(82,211,214,0.06)",
+            }}
+          >
+            {link.label} ↗
+          </a>
+        )}
       </Card>
     </Wrapper>
   );

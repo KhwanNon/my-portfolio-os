@@ -2,10 +2,10 @@
 // Maps the `component` string on a UI FileNode to its React component.
 // Each portfolio UI lives in ./ui, grouped by the resume domain it serves.
 import { SkillsUI, SoftSkillsUI } from "./ui/skills-ui";
-import { ExperienceDescriptionUI, TechStackUI } from "./ui/experience-ui";
+import { ExperienceUI } from "./ui/experience-ui";
 import { EducationUI } from "./ui/education-ui";
 import { PersonalBioUI, HobbiesUI, ContactUI } from "./ui/about-ui";
-import { ProjectDescriptionUI } from "./ui/project-ui";
+import { ProjectUI } from "./ui/project-ui";
 import { PropertiesUI, AboutOSUI } from "./ui/system-ui";
 
 // Single source of truth: component name → component. Both the runtime renderer
@@ -13,13 +13,12 @@ import { PropertiesUI, AboutOSUI } from "./ui/system-ui";
 const REGISTRY = {
   SkillsUI,
   SoftSkillsUI,
-  ExperienceDescriptionUI,
-  TechStackUI,
+  ExperienceUI,
   EducationUI,
   PersonalBioUI,
   HobbiesUI,
   ContactUI,
-  ProjectDescriptionUI,
+  ProjectUI,
   PropertiesUI,
   AboutOSUI,
 };

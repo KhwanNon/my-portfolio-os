@@ -1,73 +1,14 @@
 import type { FileNode } from "@/app/shared/types/file-system";
+import type { UiComponentProps } from "../_components/apps/ui-registry";
 import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
 
-/** Build a project folder: screenshots slide + description UI + optional store/repo link. */
+/** One project = one .ui file: description, screenshots, stack, and link together. */
 function makeProject(
-  prefix: string,
-  opts: {
-    name: string;
-    type: string;
-    description: string;
-    highlights: string[];
-    stack: string[];
-    status: string;
-    year: string;
-    platform?: string;
-    /** Public paths to screenshots; omit when the project has none. */
-    images?: string[];
-    link?: { name: string; url: string };
-  },
+  id: string,
+  props: UiComponentProps<"ProjectUI">,
 ): FileNode {
-  const children: FileNode[] = [];
-
-  if (opts.images?.length) {
-    children.push({
-      id: `${prefix}-images`,
-      name: "images.slide",
-      type: "slide",
-      icon: ICONS.slide,
-      data: {
-        kind: "slide",
-        title: `${opts.name} — Screenshots`,
-        images: opts.images.map((src, i) => ({
-          src,
-          caption: `Screenshot ${i + 1}`,
-        })),
-      },
-    });
-  }
-
-  children.push(
-    uiNode({ id: `${prefix}-desc`, name: "description.ui" }, "ProjectDescriptionUI", {
-      name: opts.name,
-      type: opts.type,
-      description: opts.description,
-      highlights: opts.highlights,
-      stack: opts.stack,
-      status: opts.status,
-      year: opts.year,
-      platform: opts.platform,
-    }),
-  );
-
-  if (opts.link) {
-    children.push({
-      id: `${prefix}-link`,
-      name: opts.link.name,
-      type: "link",
-      icon: ICONS.link,
-      data: { kind: "link", url: opts.link.url },
-    });
-  }
-
-  return {
-    id: `${prefix}-folder`,
-    name: opts.name,
-    type: "folder",
-    icon: ICONS.folder,
-    data: { kind: "folder", children },
-  };
+  return uiNode({ id, name: `${props.name}.ui` }, "ProjectUI", props);
 }
 
 /** Screenshot paths for a project living under /public/assets/projects/<slug>/. */
@@ -77,7 +18,7 @@ function shots(slug: string, files: string[]): string[] {
 
 // Positioning: Flutter Craftsman / Shipper — Flutter production work leads,
 // React Native and web work follow, personal work closes the list.
-const projectFolders: FileNode[] = [
+const projectFiles: FileNode[] = [
   makeProject("proj-vn", {
     name: "VN",
     type: "Mobile · Work",
@@ -94,7 +35,7 @@ const projectFolders: FileNode[] = [
     platform: "iOS & Android",
     images: shots("vn", ["vn1.png", "vn2.png", "vn3.png", "vn4.png"]),
     link: {
-      name: "playstore.link",
+      label: "Play Store",
       url: "https://play.google.com/store/apps/details?id=com.viknavara.vn",
     },
   }),
@@ -128,7 +69,7 @@ const projectFolders: FileNode[] = [
     platform: "iOS & Android",
     images: shots("ailearn", ["ai1.png", "ai2.png", "ai3.png", "ai4.png"]),
     link: {
-      name: "playstore.link",
+      label: "Play Store",
       url: "https://play.google.com/store/apps/details?id=ai.myorder&hl=th&gl=US",
     },
   }),
@@ -208,7 +149,7 @@ const projectFolders: FileNode[] = [
     status: "In Development",
     year: "2026",
     platform: "Web",
-    link: { name: "github.link", url: "https://github.com/KhwanNon" },
+    link: { label: "GitHub", url: "https://github.com/KhwanNon" },
   }),
 ];
 
@@ -217,5 +158,5 @@ export const projectsFolder: FileNode = {
   name: "Projects",
   type: "folder",
   icon: ICONS.folder,
-  data: { kind: "folder", children: projectFolders },
+  data: { kind: "folder", children: projectFiles },
 };

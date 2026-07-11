@@ -1,48 +1,8 @@
 import type { FileNode } from "@/app/shared/types/file-system";
-import type { UiComponentProps } from "../_components/apps/ui-registry";
 import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
 
-/** Build a company folder: role description UI + tech-stack UI + optional company link. */
-function makeCompanyFolder(
-  id: string,
-  name: string,
-  descProps: UiComponentProps<"ExperienceDescriptionUI">,
-  stackProps: UiComponentProps<"TechStackUI">,
-  link?: string,
-): FileNode {
-  const children: FileNode[] = [
-    uiNode(
-      { id: `${id}-desc`, name: "description.ui" },
-      "ExperienceDescriptionUI",
-      descProps,
-    ),
-    uiNode(
-      { id: `${id}-stack`, name: "tech_stack.ui" },
-      "TechStackUI",
-      stackProps,
-    ),
-  ];
-
-  if (link) {
-    children.push({
-      id: `${id}-link`,
-      name: "company.link",
-      type: "link",
-      icon: ICONS.link,
-      data: { kind: "link", url: link },
-    });
-  }
-
-  return {
-    id,
-    name,
-    type: "folder",
-    icon: ICONS.folder,
-    data: { kind: "folder", children },
-  };
-}
-
+// One company = one .ui file: role, highlights, tech stack, and link together.
 export const experienceFolder: FileNode = {
   id: "experience",
   name: "Experience",
@@ -51,9 +11,9 @@ export const experienceFolder: FileNode = {
   data: {
     kind: "folder",
     children: [
-      makeCompanyFolder(
-        "exp-learncloud",
-        "2024-Present — LearnCloud",
+      uiNode(
+        { id: "exp-learncloud", name: "2024-Present — LearnCloud.ui" },
+        "ExperienceUI",
         {
           role: "Mobile App Developer / Mobile Team Lead",
           company: "LEARNCLOUD CO., LTD. — Bangkok, Thailand",
@@ -69,10 +29,7 @@ export const experienceFolder: FileNode = {
             "Oversaw version control, release management, and test build distribution",
             "Served as Mobile Team Lead, assigning tasks and managing workflows using Jira",
           ],
-        },
-        {
-          title: "Tech Stack — LearnCloud",
-          techs: [
+          stack: [
             "Flutter",
             "Dart",
             "Clean Architecture",
@@ -83,9 +40,9 @@ export const experienceFolder: FileNode = {
           ],
         },
       ),
-      makeCompanyFolder(
-        "exp-myorder",
-        "2023 — MyOrder",
+      uiNode(
+        { id: "exp-myorder", name: "2023 — MyOrder.ui" },
+        "ExperienceUI",
         {
           role: "Mobile Developer",
           company: "MYORDER MARKETING CO., LTD. — Chon Buri, Thailand",
@@ -98,15 +55,12 @@ export const experienceFolder: FileNode = {
             "Worked with a team of developers to maintain and enhance applications",
             "Contributed to project planning, design discussions, and team meetings",
           ],
-        },
-        {
-          title: "Tech Stack — MyOrder",
-          techs: ["Flutter", "React Native", "TypeScript", "Dart", "Git"],
+          stack: ["Flutter", "React Native", "TypeScript", "Dart", "Git"],
         },
       ),
-      makeCompanyFolder(
-        "exp-minerta",
-        "2021-2023 — Minerta",
+      uiNode(
+        { id: "exp-minerta", name: "2021-2023 — Minerta.ui" },
+        "ExperienceUI",
         {
           role: "Mobile Developer",
           company: "MINERTA TECHNOLOGY CO., LTD. — Bangkok, Thailand",
@@ -121,10 +75,7 @@ export const experienceFolder: FileNode = {
             "Assisted senior developers in coding, testing, and debugging mobile applications",
             "Participated in team meetings and contributed to project planning & design discussions",
           ],
-        },
-        {
-          title: "Tech Stack — Minerta",
-          techs: ["Flutter", "React Native", "Nuxt", "TypeScript", "Dart", "Git"],
+          stack: ["Flutter", "React Native", "Nuxt", "TypeScript", "Dart", "Git"],
         },
       ),
     ],
