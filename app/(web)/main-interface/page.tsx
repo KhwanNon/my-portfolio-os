@@ -1,6 +1,5 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import { MatrixRain } from "@/app/shared/components/matrix-rain";
 import { Taskbar } from "./_components/taskbar";
 import { SystemBar } from "./_components/system-bar";
 import { FileIcon } from "./_components/file-icon";
@@ -15,7 +14,6 @@ import {
   useWindowManager,
 } from "@/app/modules/desktop/context/window-manager-context";
 import { desktopFileSystem, desktopSections } from "./_data/file-system-data";
-import { useIsSmallViewport } from "./_lib/use-viewport";
 import type { FileNode } from "@/app/shared/types/file-system";
 
 const containerVariants = {
@@ -55,7 +53,6 @@ function Desktop() {
     showToast,
     openFile,
   } = useWindowManager();
-  const isMobile = useIsSmallViewport();
   const fileMap = Object.fromEntries(desktopFileSystem.map((f) => [f.id, f]));
 
   const handleDesktopContextMenu = (e: React.MouseEvent) => {
@@ -81,7 +78,7 @@ function Desktop() {
   };
 
   return (
-    <div className="h-dvh w-full flex flex-col overflow-hidden bg-os-bg text-os-accent font-os-mono">
+    <div className="h-dvh w-full flex flex-col overflow-hidden bg-os-bg text-os-text">
       {/* Top menu / system bar — always above the desktop body */}
       <SystemBar />
 
@@ -105,23 +102,7 @@ function Desktop() {
         }}
       >
         {/* ── Ambient FX layers (back → front) ─────────────────────────── */}
-        {/* Matrix rain is GPU-friendly but still a constant repaint loop.
-            Skip it on phones to save battery and keep the layout calm. */}
-        {!isMobile && (
-          <MatrixRain opacity={0.18} density={0.7} speedMultiplier={0.7} />
-        )}
         <div className="absolute inset-0 bg-ambient-grid opacity-[0.05] pointer-events-none" />
-        {!isMobile && (
-          <div
-            className="absolute left-0 right-0 h-px animate-scan-y pointer-events-none"
-            style={{
-              top: 0,
-              background:
-                "linear-gradient(to right, transparent, color-mix(in srgb, var(--os-accent) 55%, transparent), transparent)",
-            }}
-          />
-        )}
-        <div className="absolute inset-0 bg-scanlines opacity-25 pointer-events-none z-10" />
         <div className="absolute inset-0 bg-vignette pointer-events-none z-10" />
 
         {/* ── Desktop icon sections ────────────────────────────────────── */}

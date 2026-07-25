@@ -76,18 +76,18 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
     }
   };
 
-  const accent = "var(--os-accent)";
+  const text = "var(--os-text)";
 
   return (
     <div
-      className="h-full w-full flex flex-col font-os-mono"
+      className="h-full w-full flex flex-col"
       style={{ background: "var(--os-surface)" }}
     >
       {/* Toolbar — back button + clickable breadcrumbs */}
       <div
         className="flex items-center gap-2 px-3 py-2 shrink-0"
         style={{
-          borderBottom: "1px solid rgba(82,211,214,0.15)",
+          borderBottom: "1px solid var(--os-border)",
           background: "var(--os-header)",
           minHeight: 40,
         }}
@@ -96,10 +96,10 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
           onClick={goBack}
           disabled={back.length === 0}
           title="Back"
-          className="px-2 py-0.5 text-[10px] tracking-widest rounded-sm transition-opacity disabled:opacity-20 hover:opacity-100 opacity-60 cursor-pointer shrink-0"
+          className="px-2 py-0.5 text-[11px] rounded-sm transition-opacity disabled:opacity-20 hover:opacity-100 opacity-70 cursor-pointer shrink-0"
           style={{
-            border: "1px solid rgba(82,211,214,0.25)",
-            color: accent,
+            border: "1px solid var(--os-border-strong)",
+            color: text,
             background: "transparent",
           }}
         >
@@ -107,14 +107,14 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
         </button>
 
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-1 min-w-0 overflow-x-auto text-[11px] tracking-widest">
+        <div className="flex items-center gap-1 min-w-0 overflow-x-auto text-[12px] font-os-mono">
           <button
             onClick={() => navigateToCrumb(-1)}
             disabled={path.length === 0}
-            className="uppercase hover:underline cursor-pointer shrink-0 disabled:no-underline disabled:cursor-default"
+            className="hover:underline cursor-pointer shrink-0 disabled:no-underline disabled:cursor-default"
             style={{
-              color: accent,
-              opacity: path.length === 0 ? 1 : 0.55,
+              color: path.length === 0 ? "var(--os-accent)" : text,
+              opacity: path.length === 0 ? 1 : 0.65,
               fontWeight: path.length === 0 ? "bold" : "normal",
               background: "none",
               border: "none",
@@ -127,16 +127,16 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
             const isLast = i === path.length - 1;
             return (
               <span key={i} className="inline-flex items-center gap-1 shrink-0">
-                <span className="opacity-30" style={{ color: accent }}>
+                <span className="opacity-40" style={{ color: text }}>
                   /
                 </span>
                 <button
                   onClick={() => navigateToCrumb(i)}
                   disabled={isLast}
-                  className="uppercase hover:underline cursor-pointer disabled:no-underline disabled:cursor-default truncate max-w-35"
+                  className="hover:underline cursor-pointer disabled:no-underline disabled:cursor-default truncate max-w-35"
                   style={{
-                    color: accent,
-                    opacity: isLast ? 1 : 0.55,
+                    color: isLast ? "var(--os-accent)" : text,
+                    opacity: isLast ? 1 : 0.65,
                     fontWeight: isLast ? "bold" : "normal",
                     background: "none",
                     border: "none",
@@ -154,9 +154,9 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
       {/* File grid */}
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-4">
         {children === null ? (
-          <CenterMessage text="PATH_NOT_FOUND" />
+          <CenterMessage text="Path not found" />
         ) : children.length === 0 ? (
-          <CenterMessage text="FOLDER_EMPTY" />
+          <CenterMessage text="This folder is empty" />
         ) : (
           <div
             style={{
@@ -180,16 +180,16 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
       {/* Status bar */}
       <div
-        className="flex items-center justify-between px-3 py-1 shrink-0 text-[10px] tracking-widest opacity-50"
+        className="flex items-center justify-between px-3 py-1 shrink-0 text-[10px] opacity-70"
         style={{
-          borderTop: "1px solid rgba(82,211,214,0.1)",
-          color: "var(--os-accent)",
+          borderTop: "1px solid var(--os-border)",
+          color: "var(--os-text-dim)",
         }}
       >
         <span>
           {children?.length ?? 0} item{children?.length === 1 ? "" : "s"}
         </span>
-        <span className="uppercase truncate ml-4">{displayPath}</span>
+        <span className="truncate ml-4 font-os-mono">{displayPath}</span>
       </div>
     </div>
   );
@@ -198,8 +198,8 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 function CenterMessage({ text }: { text: string }) {
   return (
     <div
-      className="flex items-center justify-center h-full text-xs tracking-widest opacity-30"
-      style={{ color: "var(--os-accent)" }}
+      className="flex items-center justify-center h-full text-xs opacity-50"
+      style={{ color: "var(--os-text-dim)" }}
     >
       {text}
     </div>

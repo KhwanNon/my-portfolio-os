@@ -36,7 +36,7 @@ export const Taskbar = () => {
     <footer
       style={{
         height: 50,
-        borderTop: "1px solid rgba(82,211,214,0.2)",
+        borderTop: "1px solid var(--os-border)",
         background: "var(--os-surface)",
       }}
       className="relative flex items-center justify-between px-4 z-50 backdrop-blur-md shrink-0"
@@ -44,8 +44,8 @@ export const Taskbar = () => {
       {/* Left: Start label + open window indicators (display-only) */}
       <div className="flex items-center gap-2 min-w-0 overflow-hidden">
         <span
-          className="text-xs font-black tracking-[0.4em] shrink-0 hidden sm:inline"
-          style={{ color: "var(--os-accent)" }}
+          className="text-xs font-bold tracking-wide shrink-0 hidden sm:inline"
+          style={{ color: "var(--os-text-dim)" }}
         >
           Taskbar
         </span>
@@ -55,16 +55,18 @@ export const Taskbar = () => {
           {windows.map((win) => (
             <div
               key={win.id}
-              className="flex items-center gap-2 px-3 h-8 rounded-sm text-[10px] tracking-widest shrink-0 select-none max-w-30 sm:max-w-45"
+              className="flex items-center gap-2 px-3 h-8 rounded-md text-[11px] tracking-wide shrink-0 select-none max-w-30 sm:max-w-45"
               style={{
                 background: win.isMinimized
-                  ? "rgba(82,211,214,0.06)"
-                  : "rgba(82,211,214,0.15)",
+                  ? "transparent"
+                  : "var(--os-accent-container)",
                 border: win.isMinimized
-                  ? "1px solid rgba(82,211,214,0.15)"
-                  : "1px solid rgba(82,211,214,0.35)",
-                color: "var(--os-accent)",
-                opacity: win.isMinimized ? 0.55 : 1,
+                  ? "1px solid var(--os-border)"
+                  : "1px solid transparent",
+                color: win.isMinimized
+                  ? "var(--os-text-dim)"
+                  : "var(--os-on-accent-container)",
+                opacity: win.isMinimized ? 0.6 : 1,
               }}
               title={win.fileNode.name}
             >
@@ -72,14 +74,11 @@ export const Taskbar = () => {
                 className="w-2 h-2 rounded-full shrink-0"
                 style={{
                   background: win.isMinimized
-                    ? "rgba(82,211,214,0.3)"
+                    ? "var(--os-text-faint)"
                     : "var(--os-accent)",
-                  boxShadow: win.isMinimized
-                    ? "none"
-                    : "0 0 6px rgba(82,211,214,0.6)",
                 }}
               />
-              <span className="truncate uppercase">{win.fileNode.name}</span>
+              <span className="truncate">{win.fileNode.name}</span>
             </div>
           ))}
         </div>
@@ -87,13 +86,13 @@ export const Taskbar = () => {
 
       {/* Right: Clock */}
       <div
-        className="flex items-center gap-3 sm:gap-4 text-xs font-bold tracking-widest shrink-0 ml-2 sm:ml-4"
-        style={{ color: "var(--os-accent)" }}
+        className="flex items-center gap-3 sm:gap-4 text-xs font-medium tracking-wide shrink-0 ml-2 sm:ml-4"
+        style={{ color: "var(--os-text-dim)" }}
       >
-        <span className="uppercase opacity-80 hidden sm:inline">{date}</span>
+        <span className="opacity-80 hidden sm:inline">{date}</span>
         <span
-          style={{ borderBottom: "1px solid rgba(82,211,214,0.3)" }}
-          className="leading-none pb-0.5"
+          style={{ borderBottom: "1px solid var(--os-border-strong)", color: "var(--os-text)" }}
+          className="leading-none pb-0.5 font-os-mono"
         >
           {time}
         </span>

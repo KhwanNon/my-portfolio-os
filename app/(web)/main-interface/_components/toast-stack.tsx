@@ -2,16 +2,28 @@
 import type { Toast } from "@/app/modules/desktop/context/window-manager-context";
 
 const COLORS: Record<Toast["kind"], { fg: string; bg: string; border: string }> = {
-  info:    { fg: "var(--os-accent)", bg: "rgba(82,211,214,0.10)",  border: "rgba(82,211,214,0.45)" },
-  success: { fg: "#3ddc84",          bg: "rgba(61,220,132,0.10)",  border: "rgba(61,220,132,0.45)" },
-  error:   { fg: "#ff6b6b",          bg: "rgba(255,107,107,0.10)", border: "rgba(255,107,107,0.45)" },
+  info: {
+    fg: "var(--os-on-accent-container)",
+    bg: "var(--os-accent-container)",
+    border: "color-mix(in srgb, var(--os-accent) 45%, transparent)",
+  },
+  success: {
+    fg: "#3ddc84",
+    bg: "rgba(61,220,132,0.12)",
+    border: "rgba(61,220,132,0.4)",
+  },
+  error: {
+    fg: "var(--os-error)",
+    bg: "color-mix(in srgb, var(--os-error) 12%, transparent)",
+    border: "color-mix(in srgb, var(--os-error) 40%, transparent)",
+  },
 };
 
 export function ToastStack({ toasts }: { toasts: Toast[] }) {
   if (toasts.length === 0) return null;
   return (
     <div
-      className="fixed flex flex-col gap-2 font-os-mono text-[11px] tracking-wider pointer-events-none"
+      className="fixed flex flex-col gap-2 text-[12px] pointer-events-none"
       style={{ right: 16, bottom: 66, zIndex: 9000 }}
     >
       {toasts.map((t) => {
@@ -19,11 +31,12 @@ export function ToastStack({ toasts }: { toasts: Toast[] }) {
         return (
           <div
             key={t.id}
-            className="px-3 py-2 rounded-sm shadow-lg animate-[fadeIn_0.18s_ease-out]"
+            className="px-3 py-2 rounded-md animate-[fadeIn_0.18s_ease-out]"
             style={{
               color: c.fg,
               background: c.bg,
               border: `1px solid ${c.border}`,
+              boxShadow: "var(--shadow-2)",
               backdropFilter: "blur(4px)",
               minWidth: 200,
               maxWidth: 360,

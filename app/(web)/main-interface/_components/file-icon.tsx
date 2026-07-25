@@ -125,10 +125,10 @@ export const FileIcon = ({
         style={{
           width: size,
           height: size,
-          color: "var(--os-accent)",
+          color: "var(--os-text)",
           opacity: selected ? 0.75 : 1,
         }}
-        className="relative flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(82,211,214,0.85)]"
+        className="relative flex items-center justify-center transition-all duration-300 group-hover:scale-110"
       >
         <FileGraphic
           icon={fileNode.icon}
@@ -137,14 +137,14 @@ export const FileIcon = ({
         />
         {selected && (
           <div
-            className="absolute inset-0 rounded-lg"
+            className="absolute inset-0 rounded-lg -z-10"
             style={{
-              background: "rgba(82,211,214,0.2)",
-              border: "1px solid rgba(82,211,214,0.4)",
+              background: "var(--os-accent-container)",
+              border: "1px solid color-mix(in srgb, var(--os-accent) 40%, transparent)",
             }}
           />
         )}
-        <div className="absolute inset-0 bg-os-accent/0 group-hover:bg-os-accent/10 rounded-lg transition-all duration-300 -z-10" />
+        <div className="absolute inset-0 bg-(--os-accent-container)/0 group-hover:bg-(--os-accent-container)/70 rounded-lg transition-all duration-300 -z-10" />
       </div>
 
       {/* Label */}
@@ -153,11 +153,12 @@ export const FileIcon = ({
         style={{ width: variant === "desktop" ? size + 64 : size + 32 }}
       >
         <span
-          className="text-[10px] font-bold tracking-[0.15em] uppercase text-os-accent text-center leading-tight"
+          className="text-[11px] font-medium text-center leading-tight"
           style={{
-            background: selected ? "rgba(82,211,214,0.25)" : "transparent",
+            color: "var(--os-text)",
+            background: selected ? "var(--os-accent-container)" : "transparent",
             padding: "1px 4px",
-            borderRadius: 2,
+            borderRadius: "var(--radius-xs)",
             maxWidth: "100%",
             overflow: "hidden",
             display: "-webkit-box",

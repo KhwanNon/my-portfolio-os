@@ -11,8 +11,8 @@ export const DesktopSection = ({
   variant = "default",
 }: DesktopSectionProps) => {
   const themeColor =
-    variant === "active" ? "var(--os-accent)" : "var(--os-header)";
-  const textColor = "var(--os-accent)";
+    variant === "active" ? "var(--os-accent)" : "var(--os-border)";
+  const textColor = variant === "active" ? "var(--os-accent)" : "var(--os-text-dim)";
 
   return (
     <div
@@ -33,7 +33,7 @@ export const DesktopSection = ({
             color: textColor,
             transform: "rotate(180deg)",
           }}
-          className="text-[10px] tracking-[0.4em] font-bold whitespace-nowrap normal-case mb-4"
+          className="text-[10px] tracking-[0.2em] font-bold whitespace-nowrap normal-case mb-4"
         >
           {title}
         </span>

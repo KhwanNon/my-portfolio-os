@@ -9,24 +9,24 @@ export function PdfRenderer({ data }: { data: PdfFileData }) {
     >
       {/* Toolbar */}
       <div
-        className="flex items-center justify-between px-4 py-2 shrink-0 text-xs tracking-widest"
+        className="flex items-center justify-between px-4 py-2 shrink-0 text-xs"
         style={{
           background: "var(--os-header)",
-          borderBottom: "1px solid rgba(82,211,214,0.2)",
-          color: "var(--os-accent)",
+          borderBottom: "1px solid var(--os-border)",
+          color: "var(--os-text-dim)",
         }}
       >
-        <span className="opacity-60">{data.filename ?? "document.pdf"}</span>
+        <span className="opacity-80 font-os-mono">{data.filename ?? "document.pdf"}</span>
         <a
           href={data.url}
           download={data.filename ?? "document.pdf"}
-          className="px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-widest transition-all duration-200 hover:opacity-100 opacity-70"
+          className="px-3 py-1 rounded-md text-[11px] font-medium transition-all duration-200 hover:opacity-100 opacity-80"
           style={{
-            border: "1px solid rgba(82,211,214,0.4)",
-            color: "var(--os-accent)",
+            border: "1px solid var(--os-border-strong)",
+            color: "var(--os-text)",
           }}
         >
-          [ DOWNLOAD ]
+          Download
         </a>
       </div>
 

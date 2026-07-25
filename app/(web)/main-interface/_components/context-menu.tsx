@@ -49,15 +49,15 @@ export function ContextMenu({ menu, onClose }: ContextMenuProps) {
     <div
       ref={ref}
       onContextMenu={(e) => e.preventDefault()}
-      className="fixed font-os-mono text-[11px] tracking-wider rounded-sm overflow-hidden select-none"
+      className="fixed text-[12px] rounded-md overflow-hidden select-none"
       style={{
         left: pos.x,
         top: pos.y,
         zIndex: 10000,
         minWidth: 180,
         background: "var(--os-surface)",
-        border: "1px solid rgba(82,211,214,0.4)",
-        boxShadow: "0 8px 24px rgba(0,0,0,0.55)",
+        border: "1px solid var(--os-border-strong)",
+        boxShadow: "var(--shadow-2)",
       }}
     >
       {menu.items.map((item, i) =>
@@ -67,7 +67,7 @@ export function ContextMenu({ menu, onClose }: ContextMenuProps) {
             style={{
               height: 1,
               margin: "4px 6px",
-              background: "rgba(82,211,214,0.18)",
+              background: "var(--os-border)",
             }}
           />
         ) : (
@@ -79,9 +79,9 @@ export function ContextMenu({ menu, onClose }: ContextMenuProps) {
               item.onSelect?.();
               onClose();
             }}
-            className="w-full text-left px-3 py-1.5 transition-colors hover:bg-[rgba(82,211,214,0.12)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full text-left px-3 py-1.5 transition-colors hover:bg-(--os-accent-container) disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
             style={{
-              color: "var(--os-accent)",
+              color: "var(--os-text)",
               background: "transparent",
               border: "none",
             }}

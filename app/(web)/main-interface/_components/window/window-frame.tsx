@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import type { WindowInstance } from "@/app/modules/desktop/context/window-manager-context";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { useIsSmallViewport } from "../../_lib/use-viewport";
+import { SPRING_EXPRESSIVE } from "@/app/shared/constants/motion";
 
 interface WindowFrameProps {
   window: WindowInstance;
@@ -141,14 +142,13 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       initial={{ opacity: 0, scale: 0.92, y: 14 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.94, y: 6 }}
-      transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.6 }}
-      className="absolute flex flex-col rounded-sm overflow-hidden shadow-2xl"
+      transition={SPRING_EXPRESSIVE}
+      className="absolute flex flex-col rounded-xl overflow-hidden"
       style={{
         ...style,
-        border: "1px solid rgba(82,211,214,0.3)",
+        border: "1px solid var(--os-border-strong)",
         background: "var(--os-surface)",
-        boxShadow:
-          "0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(82,211,214,0.15), 0 0 28px rgba(82,211,214,0.08)",
+        boxShadow: "var(--shadow-3)",
       }}
       onMouseDown={() => {
         focusWindow(win.id);
@@ -170,7 +170,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
         style={{
           height: 36,
           background: "var(--os-header)",
-          borderBottom: "1px solid rgba(82,211,214,0.2)",
+          borderBottom: "1px solid var(--os-border)",
           cursor: effectivelyMaximized ? "default" : "move",
         }}
         onMouseDown={handleTitleBarMouseDown}
@@ -182,21 +182,21 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       >
         {/* Title */}
         <span
-          className="text-xs font-bold tracking-widest uppercase truncate"
-          style={{ color: "var(--os-accent)" }}
+          className="text-xs font-medium tracking-wide truncate"
+          style={{ color: "var(--os-text)" }}
         >
           {win.fileNode.name}
         </span>
 
         {/* Window Controls */}
-        <div className="flex items-center gap-1 ml-2">
+        <div className="flex items-center gap-1.5 ml-2">
           {/* Minimize */}
           <button
-            className="w-4 h-4 rounded-sm flex items-center justify-center text-[10px] font-bold transition-opacity hover:opacity-100 opacity-70 cursor-pointer"
+            className="w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold transition-opacity hover:opacity-100 opacity-70 cursor-pointer"
             style={{
-              background: "rgba(82,211,214,0.15)",
-              border: "1px solid rgba(82,211,214,0.3)",
-              color: "var(--os-accent)",
+              background: "var(--os-surface-1)",
+              border: "1px solid var(--os-border)",
+              color: "var(--os-text-dim)",
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -209,11 +209,11 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
           {/* Maximize — hidden on mobile (auto-maximised already) */}
           {!isMobile && (
             <button
-              className="w-4 h-4 rounded-sm flex items-center justify-center text-[10px] font-bold transition-opacity hover:opacity-100 opacity-70 cursor-pointer"
+              className="w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold transition-opacity hover:opacity-100 opacity-70 cursor-pointer"
               style={{
-                background: "rgba(82,211,214,0.15)",
-                border: "1px solid rgba(82,211,214,0.3)",
-                color: "var(--os-accent)",
+                background: "var(--os-surface-1)",
+                border: "1px solid var(--os-border)",
+                color: "var(--os-text-dim)",
               }}
               onClick={(e) => {
                 e.stopPropagation();
@@ -226,11 +226,11 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
           )}
           {/* Close */}
           <button
-            className="w-4 h-4 rounded-sm flex items-center justify-center text-[10px] font-bold transition-colors hover:opacity-100 opacity-70 cursor-pointer"
+            className="w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold transition-colors hover:opacity-100 opacity-70 cursor-pointer"
             style={{
-              background: "rgba(255,80,80,0.2)",
-              border: "1px solid rgba(255,80,80,0.4)",
-              color: "#ff6b6b",
+              background: "color-mix(in srgb, var(--os-error) 16%, transparent)",
+              border: "1px solid color-mix(in srgb, var(--os-error) 40%, transparent)",
+              color: "var(--os-error)",
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -260,7 +260,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
             height: 16,
             cursor: "nwse-resize",
             background:
-              "linear-gradient(135deg, transparent 0%, transparent 50%, rgba(82,211,214,0.45) 50%, rgba(82,211,214,0.45) 60%, transparent 60%, transparent 70%, rgba(82,211,214,0.45) 70%, rgba(82,211,214,0.45) 80%, transparent 80%)",
+              "linear-gradient(135deg, transparent 0%, transparent 50%, var(--os-border-strong) 50%, var(--os-border-strong) 60%, transparent 60%, transparent 70%, var(--os-border-strong) 70%, var(--os-border-strong) 80%, transparent 80%)",
           }}
           title="Resize"
         />

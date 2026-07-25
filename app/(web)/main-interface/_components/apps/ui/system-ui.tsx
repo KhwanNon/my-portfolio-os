@@ -29,13 +29,13 @@ export function PropertiesUI({
       <div className="flex items-center gap-3 mb-3">
         <div
           className="flex items-center justify-center shrink-0"
-          style={{ width: 40, height: 40, color: "var(--os-accent)" }}
+          style={{ width: 40, height: 40, color: "var(--os-text)" }}
         >
           <FileGraphic icon={icon} size={32} strokeWidth={1.4} />
         </div>
         <div>
-          <div className="font-bold tracking-wide text-sm break-all">{targetName}</div>
-          <div className="opacity-50 mt-0.5 text-[10px] tracking-widest uppercase">{targetKind}</div>
+          <div className="font-bold text-sm break-all">{targetName}</div>
+          <div className="opacity-60 mt-0.5 text-[11px]">{targetKind}</div>
         </div>
       </div>
 
@@ -57,8 +57,8 @@ export function AboutOSUI() {
   return (
     <Wrapper>
       <div className="mb-3">
-        <div className="font-bold text-sm tracking-wide">Portfolio OS</div>
-        <div className="opacity-50 mt-0.5 text-[10px] tracking-widest uppercase">
+        <div className="font-bold text-sm">Portfolio OS</div>
+        <div className="opacity-60 mt-0.5 text-[11px] font-os-mono">
           Version 2.4.0 · Build 2024.Alpha
         </div>
       </div>
@@ -81,7 +81,7 @@ export function AboutOSUI() {
       </Card>
 
       <Card>
-        <div className="opacity-50 text-[10px] tracking-widest uppercase mb-2">
+        <div className="opacity-60 text-[11px] font-medium mb-2">
           Try it
         </div>
         <ul className="space-y-1 text-[11px] opacity-80">

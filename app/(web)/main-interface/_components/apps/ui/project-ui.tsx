@@ -38,26 +38,28 @@ export function ProjectUI({
       <Card>
         <div className="flex items-start justify-between mb-3">
           <div>
-            <div className="font-bold tracking-wide text-sm">{name}</div>
-            {type && <div className="opacity-50 mt-0.5 text-[10px] tracking-widest uppercase">{type}</div>}
+            <div className="font-bold text-sm">{name}</div>
+            {type && <div className="opacity-60 mt-0.5 text-[11px]">{type}</div>}
           </div>
           <div className="text-right shrink-0 ml-4 space-y-1">
             <div>
               <span
-                className="text-[10px] px-2 py-0.5 rounded-sm"
+                className="text-[11px] px-2 py-0.5 rounded-md font-medium"
                 style={{
-                  color: shipped ? "var(--os-accent)" : "#e8a21a",
-                  border: `1px solid ${shipped ? "rgba(82,211,214,0.3)" : "rgba(232,162,26,0.3)"}`,
+                  color: shipped ? "var(--os-on-accent-container)" : "var(--os-tertiary)",
+                  background: shipped
+                    ? "var(--os-accent-container)"
+                    : "color-mix(in srgb, var(--os-tertiary) 15%, transparent)",
                 }}
               >
                 {status}
               </span>
             </div>
-            <div className="opacity-40 text-[10px]">{year}</div>
+            <div className="opacity-50 text-[10px]">{year}</div>
           </div>
         </div>
 
-        <p className="opacity-70 leading-relaxed mb-3">{description}</p>
+        <p className="opacity-80 leading-relaxed mb-3">{description}</p>
 
         {images.length > 0 && (
           <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2 mb-3">
@@ -69,8 +71,8 @@ export function ProjectUI({
                 width={0}
                 height={0}
                 sizes="400px"
-                className="h-56 w-auto shrink-0 rounded-sm"
-                style={{ border: "1px solid rgba(82,211,214,0.15)" }}
+                className="h-56 w-auto shrink-0 rounded-lg"
+                style={{ border: "1px solid var(--os-border)" }}
               />
             ))}
           </div>
@@ -80,16 +82,16 @@ export function ProjectUI({
           <ul className="space-y-1 mb-3">
             {highlights.map((h, i) => (
               <li key={i} className="flex gap-2">
-                <span className="opacity-40 shrink-0">▸</span>
-                <span className="opacity-80">{h}</span>
+                <span className="opacity-50 shrink-0">▸</span>
+                <span className="opacity-90">{h}</span>
               </li>
             ))}
           </ul>
         )}
 
         {platform && (
-          <div className="mb-2 opacity-60 text-[10px] tracking-widest">
-            PLATFORM: {platform}
+          <div className="mb-2 opacity-70 text-[11px]">
+            Platform: {platform}
           </div>
         )}
 
@@ -102,11 +104,10 @@ export function ProjectUI({
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 text-[10px] tracking-widest uppercase rounded-sm transition-opacity opacity-80 hover:opacity-100"
+            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-medium rounded-md transition-opacity opacity-90 hover:opacity-100"
             style={{
-              border: "1px solid rgba(82,211,214,0.35)",
-              color: "var(--os-accent)",
-              background: "rgba(82,211,214,0.06)",
+              color: "var(--os-on-accent-container)",
+              background: "var(--os-accent-container)",
             }}
           >
             {link.label} ↗

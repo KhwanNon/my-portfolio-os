@@ -46,16 +46,16 @@ export function SystemBar() {
       className="relative flex items-center justify-between gap-2 px-3 sm:px-4 shrink-0 select-none"
       style={{
         height: 26,
-        background: "color-mix(in srgb, var(--os-surface) 80%, transparent)",
-        borderBottom: "1px solid rgba(82,211,214,0.18)",
+        background: "var(--os-surface-3)",
+        borderBottom: "1px solid var(--os-border)",
         backdropFilter: "blur(8px)",
         WebkitBackdropFilter: "blur(8px)",
-        color: "var(--os-accent)",
+        color: "var(--os-text-dim)",
         zIndex: 300,
       }}
     >
       {/* Left — brand + connection state */}
-      <div className="flex items-center gap-3 text-[10px] tracking-[0.4em] font-bold min-w-0">
+      <div className="flex items-center gap-3 text-[10px] tracking-wide font-bold min-w-0 font-os-mono">
         <span
           className="w-1.5 h-1.5 rounded-full animate-pulse-glow shrink-0"
           style={{
@@ -66,31 +66,29 @@ export function SystemBar() {
         <span className="opacity-90 truncate">PORTFOLIO_OS</span>
         <span className="opacity-30 hidden sm:inline">v2.4.0</span>
         <span className="opacity-30 hidden lg:inline">·</span>
-        <span className="opacity-50 animate-flicker hidden lg:inline">
-          SECURE_CONN
-        </span>
+        <span className="opacity-50 hidden lg:inline">SECURE_CONN</span>
       </div>
 
       {/* Center — clickable Spotlight affordance */}
       <button
         onClick={() => window.dispatchEvent(new CustomEvent("spotlight:toggle"))}
-        className="hidden md:flex items-center gap-2 px-3 py-1 rounded-sm transition-colors hover:opacity-100 opacity-70 cursor-pointer"
+        className="hidden md:flex items-center gap-2 px-3 py-1 rounded-md transition-colors hover:opacity-100 opacity-70 cursor-pointer"
         style={{
-          border: "1px solid rgba(82,211,214,0.2)",
-          background: "rgba(82,211,214,0.04)",
-          color: "var(--os-accent)",
+          border: "1px solid var(--os-border)",
+          background: "var(--os-surface-1)",
+          color: "var(--os-text-dim)",
         }}
         title="Search (⌘K)"
       >
-        <span className="text-[10px] opacity-60">›_</span>
-        <span className="text-[10px] tracking-[0.2em] opacity-70">
+        <span className="text-[10px] opacity-60 font-os-mono">›_</span>
+        <span className="text-[10px] tracking-wide opacity-70">
           Search files, apps…
         </span>
         <kbd
-          className="text-[9px] opacity-70 tracking-widest px-1.5 py-0.5 rounded-sm ml-2"
+          className="text-[9px] opacity-70 tracking-wide px-1.5 py-0.5 rounded-sm ml-2 font-os-mono"
           style={{
-            border: "1px solid rgba(82,211,214,0.25)",
-            background: "rgba(82,211,214,0.08)",
+            border: "1px solid var(--os-border-strong)",
+            background: "var(--os-surface-2)",
           }}
         >
           ⌘K
@@ -98,7 +96,7 @@ export function SystemBar() {
       </button>
 
       {/* Right — stats + clock. Progressively reveal stats on wider screens. */}
-      <div className="flex items-center gap-3 sm:gap-4 text-[10px] tracking-widest shrink-0">
+      <div className="flex items-center gap-3 sm:gap-4 text-[10px] tracking-wide shrink-0 font-os-mono">
         <div className="hidden xl:block"><Stat label="CPU" value={cpu} /></div>
         <div className="hidden xl:block"><Stat label="MEM" value={ram} /></div>
         <div className="hidden 2xl:block"><Stat label="NET" value={net} /></div>
@@ -113,16 +111,14 @@ function Stat({ label, value }: { label: string; value: number }) {
     <div className="flex items-center gap-1.5 opacity-80">
       <span className="opacity-60">{label}</span>
       <div
-        className="relative w-12 h-1.5 rounded-sm overflow-hidden"
-        style={{ background: "rgba(82,211,214,0.1)" }}
+        className="relative w-12 h-1.5 rounded-xs overflow-hidden"
+        style={{ background: "var(--os-surface-1)" }}
       >
         <div
           className="absolute inset-y-0 left-0 transition-[width] duration-700"
           style={{
             width: `${Math.round(value)}%`,
-            background:
-              "linear-gradient(to right, color-mix(in srgb, var(--os-accent) 70%, transparent), var(--os-accent))",
-            boxShadow: "0 0 6px color-mix(in srgb, var(--os-accent) 60%, transparent)",
+            background: "var(--os-accent)",
           }}
         />
       </div>

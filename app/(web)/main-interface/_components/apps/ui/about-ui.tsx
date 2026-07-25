@@ -23,10 +23,10 @@ export function PersonalBioUI({ bio = "", facts = [] }: PersonalBioUIProps) {
           {facts.map(({ label, value }) => (
             <div
               key={label}
-              className="p-3 rounded-sm"
-              style={{ border: "1px solid rgba(82,211,214,0.12)", background: "rgba(82,211,214,0.03)" }}
+              className="p-3 rounded-lg"
+              style={{ border: "1px solid var(--os-border)", background: "var(--os-surface-3)" }}
             >
-              <div className="opacity-40 text-[10px] tracking-widest mb-1">{label}</div>
+              <div className="opacity-60 text-[11px] mb-1">{label}</div>
               <div>{value}</div>
             </div>
           ))}
@@ -82,10 +82,10 @@ export function ContactUI({ links = [] }: ContactUIProps) {
             href={c.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between px-4 py-3 rounded-sm transition-opacity hover:opacity-100 opacity-70 group"
-            style={{ border: "1px solid rgba(82,211,214,0.2)", background: "rgba(82,211,214,0.04)" }}
+            className="flex items-center justify-between px-4 py-3 rounded-lg transition-opacity hover:opacity-100 opacity-80 group"
+            style={{ border: "1px solid var(--os-border)", background: "var(--os-surface-3)" }}
           >
-            <span className="opacity-50 w-20 shrink-0">{c.label}</span>
+            <span className="opacity-60 w-20 shrink-0">{c.label}</span>
             <span className="group-hover:underline truncate">{c.value}</span>
           </a>
         ))}

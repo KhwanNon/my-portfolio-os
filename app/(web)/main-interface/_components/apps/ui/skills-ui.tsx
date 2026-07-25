@@ -21,14 +21,14 @@ export function SkillsUI({ title = "Skills", items = [], layout = "list" }: Skil
             <div
               key={s.name}
               className="flex items-baseline justify-between gap-4 py-1.5 border-b last:border-b-0"
-              style={{ borderColor: "rgba(82,211,214,0.08)" }}
+              style={{ borderColor: "var(--os-border)" }}
             >
-              <span className="inline-flex items-center gap-2 text-[11px]">
+              <span className="inline-flex items-center gap-2 text-[12px]">
                 <TechIcon name={s.name} />
                 {s.name}
               </span>
               {s.note && (
-                <span className="opacity-50 text-[10px] tracking-wider text-right uppercase">
+                <span className="opacity-60 text-[11px] text-right">
                   {s.note}
                 </span>
               )}

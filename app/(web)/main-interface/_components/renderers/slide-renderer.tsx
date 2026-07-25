@@ -10,10 +10,10 @@ export function SlideRenderer({ data }: { data: SlideFileData }) {
   if (total === 0) {
     return (
       <div
-        className="h-full flex items-center justify-center text-xs tracking-widest opacity-40"
-        style={{ color: "var(--os-accent)" }}
+        className="h-full flex items-center justify-center text-xs opacity-50"
+        style={{ color: "var(--os-text-dim)" }}
       >
-        NO_SLIDES_FOUND
+        No slides found
       </div>
     );
   }
@@ -37,38 +37,38 @@ export function SlideRenderer({ data }: { data: SlideFileData }) {
 
       {/* Caption & Controls */}
       <div
-        className="flex items-center justify-between px-4 py-2 flex-shrink-0 text-xs"
+        className="flex items-center justify-between px-4 py-2 shrink-0 text-xs"
         style={{
           background: "var(--os-header)",
-          borderTop: "1px solid rgba(82,211,214,0.2)",
-          color: "var(--os-accent)",
+          borderTop: "1px solid var(--os-border)",
+          color: "var(--os-text-dim)",
         }}
       >
         <button
-          className="px-3 py-1 rounded-sm tracking-widest font-bold uppercase transition-opacity hover:opacity-100 opacity-60 disabled:opacity-20 cursor-pointer"
-          style={{ border: "1px solid rgba(82,211,214,0.3)" }}
+          className="px-3 py-1 rounded-md font-medium transition-opacity hover:opacity-100 opacity-70 disabled:opacity-20 cursor-pointer"
+          style={{ border: "1px solid var(--os-border-strong)", color: "var(--os-text)" }}
           onClick={() => setCurrent((p) => Math.max(0, p - 1))}
           disabled={current === 0}
         >
-          ◀ PREV
+          ◀ Prev
         </button>
 
         <div className="text-center">
           {slide.caption && (
-            <div className="opacity-70 mb-1">{slide.caption}</div>
+            <div className="opacity-90 mb-1">{slide.caption}</div>
           )}
-          <div className="opacity-40 tracking-widest">
+          <div className="opacity-60 font-os-mono">
             {current + 1} / {total}
           </div>
         </div>
 
         <button
-          className="px-3 py-1 rounded-sm tracking-widest font-bold uppercase transition-opacity hover:opacity-100 opacity-60 disabled:opacity-20 cursor-pointer"
-          style={{ border: "1px solid rgba(82,211,214,0.3)" }}
+          className="px-3 py-1 rounded-md font-medium transition-opacity hover:opacity-100 opacity-70 disabled:opacity-20 cursor-pointer"
+          style={{ border: "1px solid var(--os-border-strong)", color: "var(--os-text)" }}
           onClick={() => setCurrent((p) => Math.min(total - 1, p + 1))}
           disabled={current === total - 1}
         >
-          NEXT ▶
+          Next ▶
         </button>
       </div>
     </div>

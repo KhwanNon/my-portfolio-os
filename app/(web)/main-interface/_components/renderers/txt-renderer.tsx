@@ -9,7 +9,7 @@ export function TxtRenderer({ data }: { data: TxtFileData }) {
     >
       <pre
         className="text-xs leading-relaxed whitespace-pre-wrap wrap-break-word font-os-mono"
-        style={{ color: "var(--os-accent)" }}
+        style={{ color: "var(--os-text)" }}
       >
         {data.content}
       </pre>

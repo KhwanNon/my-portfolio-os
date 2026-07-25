@@ -1,51 +1,137 @@
 @import "tailwindcss";
 
+/*
+ * Material 3 Expressive token system. Each theme defines the same set of
+ * roles — primary (accent), tonal surface staircase, neutral text ramp,
+ * neutral outline, and container pairs — so components never hardcode a
+ * color; they consume the role. Shape and elevation scales below are
+ * theme-invariant (shape/elevation don't change with color scheme).
+ */
 :root {
-  /* Theme 1: Cyber Blue (Default) */
-  --os-bg: #182035;
+  /* Theme 1: Cyber Blue (Default) — dark, teal-seeded */
+  --os-bg: #10151c;
   --os-accent: #52d3d6;
-  --os-surface: #151e2f;
-  --os-header: #1c2b3e;
+  --os-surface-1: #12181f;
+  --os-surface-2: #1a222b;
+  --os-surface-3: #232d38;
+  --os-header: var(--os-surface-3);
+  --os-surface: var(--os-surface-2);
+
+  --os-text: #e7edf0;
+  --os-text-dim: #a9b6bd;
+  --os-text-faint: #6b7780;
+
+  --os-border: rgba(231, 237, 240, 0.12);
+  --os-border-strong: rgba(231, 237, 240, 0.24);
+
+  --os-accent-container: #1c3d3f;
+  --os-on-accent-container: #a6eef0;
+
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.22);
+  --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.48), 0 4px 10px rgba(0, 0, 0, 0.26);
 
   --background: var(--os-bg);
-  --foreground: var(--os-accent);
+  --foreground: var(--os-text);
 }
 
-/* Theme 2: Matrix Green */
+/* Theme 2: Matrix Green — dark, green-seeded */
 [data-theme="matrix"] {
-  --os-bg: #020502;
+  --os-bg: #05080a;
   --os-accent: #00ff41;
-  --os-surface: #0a0f0a;
-  --os-header: #121a12;
+  --os-surface-1: #070c08;
+  --os-surface-2: #0d150e;
+  --os-surface-3: #142016;
+  --os-header: var(--os-surface-3);
+  --os-surface: var(--os-surface-2);
+
+  --os-text: #d8f5db;
+  --os-text-dim: #8fae93;
+  --os-text-faint: #566b58;
+
+  --os-border: rgba(216, 245, 219, 0.12);
+  --os-border-strong: rgba(216, 245, 219, 0.24);
+
+  --os-accent-container: #123a1a;
+  --os-on-accent-container: #9df7ad;
+
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.22);
+  --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.48), 0 4px 10px rgba(0, 0, 0, 0.26);
 }
 
-/* Theme 3: Minimal Light */
+/* Theme 3: Minimal Light — real M3 light tonal scheme (not a hack) */
 [data-theme="light"] {
-  --os-bg: #f0f2f5;
-  --os-accent: #2d3436;
-  --os-surface: #ffffff;
-  --os-header: #dfe6e9;
+  --os-bg: #f4f7f8;
+  --os-accent: #00787e;
+  --os-surface-1: #ffffff;
+  --os-surface-2: #eef2f3;
+  --os-surface-3: #e2e8ea;
+  --os-header: var(--os-surface-3);
+  --os-surface: var(--os-surface-2);
+
+  --os-text: #14201f;
+  --os-text-dim: #45514f;
+  --os-text-faint: #6f7b79;
+
+  --os-border: rgba(20, 32, 31, 0.12);
+  --os-border-strong: rgba(20, 32, 31, 0.22);
+
+  --os-accent-container: #cdeef0;
+  --os-on-accent-container: #003739;
+
+  --shadow-1: 0 1px 2px rgba(20, 32, 31, 0.1);
+  --shadow-2: 0 4px 10px rgba(20, 32, 31, 0.12);
+  --shadow-3: 0 10px 26px rgba(20, 32, 31, 0.16);
+}
+
+/* Roles that don't change with theme. */
+:root {
+  --os-tertiary: #e8a21a;
+  --os-error: #ff6b6b;
 }
 
 @theme inline {
   --color-os-bg: var(--os-bg);
   --color-os-accent: var(--os-accent);
   --color-os-surface: var(--os-surface);
-  --color-os-header: var(--os-header);
-  --font-os-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  --color-os-text: var(--os-text);
+  --color-os-text-dim: var(--os-text-dim);
+  --font-os-sans: var(--font-roboto), system-ui, sans-serif;
+  --font-os-mono: var(--font-roboto-mono), ui-monospace, monospace;
+}
+
+/*
+ * Material 3 Expressive shape scale — patches Tailwind's own `--radius-*`
+ * namespace (not `inline`), so every existing `rounded-*` utility across the
+ * app retunes from flat/sharp to expressive without renaming any class.
+ */
+@theme {
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+  --radius-2xl: 28px;
+  --radius-3xl: 32px;
 }
 
 body {
   background-color: var(--os-bg);
-  color: var(--os-accent);
-  font-family: var(--font-os-mono);
+  color: var(--os-text);
+  font-family: var(--font-os-sans);
   overflow: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Mono voice — terminal, boot screen, file paths, clock/stat readouts only. */
+.font-os-mono {
+  font-family: var(--font-os-mono);
+}
+
 /* ─── Utility classes used across boot + desktop ────────────────────────────── */
 
-/* CRT scanlines overlay — wear over any layer with z-index */
+/* CRT scanlines overlay — boot screen only (see app/(web)/boot/page.tsx). */
 .bg-scanlines {
   background-image: repeating-linear-gradient(
     to bottom,
@@ -77,14 +163,14 @@ body {
   );
 }
 
-/* Glowing text — used for titles + the boot status header */
+/* Glowing text — boot status header only. */
 .glow-text {
   text-shadow:
     0 0 6px color-mix(in srgb, var(--os-accent) 60%, transparent),
     0 0 14px color-mix(in srgb, var(--os-accent) 35%, transparent);
 }
 
-/* Pulsing soft glow used by the boot button / focused windows */
+/* Pulsing soft glow — used by the boot button and the system-bar's live status dot. */
 @keyframes os-pulse-glow {
   0%, 100% {
     box-shadow: 0 0 0 0 color-mix(in srgb, var(--os-accent) 0%, transparent);
@@ -97,37 +183,7 @@ body {
   animation: os-pulse-glow 2.4s ease-in-out infinite;
 }
 
-/* Slow horizontal sweep — adds life to backgrounds without distracting */
-@keyframes os-sweep {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-.animate-sweep {
-  animation: os-sweep 8s linear infinite;
-}
-
-/* Vertical CRT-style scan beam — a thin horizontal line that drifts top→bottom */
-@keyframes os-scan-y {
-  0%   { transform: translateY(-30vh); opacity: 0; }
-  10%  { opacity: 0.6; }
-  90%  { opacity: 0.6; }
-  100% { transform: translateY(100vh); opacity: 0; }
-}
-.animate-scan-y {
-  animation: os-scan-y 8s linear infinite;
-}
-
-/* Subtle flicker for the system bar / decorative elements */
-@keyframes os-flicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-  20%, 24%, 55% { opacity: 0.7; }
-}
-.animate-flicker {
-  animation: os-flicker 5s infinite;
-}
-
 /* Light theme softens the visual fx so they don't fight the bright bg */
-[data-theme="light"] .bg-scanlines,
 [data-theme="light"] .bg-vignette,
 [data-theme="light"] .bg-ambient-grid {
   display: none;
@@ -136,15 +192,16 @@ body {
   text-shadow: none;
 }
 
-/* Custom scrollbar (already used by file/folder panes) */
+/* Custom scrollbar (already used by file/folder panes). Neutral outline tone —
+   chrome, not an active/focus state, so it doesn't borrow the accent. */
 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--os-accent) 25%, transparent);
+  background: var(--os-border-strong);
   border-radius: 2px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--os-accent) 45%, transparent);
+  background: var(--os-text-faint);
 }
 
 /* Misc helpers preserved from previous version */

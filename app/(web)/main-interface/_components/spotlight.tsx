@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { desktopFileSystem } from "../_data/file-system-data";
 import type { FileNode } from "@/app/shared/types/file-system";
+import { SPRING_EXPRESSIVE } from "@/app/shared/constants/motion";
 
 interface Entry {
   node: FileNode;
@@ -162,7 +163,7 @@ export function Spotlight() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.12 }}
-          className="fixed inset-0 flex items-start justify-center pt-16 sm:pt-32 font-os-mono"
+          className="fixed inset-0 flex items-start justify-center pt-16 sm:pt-32"
           style={{
             background: "rgba(0,0,0,0.55)",
             backdropFilter: "blur(4px)",
@@ -178,24 +179,23 @@ export function Spotlight() {
             initial={{ opacity: 0, scale: 0.96, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -8 }}
-            transition={{ type: "spring", stiffness: 380, damping: 28 }}
-            className="w-full max-w-xl mx-4 rounded-sm overflow-hidden"
+            transition={SPRING_EXPRESSIVE}
+            className="w-full max-w-xl mx-4 rounded-xl overflow-hidden"
             style={{
               background: "var(--os-surface)",
-              border: "1px solid rgba(82,211,214,0.4)",
-              boxShadow:
-                "0 24px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(82,211,214,0.18), 0 0 60px rgba(82,211,214,0.08)",
+              border: "1px solid var(--os-border-strong)",
+              boxShadow: "var(--shadow-3)",
             }}
             onMouseDown={(e) => e.stopPropagation()}
           >
             {/* Search input row */}
             <div
               className="flex items-center gap-3 px-4 py-3"
-              style={{ borderBottom: "1px solid rgba(82,211,214,0.18)" }}
+              style={{ borderBottom: "1px solid var(--os-border)" }}
             >
               <span
-                className="text-xs opacity-60 tracking-widest"
-                style={{ color: "var(--os-accent)" }}
+                className="text-xs opacity-60 font-os-mono"
+                style={{ color: "var(--os-text-dim)" }}
               >
                 ›_
               </span>
@@ -209,14 +209,14 @@ export function Spotlight() {
                 placeholder="Search files, folders, apps…"
                 spellCheck={false}
                 autoComplete="off"
-                className="flex-1 bg-transparent outline-none text-sm tracking-wider"
-                style={{ color: "var(--os-accent)" }}
+                className="flex-1 bg-transparent outline-none text-sm"
+                style={{ color: "var(--os-text)" }}
               />
               <kbd
-                className="text-[9px] opacity-40 tracking-widest px-1.5 py-0.5 rounded-sm"
+                className="text-[9px] opacity-60 tracking-wide px-1.5 py-0.5 rounded-sm font-os-mono"
                 style={{
-                  color: "var(--os-accent)",
-                  border: "1px solid rgba(82,211,214,0.25)",
+                  color: "var(--os-text-dim)",
+                  border: "1px solid var(--os-border-strong)",
                 }}
               >
                 ESC
@@ -230,10 +230,10 @@ export function Spotlight() {
             >
               {results.length === 0 ? (
                 <div
-                  className="py-12 text-center text-xs opacity-40 tracking-widest"
-                  style={{ color: "var(--os-accent)" }}
+                  className="py-12 text-center text-xs opacity-50"
+                  style={{ color: "var(--os-text-dim)" }}
                 >
-                  NO_RESULTS
+                  No results
                 </div>
               ) : (
                 results.map((r, i) => {
@@ -247,9 +247,9 @@ export function Spotlight() {
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors cursor-pointer"
                       style={{
                         background: active
-                          ? "rgba(82,211,214,0.13)"
+                          ? "var(--os-accent-container)"
                           : "transparent",
-                        color: "var(--os-accent)",
+                        color: active ? "var(--os-on-accent-container)" : "var(--os-text)",
                         borderLeft: `2px solid ${active ? "var(--os-accent)" : "transparent"}`,
                       }}
                     >
@@ -259,11 +259,11 @@ export function Spotlight() {
                       <span className="flex-1 truncate text-sm">
                         {r.node.name}
                       </span>
-                      <span className="hidden sm:inline text-[9px] opacity-40 tracking-widest uppercase">
+                      <span className="hidden sm:inline text-[9px] opacity-60">
                         {r.category}
                       </span>
                       <span
-                        className="hidden md:inline text-[10px] opacity-35 truncate"
+                        className="hidden md:inline text-[10px] opacity-50 truncate font-os-mono"
                         style={{ maxWidth: 260 }}
                       >
                         {r.absolutePath}
@@ -276,10 +276,10 @@ export function Spotlight() {
 
             {/* Footer hints */}
             <div
-              className="flex items-center justify-between px-4 py-2 text-[10px] opacity-55 tracking-widest"
+              className="flex items-center justify-between px-4 py-2 text-[10px] opacity-70"
               style={{
-                borderTop: "1px solid rgba(82,211,214,0.12)",
-                color: "var(--os-accent)",
+                borderTop: "1px solid var(--os-border)",
+                color: "var(--os-text-dim)",
               }}
             >
               <span>↑ ↓ navigate · ⏎ open</span>
