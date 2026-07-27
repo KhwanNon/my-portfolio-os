@@ -2,7 +2,7 @@
 import { useCallback, useSyncExternalStore } from "react";
 import { STORAGE_KEYS } from "@/app/shared/constants/storage";
 
-export type ThemeId = "daylight" | "dark" | "matrix";
+export type ThemeId = "daylight" | "dark";
 
 /** Daylight is the baseline scheme, so it carries no `data-theme` attribute. */
 export const DEFAULT_THEME: ThemeId = "daylight";
@@ -10,7 +10,6 @@ export const DEFAULT_THEME: ThemeId = "daylight";
 export const THEMES: { id: ThemeId; label: string; swatch: string }[] = [
   { id: "daylight", label: "Daylight", swatch: "#ffffff" },
   { id: "dark", label: "Cyber Blue", swatch: "#10151c" },
-  { id: "matrix", label: "Matrix", swatch: "#05080a" },
 ];
 
 /**
@@ -20,7 +19,7 @@ export const THEMES: { id: ThemeId; label: string; swatch: string }[] = [
  */
 function readTheme(): ThemeId {
   const attr = document.documentElement.getAttribute("data-theme");
-  return attr === "dark" || attr === "matrix" ? attr : DEFAULT_THEME;
+  return attr === "dark" ? attr : DEFAULT_THEME;
 }
 
 const listeners = new Set<() => void>();

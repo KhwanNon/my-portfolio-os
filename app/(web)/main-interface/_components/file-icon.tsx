@@ -57,12 +57,16 @@ export const FileIcon = ({
   });
 
   // Desktop: a launcher, not a listing. Big glyph, name, what it is — and
-  // nothing else, so it reads nothing like a file manager entry.
+  // nothing else, so it reads nothing like a file manager entry. It carries its
+  // own width rather than stretching to its column: an app icon is a portrait
+  // card, and one stretched wide reads as a row. The width is the one that
+  // holds the longest app name — "System Command" — on a single line; the
+  // clamp below is the safety net, not the intended reading.
   if (layout === "desktop") {
     return (
       <div
         {...interaction}
-        className={`focus-ring group flex cursor-pointer select-none flex-col items-center gap-3 rounded-xl border px-3 py-5 transition-[background-color,box-shadow] duration-200 hover:shadow-(--shadow-2) ${
+        className={`focus-ring group flex w-36 cursor-pointer select-none flex-col items-center gap-4 rounded-lg border px-3 py-10 transition-[background-color,box-shadow] duration-200 hover:shadow-(--shadow-2) ${
           selected
             ? "border-transparent bg-os-accent-container"
             : "border-os-border bg-os-surface-1"
@@ -74,16 +78,16 @@ export const FileIcon = ({
           size="lg"
           className="transition-transform duration-200 group-hover:-translate-y-0.5"
         />
-        <span className="flex flex-col items-center gap-1">
+        <span className="flex flex-col items-center gap-0.5">
           <span
-            className="line-clamp-2 text-center text-[14px] font-semibold leading-tight tracking-tight"
+            className="line-clamp-2 text-center text-[13px] font-semibold leading-tight tracking-tight"
             style={{ color: "var(--os-text)" }}
           >
             {fileNode.name}
           </span>
           {caption && (
             <span
-              className="text-center text-[12px]"
+              className="text-center text-[11px]"
               style={{ color: "var(--os-text-faint)" }}
             >
               {caption}
@@ -101,7 +105,7 @@ export const FileIcon = ({
     return (
       <div
         {...interaction}
-        className={`focus-ring group flex cursor-pointer select-none items-center gap-3 border-t border-os-border px-2 py-2.5 transition-colors duration-150 first:border-t-0 ${
+        className={`focus-ring group flex cursor-pointer select-none items-center gap-2.5 border-t border-os-border px-1.5 py-2.5 transition-colors duration-150 first:border-t-0 ${
           selected ? "bg-os-accent-container" : "hover:bg-os-surface-3"
         }`}
       >

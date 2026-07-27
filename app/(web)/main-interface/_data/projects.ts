@@ -142,7 +142,7 @@ const projectFiles: FileNode[] = [
       "Custom window manager with drag, minimize, maximize, z-index",
       "Virtual typed file system (folder, txt, ui, pdf, slide, link)",
       "Working terminal with command parsing",
-      "Multi-theme support (Cyber Blue, Matrix, Light)",
+      "Dual-theme support (Daylight, Cyber Blue)",
       "Framer Motion animations throughout",
     ],
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "React"],

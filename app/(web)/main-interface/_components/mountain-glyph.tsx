@@ -1,3 +1,5 @@
+import { SparkPath } from "./spark-glyph";
+
 /**
  * The shell's one decorative motif — soft-crowned peaks with a few sparks, in
  * tints of the live accent. The baseline sits exactly on the viewBox floor, so
@@ -6,19 +8,22 @@
 export function MountainGlyph({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 320 110"
+      // A wide, shallow range: the motif is a band across the top of a card,
+      // so the viewBox is proportioned like that band rather than like a
+      // portrait scene — otherwise fitting its width makes it tower.
+      viewBox="0 0 420 110"
       preserveAspectRatio="xMaxYMax meet"
       fill="currentColor"
       aria-hidden
       className={className}
       style={{ color: "var(--os-accent)" }}
     >
-      <Peak opacity={0.1} base={[0, 118]} apex={54} top={50} />
-      <Peak opacity={0.18} base={[70, 250]} apex={158} top={16} />
-      <Peak opacity={0.12} base={[212, 320]} apex={272} top={34} />
-      <g opacity="0.45">
-        <Spark x={24} y={30} size={11} />
-        <Spark x={72} y={58} size={7} />
+      <Peak opacity={0.07} base={[0, 155]} apex={71} top={50} />
+      <Peak opacity={0.13} base={[92, 328]} apex={207} top={16} />
+      <Peak opacity={0.09} base={[278, 420]} apex={357} top={34} />
+      <g opacity="0.3">
+        <SparkPath x={32} y={30} size={11} />
+        <SparkPath x={94} y={58} size={7} />
       </g>
     </svg>
   );
@@ -49,23 +54,6 @@ function Peak({
         `L${apex - shoulder} ${top + CROWN} ` +
         `Q${apex} ${top} ${apex + shoulder} ${top + CROWN} ` +
         `L${right} ${FLOOR} Z`
-      }
-    />
-  );
-}
-
-/** A four-point star with concave, rounded sides. */
-function Spark({ x, y, size }: { x: number; y: number; size: number }) {
-  const r = size / 2;
-  const pull = r * 0.55;
-  return (
-    <path
-      transform={`translate(${x - r} ${y - r})`}
-      d={
-        `M${r} 0 C${r} ${pull} ${size - pull} ${r} ${size} ${r} ` +
-        `C${size - pull} ${r} ${r} ${size - pull} ${r} ${size} ` +
-        `C${r} ${size - pull} ${pull} ${r} 0 ${r} ` +
-        `C${pull} ${r} ${r} ${pull} ${r} 0 Z`
       }
     />
   );

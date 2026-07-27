@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Taskbar } from "./_components/taskbar";
 import { SystemBar } from "./_components/system-bar";
@@ -11,6 +11,7 @@ import { FileRenderer } from "./_components/file-renderer";
 import { ContextMenu } from "./_components/context-menu";
 import { ToastStack } from "./_components/toast-stack";
 import { Spotlight } from "./_components/spotlight";
+import { useIsSmallViewport } from "./_lib/use-viewport";
 import {
   WindowManagerProvider,
   useWindowManager,
@@ -31,6 +32,11 @@ function Desktop() {
   } = useWindowManager();
 
   const [railOpen, setRailOpen] = useState(false);
+  const closeRail = useCallback(() => setRailOpen(false), []);
+
+  // While the drawer is open, everything outside it is inert — that is what
+  // keeps Tab inside the drawer, without hand-rolling a focus trap.
+  const drawerBlocking = useIsSmallViewport(1024) && railOpen;
 
   const handleDesktopContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -54,14 +60,16 @@ function Desktop() {
   return (
     // The rail owns the full height; both bars belong to the content column.
     <div className="flex h-dvh w-full overflow-hidden bg-os-bg text-os-text">
-      <SideRail open={railOpen} onClose={() => setRailOpen(false)} />
+      <SideRail open={railOpen} onClose={closeRail} />
 
-      {/* Content column — system bar, workspace, taskbar */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <SystemBar onMenuClick={() => setRailOpen(true)} />
+      {/* Content column — system bar, workspace, and the dock floating over it */}
+      <div inert={drawerBlocking} className="flex min-w-0 flex-1 flex-col">
+        <SystemBar navOpen={railOpen} onMenuClick={() => setRailOpen(true)} />
 
-        {/* Workspace — positioning context for windows and ambient layers */}
+        {/* Workspace — positioning context for windows and ambient layers, and
+            the box the window manager measures itself against. */}
         <div
+          data-workspace
           className="relative flex-1 overflow-hidden"
           onClick={() => {
             // Click on empty workspace → deselect any focused icon.
@@ -83,13 +91,13 @@ function Desktop() {
           <div className="absolute inset-0 bg-ambient-grid opacity-[0.05] pointer-events-none" />
           <div className="absolute inset-0 bg-vignette pointer-events-none z-10" />
 
-          {/* ── Home: the greeting and the desktop windows open from ────── */}
+          {/* ── Desktop: the greeting and the surface windows open from ─── */}
           <motion.main
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
             onContextMenu={handleDesktopContextMenu}
-            className="custom-scrollbar absolute inset-0 z-20 overflow-y-auto px-4 pb-4 pt-4 sm:px-6"
+            className="custom-scrollbar absolute inset-0 z-20 overflow-y-auto px-4 pb-6 pt-8 sm:px-8"
           >
             <div className="mx-auto flex max-w-5xl flex-col gap-4">
               <HomeHero />
@@ -114,15 +122,8 @@ function Desktop() {
           <Spotlight />
         </div>
 
-        {/* Taskbar — mirrors the system bar at the foot of the same column */}
-        <motion.div
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="relative z-40 flex flex-col"
-        >
-          <Taskbar />
-        </motion.div>
+        {/* The column's closing band, mirroring the system bar that opens it. */}
+        <Taskbar />
       </div>
     </div>
   );

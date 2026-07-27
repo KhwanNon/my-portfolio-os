@@ -51,7 +51,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
   const [view, setView] = useState<ViewMode>("grid");
 
   const { icon, children } = viewAt(path);
-  const title = path.length === 0 ? "Home" : path[path.length - 1];
+  const title = path.length === 0 ? "Desktop" : path[path.length - 1];
 
   const navigate = (next: Path) => {
     if (pathEquals(next, path)) return;

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Copy, Minus, Square, X } from "lucide-react";
 import type { WindowInstance } from "@/app/modules/desktop/context/window-manager-context";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
+import { workspaceBox } from "@/app/modules/desktop/lib/workspace";
 import { useIsSmallViewport } from "../../_lib/use-viewport";
 import { FileGraphic } from "../file-graphic";
 import { SPRING_EXPRESSIVE } from "@/app/shared/constants/motion";
@@ -15,6 +16,13 @@ interface WindowFrameProps {
 
 const MIN_WIDTH = 280;
 const MIN_HEIGHT = 180;
+
+/**
+ * Keep `value` inside the workspace. When the box is too small to satisfy both
+ * ends, `min` wins — a window stays usable rather than collapsing to fit.
+ */
+const clamp = (value: number, max: number, min = 0) =>
+  Math.max(min, Math.min(value, max));
 
 /** Ghost round control in the title bar; `danger` tints the close action red. */
 function TitleButton({
@@ -91,20 +99,40 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     resizeRef.current = resizeWindow;
   });
 
+  // The listeners below are bound once per window, so its live geometry has to
+  // reach them the same way its actions do.
+  const winRef = useRef(win);
+  useEffect(() => {
+    winRef.current = win;
+  });
+
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
+      // Both gestures are bounded by the same box, so a window can never be
+      // pushed or stretched under the dock.
+      const box = workspaceBox();
+      const { size, position } = winRef.current;
+
       if (dragState.current.isDragging) {
         const dx = e.clientX - dragState.current.startX;
         const dy = e.clientY - dragState.current.startY;
-        const newX = dragState.current.startPosX + dx;
-        const newY = dragState.current.startPosY + dy;
-        moveRef.current(win.id, Math.max(0, newX), Math.max(0, newY));
+        const x = dragState.current.startPosX + dx;
+        const y = dragState.current.startPosY + dy;
+        moveRef.current(
+          win.id,
+          clamp(x, box.width - size.width),
+          clamp(y, box.height - size.height),
+        );
       } else if (resizeState.current.isResizing) {
         const dx = e.clientX - resizeState.current.startX;
         const dy = e.clientY - resizeState.current.startY;
-        const w = Math.max(MIN_WIDTH, resizeState.current.startW + dx);
-        const h = Math.max(MIN_HEIGHT, resizeState.current.startH + dy);
-        resizeRef.current(win.id, w, h);
+        const w = resizeState.current.startW + dx;
+        const h = resizeState.current.startH + dy;
+        resizeRef.current(
+          win.id,
+          clamp(w, box.width - position.x, MIN_WIDTH),
+          clamp(h, box.height - position.y, MIN_HEIGHT),
+        );
       }
     };
     const onMouseUp = () => {

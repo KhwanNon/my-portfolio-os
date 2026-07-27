@@ -6,18 +6,20 @@ import "./globals.css";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  themeColor: "#ffffff",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f6f8fc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c1117" },
+  ],
 };
 
 /**
  * Re-applies the saved theme before first paint. Daylight is the default, so
- * only the dark schemes need an attribute — a returning visitor never sees a
+ * only the dark scheme needs an attribute — a returning visitor never sees a
  * flash of white before their theme lands.
  */
 const THEME_BOOTSTRAP = `try{var t=localStorage.getItem(${JSON.stringify(
   STORAGE_KEYS.theme,
-)});if(t==="dark"||t==="matrix")document.documentElement.setAttribute("data-theme",t)}catch(e){}`;
+)});if(t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}`;
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -42,7 +44,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // The bootstrap script below writes `data-theme` before React hydrates.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
       </head>

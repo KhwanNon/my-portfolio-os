@@ -1,15 +1,16 @@
 "use client";
+// The dock: the bar across the foot of the shell, reading left to right as
+// shell controls, then the apps, then what the machine has to say about itself.
 import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
+import { motion } from "framer-motion";
+import { Battery, LayoutGrid, Search, Wifi, WifiOff } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
-import { applications, preferences } from "../_data/file-system-data";
-import { FileGraphic, IconTile, iconSurface } from "./file-graphic";
+import { applications } from "../_data/file-system-data";
+import { useSystemStatus } from "../_lib/use-system-status";
+import { IconTile } from "./file-graphic";
 
-/** Settings sits with the shell controls, so the dock stays the apps you open. */
-const DOCK_APPS = applications
-  .map(({ node }) => node)
-  .filter((node) => node.id !== preferences.id);
+const DOCK_APPS = applications.map(({ node }) => node);
 
 function useClock() {
   const [display, setDisplay] = useState({ date: "", time: "" });
@@ -17,16 +18,25 @@ function useClock() {
   useEffect(() => {
     const update = () => {
       const now = new Date();
-      const date = now.toLocaleDateString("en-US", {
-        day: "numeric",
+      // Composed rather than one `toLocaleDateString` call: the shell wants the
+      // date first and the weekday after it, which no locale pattern gives.
+      const monthDay = now.toLocaleDateString("en-US", {
         month: "short",
-        weekday: "short",
+        day: "numeric",
       });
+      const weekday = now.toLocaleDateString("en-US", { weekday: "short" });
       const time = now.toLocaleTimeString("en-US", {
-        hour: "2-digit",
+        hour: "numeric",
         minute: "2-digit",
       });
-      setDisplay({ date, time });
+      const next = { date: `${monthDay}, ${weekday}`, time };
+      // Only minutes are shown, so most ticks change nothing — bail rather than
+      // re-render the dock once a second.
+      setDisplay((current) =>
+        current.date === next.date && current.time === next.time
+          ? current
+          : next,
+      );
     };
     update();
     const id = setInterval(update, 1000);
@@ -37,8 +47,8 @@ function useClock() {
 }
 
 export const Taskbar = () => {
-  const { windows, openFile, focusWindow, restoreWindow } = useWindowManager();
-  const { date, time } = useClock();
+  const { windows, openFile, focusWindow, restoreWindow, minimizeAllWindows } =
+    useWindowManager();
 
   // The dock always shows its apps, plus anything else currently open.
   const opened = windows
@@ -46,34 +56,36 @@ export const Taskbar = () => {
     .filter((node) => !DOCK_APPS.some((app) => app.id === node.id));
 
   return (
-    <footer
+    <motion.nav
+      aria-label="Dock"
+      initial={{ y: 60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.5, duration: 0.5 }}
       style={{
-        borderTop: "1px solid var(--os-border)",
+        height: "var(--os-bar-h)",
         background: "var(--os-surface-1)",
+        borderTop: "1px solid var(--os-border)",
+        zIndex: 300,
       }}
-      className="relative z-50 flex h-16 w-full shrink-0 items-center gap-3 px-3 sm:px-4"
+      // The system bar's counterpart at the foot of the column: same height,
+      // same surface, same edge treatment — a hairline instead of a shadow,
+      // because it sits in the flow rather than floating over the workspace.
+      className="relative flex shrink-0 items-center gap-5 px-4 sm:px-6"
     >
       {/* Shell controls */}
-      <div className="flex shrink-0 items-center gap-1">
-        <ShellButton
-          label={preferences.name}
-          onClick={() => openFile(preferences)}
-          tint={iconSurface(preferences.icon)}
-        >
-          <FileGraphic icon={preferences.icon} size={18} />
-        </ShellButton>
-        <ShellButton
-          label="Search (⌘K)"
-          onClick={() =>
-            window.dispatchEvent(new CustomEvent("spotlight:toggle"))
-          }
-        >
-          <Search size={18} strokeWidth={1.9} />
-        </ShellButton>
-      </div>
+      <ShellButton label="Show desktop" onClick={minimizeAllWindows} accented>
+        <LayoutGrid size={18} strokeWidth={1.9} />
+      </ShellButton>
+      <ShellButton
+        label="Search (⌘K)"
+        onClick={() => window.dispatchEvent(new CustomEvent("spotlight:toggle"))}
+      >
+        <Search size={18} strokeWidth={1.9} />
+      </ShellButton>
 
-      {/* Dock */}
-      <div className="custom-scrollbar flex min-w-0 flex-1 items-center justify-center gap-1 overflow-x-auto">
+      {/* The apps, and the only part that may grow past the bar: every window
+          opened outside the dock adds a slot, so this strip is what scrolls. */}
+      <div className="custom-scrollbar scroll-fade-x flex min-w-0 flex-1 items-center gap-5 overflow-x-auto py-2.5">
         {[...DOCK_APPS, ...opened].map((node) => (
           <DockItem
             key={node.id}
@@ -88,32 +100,25 @@ export const Taskbar = () => {
         ))}
       </div>
 
-      {/* Clock */}
-      <div className="shrink-0 text-right leading-tight">
-        <div className="text-[11px]" style={{ color: "var(--os-text-dim)" }}>
-          {date}
-        </div>
-        <div
-          className="text-[14px] font-medium tabular-nums"
-          style={{ color: "var(--os-text)" }}
-        >
-          {time}
-        </div>
+      {/* Readouts, not controls — the first thing to go when the bar is narrow. */}
+      <div className="hidden shrink-0 items-center gap-5 sm:flex">
+        <StatusTray />
+        <Clock />
       </div>
-    </footer>
+    </motion.nav>
   );
 };
 
-/** Round control at the dock's left edge; `tint` gives it a launcher's chip. */
+/** Square control at the dock's left edge; the accented one is the launcher. */
 function ShellButton({
   label,
   onClick,
-  tint,
+  accented,
   children,
 }: {
   label: string;
   onClick: () => void;
-  tint?: string;
+  accented?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -121,8 +126,11 @@ function ShellButton({
       onClick={onClick}
       title={label}
       aria-label={label}
-      className="focus-ring grid h-10 w-10 cursor-pointer place-items-center rounded-xl transition-colors duration-200 hover:bg-os-surface-3"
-      style={{ background: tint ?? "transparent", color: "var(--os-text-dim)" }}
+      // Same radius as the app chips beside it — one dock row, one shape.
+      className={`focus-ring grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-sm transition-colors duration-200 ${
+        accented ? "bg-os-accent-container" : "hover:bg-os-surface-3"
+      }`}
+      style={{ color: accented ? "var(--os-accent)" : "var(--os-text-dim)" }}
     >
       {children}
     </button>
@@ -141,25 +149,69 @@ function DockItem({
   onLaunch: () => void;
   onFocus: (id: string) => void;
 }) {
-  const running = win !== undefined;
+  const state = !win ? "" : win.isMinimized ? ", minimised" : ", running";
 
   return (
     <button
       onClick={() => (win ? onFocus(win.id) : onLaunch())}
       title={node.name}
-      aria-label={node.name}
+      aria-label={`${node.name}${state}`}
       className="focus-ring group relative grid shrink-0 cursor-pointer place-items-center transition-transform duration-200 hover:-translate-y-0.5"
     >
       <IconTile icon={node.icon} />
       <span
         className="absolute -bottom-1 h-1 rounded-full transition-all duration-200"
         style={{
-          width: running ? 14 : 0,
+          width: win ? 12 : 0,
           background: win?.isMinimized
             ? "var(--os-text-faint)"
             : "var(--os-accent)",
         }}
       />
     </button>
+  );
+}
+
+/** Only what the browser will actually tell us about the machine. */
+function StatusTray() {
+  const { online, battery } = useSystemStatus();
+
+  return (
+    <div
+      className="flex items-center gap-3"
+      style={{ color: "var(--os-text-dim)" }}
+    >
+      <span title={online ? "Online" : "Offline"}>
+        {online ? (
+          <Wifi size={16} strokeWidth={1.8} />
+        ) : (
+          <WifiOff size={16} strokeWidth={1.8} />
+        )}
+      </span>
+      {battery !== null && (
+        <span className="flex items-center gap-1.5" title="Battery">
+          <Battery size={16} strokeWidth={1.8} />
+          <span className="text-[11px] tabular-nums">{battery}%</span>
+        </span>
+      )}
+    </div>
+  );
+}
+
+function Clock() {
+  const { date, time } = useClock();
+
+  return (
+    <div className="shrink-0 text-right leading-tight">
+      <div className="text-[11px]" style={{ color: "var(--os-text-dim)" }}>
+        {date}
+      </div>
+      <div
+        className="text-[13px] font-medium tabular-nums"
+        style={{ color: "var(--os-text)" }}
+      >
+        {time}
+      </div>
+    </div>
   );
 }

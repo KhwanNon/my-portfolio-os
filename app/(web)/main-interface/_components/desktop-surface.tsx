@@ -4,7 +4,6 @@
 // one hairline, because they are answers to different questions: what can I
 // run, and what should I read. Windows float above this; it is the surface
 // they come back to.
-import { ArrowRight, type LucideIcon } from "lucide-react";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { applications, cDrive, suggestedItems } from "../_data/file-system-data";
 import { FileIcon } from "./file-icon";
@@ -14,8 +13,11 @@ export function DesktopSurface() {
 
   return (
     <>
-      <Panel title="System">
-        <div className="desktop-grid">
+      <Panel title="Applications">
+        {/* The cards carry their own width, so there are no columns to define —
+            they pack from the left and wrap when the panel runs out, which is
+            what a launcher does. */}
+        <div className="flex flex-wrap gap-5">
           {applications.map(({ node, kind }) => (
             <FileIcon
               key={node.id}
@@ -29,11 +31,7 @@ export function DesktopSurface() {
 
       <Panel
         title="Suggested"
-        action={{
-          label: "View all",
-          icon: ArrowRight,
-          onSelect: () => openFile(cDrive),
-        }}
+        action={{ label: "View All", onSelect: () => openFile(cDrive) }}
       >
         {/* A list, not tiles: these are things to read, and a reading order is
             what a list expresses. The line under each name is why it is worth
@@ -60,21 +58,21 @@ function Panel({
   children,
 }: {
   title: string;
-  action?: { label: string; icon: LucideIcon; onSelect: () => void };
+  action?: { label: string; onSelect: () => void };
   children: React.ReactNode;
 }) {
   return (
     <section
-      className="rounded-2xl p-4 sm:p-5"
+      className="rounded-xl p-3.5 sm:p-5"
       style={{
         background: "var(--os-surface-1)",
         border: "1px solid var(--os-border)",
         boxShadow: "var(--shadow-1)",
       }}
     >
-      <div className="mb-4 flex min-h-9 items-center justify-between gap-3">
+      <div className="mb-4 flex min-h-7 items-center justify-between gap-3">
         <h2
-          className="text-[15px] font-semibold tracking-tight"
+          className="text-[14px] font-semibold tracking-tight"
           style={{ color: "var(--os-text)" }}
         >
           {title}
@@ -82,13 +80,12 @@ function Panel({
         {action && (
           <button
             onClick={action.onSelect}
-            className="focus-ring flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-[12px] font-medium transition-colors duration-200 hover:bg-os-surface-3"
+            className="focus-ring flex cursor-pointer items-center gap-2 rounded-md px-2.5 py-1 text-[12px] font-medium leading-5 transition-colors duration-200 hover:bg-os-surface-3"
             style={{
               border: "1px solid var(--os-border)",
               color: "var(--os-text-dim)",
             }}
           >
-            <action.icon size={13} strokeWidth={1.9} />
             {action.label}
           </button>
         )}

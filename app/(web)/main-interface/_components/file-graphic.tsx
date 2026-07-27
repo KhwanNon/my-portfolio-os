@@ -16,18 +16,18 @@ import {
 } from "./product-icons";
 
 /**
- * How an icon is presented, and the whole of the rule behind it: a coloured
+ * How an icon is presented, and the whole of the rule behind it: a *coloured*
  * chip means "this launches". The four apps this OS ships with earn one; a
- * document does not, so it stays a plain neutral mark with nothing behind it.
- * Colour everywhere is colour nowhere — it was the chips, not the hues, that
- * told the desktop apart.
+ * document gets the same footprint on a plain neutral plate, so a list stays
+ * aligned without borrowing the launcher's signal. Colour everywhere is colour
+ * nowhere — it was the hues, not the plates, that told the desktop apart.
  */
 type Finish =
   /** App: outline artwork in its own hue, on a chip washed with that hue. */
   | "chip"
   /** App: filled chip in its own hue, artwork drawn through it in the surface colour. */
   | "filled"
-  /** Document: the mark alone, no chip. */
+  /** Document: the mark on a neutral plate that carries no meaning of its own. */
   | "plain";
 
 interface IconSpec {
@@ -46,21 +46,21 @@ const REGISTRY: Record<string, IconSpec> = {
   // Apps. System Command is the one solid chip in the set — a terminal is a
   // surface you type into, and drawing it as ink makes it the anchor the other
   // three are read against; they keep the same footprint on a washed chip.
-  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",  finish: "filled" },
-  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)", finish: "chip"   },
-  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-cyan)", finish: "chip"   },
-  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-red)",  finish: "chip"   },
+  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",    finish: "filled" },
+  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)",   finish: "chip"   },
+  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-purple)", finish: "chip"   },
+  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip"   },
 
   // Documents. Red on the PDF is the one hue a file keeps — it is the format's
   // own signal, the way every file manager already draws it.
-  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",  finish: "plain"  },
-  folder:  { glyph: FolderGlyph,   tone: NEUTRAL,               finish: "plain"  },
-  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,               finish: "plain"  },
-  slide:   { glyph: SlideGlyph,    tone: NEUTRAL,               finish: "plain"  },
-  ui:      { glyph: LayersGlyph,   tone: NEUTRAL,               finish: "plain"  },
-  link:    { glyph: LinkGlyph,     tone: NEUTRAL,               finish: "plain"  },
-  about:   { glyph: InfoGlyph,     tone: NEUTRAL,               finish: "plain"  },
-  file:    { glyph: FileGlyph,     tone: NEUTRAL,               finish: "plain"  },
+  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",    finish: "plain"  },
+  folder:  { glyph: FolderGlyph,   tone: NEUTRAL,                 finish: "plain"  },
+  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain"  },
+  slide:   { glyph: SlideGlyph,    tone: NEUTRAL,                 finish: "plain"  },
+  ui:      { glyph: LayersGlyph,   tone: NEUTRAL,                 finish: "plain"  },
+  link:    { glyph: LinkGlyph,     tone: NEUTRAL,                 finish: "plain"  },
+  about:   { glyph: InfoGlyph,     tone: NEUTRAL,                 finish: "plain"  },
+  file:    { glyph: FileGlyph,     tone: NEUTRAL,                 finish: "plain"  },
 };
 
 export type IconKey = keyof typeof REGISTRY | string;
@@ -87,7 +87,7 @@ const wash = (tone: string, percent: number) =>
  */
 export function iconSurface(icon?: string): string {
   const tone = iconTone(icon);
-  return `linear-gradient(150deg, ${wash(tone, 14)}, ${wash(tone, 7)})`;
+  return `linear-gradient(150deg, ${wash(tone, 9)}, ${wash(tone, 4)})`;
 }
 
 interface FileGraphicProps {
@@ -116,16 +116,20 @@ export function FileGraphic({
 }
 
 /**
- * The three chip sizes the shell uses. Radius comes off the shape scale at
- * roughly 28% of the box — a squircle, the app-icon silhouette; any rounder and
- * a tile turns into a bubble. An app's artwork takes ~55% of its chip; a
- * document, having no chip to sit in, is drawn larger to hold the same weight.
+ * The three chip sizes the shell uses: a reading row, a dock slot or folder
+ * card, a desktop launcher. Radius is the step on the shape scale nearest ~28%
+ * of the box — a squircle, the app-icon silhouette; any rounder and a tile
+ * turns into a bubble, which is why the smallest chip rounds down rather than
+ * up. Artwork takes ~55% of its chip at every size.
  */
 const TILE = {
-  sm: { box: "h-8 w-8 rounded-sm",   app: 18, plain: 20 },
-  md: { box: "h-11 w-11 rounded-md", app: 24, plain: 27 },
-  lg: { box: "h-16 w-16 rounded-lg", app: 34, plain: 38 },
+  sm: { box: "h-7 w-7 rounded-xs",   glyph: 15 },
+  md: { box: "h-9 w-9 rounded-sm",   glyph: 20 },
+  lg: { box: "h-13 w-13 rounded-md", glyph: 28 },
 } as const;
+
+/** The neutral plate a document sits on — a container, not a signal. */
+const PLATE = "var(--os-surface-3)";
 
 interface IconTileProps {
   icon?: string;
@@ -134,44 +138,37 @@ interface IconTileProps {
 }
 
 /**
- * The app-icon form: every surface that launches something — desktop tile,
- * folder card, rail row, dock slot — shows the same chip, so one icon is
- * recognisable everywhere it appears. Documents keep the footprint, so rows
- * stay aligned, but drop the chip.
+ * The chipped form: every surface that lists things side by side — desktop
+ * tile, folder card, reading row, dock slot — shows the same box, so one icon
+ * is recognisable everywhere it appears and every row lines up.
  */
 export function IconTile({ icon, size = "md", className }: IconTileProps) {
-  const { box, app, plain } = TILE[size];
+  const { box, glyph } = TILE[size];
   const { tone, finish } = specOf(icon);
-
-  if (finish === "plain") {
-    return (
-      <span className={`grid shrink-0 place-items-center ${box} ${className ?? ""}`}>
-        <FileGraphic icon={icon} size={plain} />
-      </span>
-    );
-  }
-
   const filled = finish === "filled";
+  const plate = finish === "plain" ? PLATE : null;
+
   return (
     <span
       className={`grid shrink-0 place-items-center ${box} ${className ?? ""}`}
       style={
         {
-          background: filled ? tone : iconSurface(icon),
-          // A washed chip has no mass to cast with; only the solid one lifts.
+          background: plate ?? (filled ? tone : iconSurface(icon)),
+          // A washed or neutral chip has no mass to cast with; only the solid
+          // one lifts.
           boxShadow: filled
             ? `0 6px 14px -8px color-mix(in srgb, ${tone} 70%, transparent)`
             : "none",
           // Whatever masks inside the artwork has to be painted in the chip it
           // sits on, or it reads as a stray mark instead of a hole: the hue
           // itself on a filled chip, the wash beneath the glyph on a washed one.
-          "--icon-cut": filled ? tone : wash(tone, 10),
+          "--icon-cut": plate ?? (filled ? tone : wash(tone, 6)),
         } as React.CSSProperties
       }
     >
       <FileGraphic
         icon={icon}
-        size={app}
+        size={glyph}
         color={filled ? "var(--os-surface-1)" : undefined}
       />
     </span>

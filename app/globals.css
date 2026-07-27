@@ -19,7 +19,9 @@
 
   --os-text: #1f1f1f;
   --os-text-dim: #444746;
-  --os-text-faint: #747775;
+  /* Holds AA on the tonal surfaces too, not just on white — captions and meta
+     columns sit on surface-3 whenever a row is hovered. */
+  --os-text-faint: #6d706e;
 
   --os-border: #e3e6ea;
   --os-border-strong: #c7cbd1;
@@ -35,10 +37,11 @@
    * the settings, the bin — so that a coloured chip *means* "this launches".
    * Documents run on `neutral` and stay quiet; `ink` is the terminal's filled
    * chip. Google product-icon values on Daylight; every theme restates the
-   * same five so nothing hardcodes a hex.
+   * same six so nothing hardcodes a hex.
    */
   --os-icon-blue: #1a73e8;
-  --os-icon-cyan: #00796b;
+  --os-icon-purple: #9334e6;
+  --os-icon-yellow: #f9ab00;
   --os-icon-red: #d93025;
   --os-icon-ink: #202124;
   --os-icon-neutral: #5f6368;
@@ -47,6 +50,15 @@
   --shadow-1: 0 1px 2px rgba(60, 64, 67, 0.1), 0 1px 3px 1px rgba(60, 64, 67, 0.06);
   --shadow-2: 0 1px 3px rgba(60, 64, 67, 0.12), 0 4px 8px 3px rgba(60, 64, 67, 0.08);
   --shadow-3: 0 4px 8px rgba(60, 64, 67, 0.12), 0 12px 28px 6px rgba(60, 64, 67, 0.1);
+
+  /*
+   * Both chrome bars stand the same height — the system bar across the top, the
+   * dock across the foot — so the shell reads as one frame around the
+   * workspace, and the rail's brand band lines up with the top of it. They sit
+   * in the flow and reserve their own space; only overlays anchored to the
+   * viewport have to know this number.
+   */
+  --os-bar-h: 64px;
 
   --background: var(--os-bg);
   --foreground: var(--os-text);
@@ -64,7 +76,7 @@
 
   --os-text: #e7edf0;
   --os-text-dim: #a9b6bd;
-  --os-text-faint: #6b7780;
+  --os-text-faint: #8a969e;
 
   --os-border: rgba(231, 237, 240, 0.12);
   --os-border-strong: rgba(231, 237, 240, 0.24);
@@ -75,47 +87,13 @@
   --os-tertiary: #e8a21a;
   --os-error: #ff6b6b;
 
-  /* Same five, lifted to Material dark tones so they read on #161d26. */
+  /* Same six, lifted to Material dark tones so they read on #161d26. */
   --os-icon-blue: #8ab4f8;
-  --os-icon-cyan: #78d9ec;
+  --os-icon-purple: #d7aefb;
+  --os-icon-yellow: #fdd663;
   --os-icon-red: #f28b82;
   --os-icon-ink: #dfe6ea;
   --os-icon-neutral: #9aa5ab;
-
-  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
-  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.22);
-  --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.48), 0 4px 10px rgba(0, 0, 0, 0.26);
-}
-
-/* Theme 3: Matrix Green — dark, green-seeded */
-[data-theme="matrix"] {
-  --os-bg: #05080a;
-  --os-accent: #00ff41;
-  --os-surface-1: #0e1911;
-  --os-surface-2: #0d150e;
-  --os-surface-3: #142016;
-  --os-header: var(--os-surface-3);
-  --os-surface: var(--os-surface-2);
-
-  --os-text: #d8f5db;
-  --os-text-dim: #8fae93;
-  --os-text-faint: #566b58;
-
-  --os-border: rgba(216, 245, 219, 0.12);
-  --os-border-strong: rgba(216, 245, 219, 0.24);
-
-  --os-accent-container: #123a1a;
-  --os-on-accent-container: #9df7ad;
-
-  --os-tertiary: #e8a21a;
-  --os-error: #ff6b6b;
-
-  /* Phosphor set — the same five, pulled to what a CRT could actually emit. */
-  --os-icon-blue: #5ad2ff;
-  --os-icon-cyan: #39ffd0;
-  --os-icon-red: #ff5f56;
-  --os-icon-ink: #c8e6cc;
-  --os-icon-neutral: #7b9a7f;
 
   --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
   --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.22);
@@ -133,7 +111,6 @@
   --color-os-on-accent-container: var(--os-on-accent-container);
   --color-os-surface: var(--os-surface);
   --color-os-surface-1: var(--os-surface-1);
-  --color-os-surface-2: var(--os-surface-2);
   --color-os-surface-3: var(--os-surface-3);
   --color-os-header: var(--os-header);
   --color-os-border: var(--os-border);
@@ -216,36 +193,14 @@ body {
     0 0 14px color-mix(in srgb, var(--os-accent) 35%, transparent);
 }
 
-/* Pulsing soft glow — used by the boot button and the system-bar's live status dot. */
-@keyframes os-pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--os-accent) 0%, transparent);
-  }
-  50% {
-    box-shadow: 0 0 18px 0 color-mix(in srgb, var(--os-accent) 35%, transparent);
-  }
-}
-.animate-pulse-glow {
-  animation: os-pulse-glow 2.4s ease-in-out infinite;
-}
-
-/* Ambient FX belong to the dark themes only — on Daylight they'd muddy the white. */
+/* Ambient FX belong to the dark theme only — on Daylight they'd muddy the white. */
 .bg-vignette,
 .bg-ambient-grid {
   display: none;
 }
 [data-theme="dark"] .bg-vignette,
-[data-theme="dark"] .bg-ambient-grid,
-[data-theme="matrix"] .bg-vignette,
-[data-theme="matrix"] .bg-ambient-grid {
+[data-theme="dark"] .bg-ambient-grid {
   display: block;
-}
-
-/* Launcher tiles on the desktop — a glyph, a name, and one word of caption. */
-.desktop-grid {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
 }
 
 /* Detailed cards inside folder windows — wider, they carry a line of metadata. */
@@ -253,6 +208,13 @@ body {
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+/* Fades the trailing edge of a horizontal scroller, so an item cut off by the
+   edge reads as "there is more" rather than as the end of the row. When the
+   content fits, the fade falls on empty space and costs nothing. */
+.scroll-fade-x {
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
 }
 
 /* One keyboard-focus treatment for every interactive surface in the OS. */
@@ -271,9 +233,4 @@ body {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--os-text-faint);
-}
-
-/* Misc helpers preserved from previous version */
-.rotate-270 {
-  transform: rotate(-90deg);
 }

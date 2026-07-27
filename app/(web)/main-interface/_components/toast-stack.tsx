@@ -24,7 +24,12 @@ export function ToastStack({ toasts }: { toasts: Toast[] }) {
   return (
     <div
       className="fixed flex flex-col gap-2 text-[12px] pointer-events-none"
-      style={{ right: 16, bottom: 66, zIndex: 9000 }}
+      style={{
+        right: 16,
+        // Anchored to the viewport, so it clears the dock by hand.
+        bottom: "calc(var(--os-bar-h) + 16px)",
+        zIndex: 9000,
+      }}
     >
       {toasts.map((t) => {
         const c = COLORS[t.kind];

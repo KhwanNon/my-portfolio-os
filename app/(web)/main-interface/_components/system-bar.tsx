@@ -1,21 +1,27 @@
 "use client";
-import { Menu, Moon, Search, Sun, Terminal, type LucideIcon } from "lucide-react";
+import { Menu, Moon, Search, Sun, type LucideIcon } from "lucide-react";
 import { THEMES, useTheme, type ThemeId } from "@/app/shared/hooks/use-theme";
 
 const THEME_ICON: Record<ThemeId, LucideIcon> = {
   daylight: Sun,
   dark: Moon,
-  matrix: Terminal,
 };
 
 /** Top app bar of the content column — search on the left, scheme on the right. */
-export function SystemBar({ onMenuClick }: { onMenuClick: () => void }) {
+export function SystemBar({
+  navOpen,
+  onMenuClick,
+}: {
+  navOpen: boolean;
+  onMenuClick: () => void;
+}) {
   const { theme, changeTheme } = useTheme();
 
   return (
     <header
-      className="relative flex h-16 shrink-0 select-none items-center gap-2 px-3 sm:px-5"
+      className="relative flex shrink-0 select-none items-center gap-2.5 px-4 sm:px-6"
       style={{
+        height: "var(--os-bar-h)",
         background: "var(--os-surface-1)",
         borderBottom: "1px solid var(--os-border)",
         zIndex: 300,
@@ -25,6 +31,8 @@ export function SystemBar({ onMenuClick }: { onMenuClick: () => void }) {
         onClick={onMenuClick}
         title="Open navigation"
         aria-label="Open navigation"
+        aria-expanded={navOpen}
+        aria-controls="shell-navigation"
         className="focus-ring grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-full transition-colors duration-200 hover:bg-os-surface-3 lg:hidden"
         style={{ color: "var(--os-text-dim)" }}
       >
@@ -35,11 +43,12 @@ export function SystemBar({ onMenuClick }: { onMenuClick: () => void }) {
       <button
         onClick={() => window.dispatchEvent(new CustomEvent("spotlight:toggle"))}
         title="Search (⌘K)"
-        className="focus-ring flex h-11 min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-full bg-os-surface-3 px-4 transition-[background-color,box-shadow] duration-200 hover:bg-os-surface-1 hover:shadow-(--shadow-2) sm:max-w-3xl"
+        className="focus-ring flex h-9 min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-full bg-os-surface-3 pl-4 pr-2.5 transition-[background-color,box-shadow] duration-200 hover:bg-os-surface-1 hover:shadow-(--shadow-2) sm:max-w-176"
       >
         <Search
-          size={18}
+          size={17}
           strokeWidth={1.8}
+          className="shrink-0"
           style={{ color: "var(--os-text-dim)" }}
         />
         <span
@@ -49,7 +58,7 @@ export function SystemBar({ onMenuClick }: { onMenuClick: () => void }) {
           Search files, apps, and more…
         </span>
         <kbd
-          className="hidden rounded-md px-1.5 py-0.5 text-[11px] font-medium sm:inline"
+          className="hidden shrink-0 rounded-xs px-1.5 py-0.5 text-[11px] font-medium sm:inline"
           style={{
             background: "var(--os-surface-1)",
             border: "1px solid var(--os-border)",
@@ -62,18 +71,17 @@ export function SystemBar({ onMenuClick }: { onMenuClick: () => void }) {
 
       {/* Colour scheme */}
       <div
-        className="ml-auto flex shrink-0 items-center gap-0.5 rounded-full p-1"
+        className="ml-auto flex shrink-0 items-center gap-0.5 rounded-full p-0.5"
         style={{ background: "var(--os-surface-3)" }}
       >
         {THEMES.map(({ id, label }) => {
           const Icon = THEME_ICON[id];
-          const isActive = theme === id;
           return (
             <SchemeButton
               key={id}
               label={`${label} theme`}
               onClick={() => changeTheme(id)}
-              pressed={isActive}
+              pressed={theme === id}
             >
               <Icon size={16} strokeWidth={1.8} />
             </SchemeButton>
@@ -84,7 +92,7 @@ export function SystemBar({ onMenuClick }: { onMenuClick: () => void }) {
   );
 }
 
-/** One scheme in the toggle track — the chosen one rides above the others. */
+/** One scheme in the toggle track — the chosen one rides above the other. */
 function SchemeButton({
   label,
   onClick,

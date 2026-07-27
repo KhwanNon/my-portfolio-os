@@ -8,6 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import type { FileNode } from "@/app/shared/types/file-system";
+import { workspaceBox } from "../lib/workspace";
 
 export interface WindowInstance {
   id: string;
@@ -49,16 +50,21 @@ const DEFAULT_WINDOW_SIZES: Record<string, { width: number; height: number }> =
     "profile-txt": { width: 620, height: 440 },
   };
 
+/** Breathing room between a window and the edge of the workspace. */
+const MARGIN = 16;
+
+const clamp = (value: number, max: number) => Math.max(0, Math.min(value, max));
+
 function getDefaultSize(fileNode: FileNode): { width: number; height: number } {
   const target = fileNode.id.startsWith("props-")
     ? { width: 420, height: 360 }
     : DEFAULT_WINDOW_SIZES[fileNode.id] ?? { width: 640, height: 460 };
   if (typeof window === "undefined") return target;
-  // Clamp to the workspace — the viewport minus the system bar, the floating
-  // taskbar, and a little breathing room.
+  // A window opens no larger than the box it opens into, dock band excluded.
+  const box = workspaceBox();
   return {
-    width: Math.min(target.width, Math.max(280, window.innerWidth - 32)),
-    height: Math.min(target.height, Math.max(200, window.innerHeight - 168)),
+    width: Math.min(target.width, Math.max(280, box.width - MARGIN * 2)),
+    height: Math.min(target.height, Math.max(200, box.height - MARGIN * 2)),
   };
 }
 
@@ -67,12 +73,13 @@ function getDefaultPosition(
   size: { width: number; height: number },
 ): { x: number; y: number } {
   if (typeof window === "undefined") return { x: 80, y: 60 };
+  // Each new window steps down and right off the last, until the cascade would
+  // push it past the workspace — then it stops at the far edge.
+  const box = workspaceBox();
   const offset = (count % 8) * 28;
-  const maxX = Math.max(0, window.innerWidth - size.width - 20);
-  const maxY = Math.max(0, window.innerHeight - size.height - 80);
   return {
-    x: Math.min(80 + offset, maxX),
-    y: Math.min(60 + offset, maxY),
+    x: clamp(80 + offset, box.width - size.width - MARGIN),
+    y: clamp(60 + offset, box.height - size.height - MARGIN),
   };
 }
 
