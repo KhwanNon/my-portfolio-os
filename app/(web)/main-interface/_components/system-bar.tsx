@@ -1,130 +1,115 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Menu, Moon, Search, Sun, Terminal, type LucideIcon } from "lucide-react";
+import { THEMES, useTheme, type ThemeId } from "@/app/shared/hooks/use-theme";
 
-function useLiveClock() {
-  const [now, setNow] = useState<Date | null>(null);
-  useEffect(() => {
-    const update = () => setNow(new Date());
-    update();
-    const id = setInterval(update, 1000);
-    return () => clearInterval(id);
-  }, []);
-  return now;
-}
+const THEME_ICON: Record<ThemeId, LucideIcon> = {
+  daylight: Sun,
+  dark: Moon,
+  matrix: Terminal,
+};
 
-/** Slowly-varying fake stat so the readout feels alive without distracting. */
-function useFakeStat(baseline: number, jitter: number) {
-  const [val, setVal] = useState(baseline);
-  useEffect(() => {
-    const id = setInterval(() => {
-      setVal(() => {
-        const next = baseline + (Math.random() - 0.5) * jitter * 2;
-        return Math.max(5, Math.min(95, next));
-      });
-    }, 1800);
-    return () => clearInterval(id);
-  }, [baseline, jitter]);
-  return val;
-}
-
-export function SystemBar() {
-  const now = useLiveClock();
-  const cpu = useFakeStat(34, 10);
-  const ram = useFakeStat(62, 8);
-  const net = useFakeStat(48, 16);
-
-  const time =
-    now?.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }) ?? "--:--:--";
+/** Top app bar of the content column — search on the left, scheme on the right. */
+export function SystemBar({ onMenuClick }: { onMenuClick: () => void }) {
+  const { theme, changeTheme } = useTheme();
 
   return (
-    <div
-      className="relative flex items-center justify-between gap-2 px-3 sm:px-4 shrink-0 select-none"
+    <header
+      className="relative flex h-16 shrink-0 select-none items-center gap-2 px-3 sm:px-5"
       style={{
-        height: 26,
-        background: "var(--os-surface-3)",
+        background: "var(--os-surface-1)",
         borderBottom: "1px solid var(--os-border)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        color: "var(--os-text-dim)",
         zIndex: 300,
       }}
     >
-      {/* Left — brand + connection state */}
-      <div className="flex items-center gap-3 text-[10px] tracking-wide font-bold min-w-0 font-os-mono">
-        <span
-          className="w-1.5 h-1.5 rounded-full animate-pulse-glow shrink-0"
-          style={{
-            background: "var(--os-accent)",
-            boxShadow: "0 0 6px var(--os-accent)",
-          }}
-        />
-        <span className="opacity-90 truncate">PORTFOLIO_OS</span>
-        <span className="opacity-30 hidden sm:inline">v2.4.0</span>
-        <span className="opacity-30 hidden lg:inline">·</span>
-        <span className="opacity-50 hidden lg:inline">SECURE_CONN</span>
-      </div>
+      <button
+        onClick={onMenuClick}
+        title="Open navigation"
+        aria-label="Open navigation"
+        className="focus-ring grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-full transition-colors duration-200 hover:bg-os-surface-3 lg:hidden"
+        style={{ color: "var(--os-text-dim)" }}
+      >
+        <Menu size={18} strokeWidth={1.8} />
+      </button>
 
-      {/* Center — clickable Spotlight affordance */}
+      {/* Search — the bar's centre of gravity; opens Spotlight */}
       <button
         onClick={() => window.dispatchEvent(new CustomEvent("spotlight:toggle"))}
-        className="hidden md:flex items-center gap-2 px-3 py-1 rounded-md transition-colors hover:opacity-100 opacity-70 cursor-pointer"
-        style={{
-          border: "1px solid var(--os-border)",
-          background: "var(--os-surface-1)",
-          color: "var(--os-text-dim)",
-        }}
         title="Search (⌘K)"
+        className="focus-ring flex h-11 min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-full bg-os-surface-3 px-4 transition-[background-color,box-shadow] duration-200 hover:bg-os-surface-1 hover:shadow-(--shadow-2) sm:max-w-3xl"
       >
-        <span className="text-[10px] opacity-60 font-os-mono">›_</span>
-        <span className="text-[10px] tracking-wide opacity-70">
-          Search files, apps…
+        <Search
+          size={18}
+          strokeWidth={1.8}
+          style={{ color: "var(--os-text-dim)" }}
+        />
+        <span
+          className="flex-1 truncate text-left text-[13px]"
+          style={{ color: "var(--os-text-dim)" }}
+        >
+          Search files, apps, and more…
         </span>
         <kbd
-          className="text-[9px] opacity-70 tracking-wide px-1.5 py-0.5 rounded-sm ml-2 font-os-mono"
+          className="hidden rounded-md px-1.5 py-0.5 text-[11px] font-medium sm:inline"
           style={{
-            border: "1px solid var(--os-border-strong)",
-            background: "var(--os-surface-2)",
+            background: "var(--os-surface-1)",
+            border: "1px solid var(--os-border)",
+            color: "var(--os-text-faint)",
           }}
         >
           ⌘K
         </kbd>
       </button>
 
-      {/* Right — stats + clock. Progressively reveal stats on wider screens. */}
-      <div className="flex items-center gap-3 sm:gap-4 text-[10px] tracking-wide shrink-0 font-os-mono">
-        <div className="hidden xl:block"><Stat label="CPU" value={cpu} /></div>
-        <div className="hidden xl:block"><Stat label="MEM" value={ram} /></div>
-        <div className="hidden 2xl:block"><Stat label="NET" value={net} /></div>
-        <span className="font-bold tabular-nums opacity-90">{time}</span>
+      {/* Colour scheme */}
+      <div
+        className="ml-auto flex shrink-0 items-center gap-0.5 rounded-full p-1"
+        style={{ background: "var(--os-surface-3)" }}
+      >
+        {THEMES.map(({ id, label }) => {
+          const Icon = THEME_ICON[id];
+          const isActive = theme === id;
+          return (
+            <SchemeButton
+              key={id}
+              label={`${label} theme`}
+              onClick={() => changeTheme(id)}
+              pressed={isActive}
+            >
+              <Icon size={16} strokeWidth={1.8} />
+            </SchemeButton>
+          );
+        })}
       </div>
-    </div>
+    </header>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+/** One scheme in the toggle track — the chosen one rides above the others. */
+function SchemeButton({
+  label,
+  onClick,
+  pressed,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  pressed: boolean;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex items-center gap-1.5 opacity-80">
-      <span className="opacity-60">{label}</span>
-      <div
-        className="relative w-12 h-1.5 rounded-xs overflow-hidden"
-        style={{ background: "var(--os-surface-1)" }}
-      >
-        <div
-          className="absolute inset-y-0 left-0 transition-[width] duration-700"
-          style={{
-            width: `${Math.round(value)}%`,
-            background: "var(--os-accent)",
-          }}
-        />
-      </div>
-      <span className="opacity-50 tabular-nums w-7 text-right">
-        {Math.round(value)}%
-      </span>
-    </div>
+    <button
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      aria-pressed={pressed}
+      className="focus-ring grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-full transition-[background-color,box-shadow] duration-200"
+      style={{
+        background: pressed ? "var(--os-surface-1)" : "transparent",
+        boxShadow: pressed ? "var(--shadow-1)" : "none",
+        color: pressed ? "var(--os-accent)" : "var(--os-text-faint)",
+      }}
+    >
+      {children}
+    </button>
   );
 }

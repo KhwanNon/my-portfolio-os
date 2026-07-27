@@ -1,13 +1,23 @@
 import type { Metadata, Viewport } from "next";
 import { Roboto, Roboto_Mono } from "next/font/google";
+import { STORAGE_KEYS } from "@/app/shared/constants/storage";
 import "./globals.css";
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#10151c",
+  themeColor: "#ffffff",
 };
+
+/**
+ * Re-applies the saved theme before first paint. Daylight is the default, so
+ * only the dark schemes need an attribute — a returning visitor never sees a
+ * flash of white before their theme lands.
+ */
+const THEME_BOOTSTRAP = `try{var t=localStorage.getItem(${JSON.stringify(
+  STORAGE_KEYS.theme,
+)});if(t==="dark"||t==="matrix")document.documentElement.setAttribute("data-theme",t)}catch(e){}`;
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -33,6 +43,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
+      </head>
       <body
         className={`${roboto.variable} ${robotoMono.variable} antialiased`}
       >

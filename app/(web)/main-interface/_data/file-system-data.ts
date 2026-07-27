@@ -7,7 +7,7 @@ import { educationFile } from "./education";
 import { aboutFolder } from "./about";
 import { recycleBin } from "./recycle-bin";
 
-const cDrive: FileNode = {
+export const cDrive: FileNode = {
   id: "c-drive",
   name: "C-DRIVE",
   type: "folder",
@@ -81,12 +81,24 @@ const systemCommand: FileNode = {
   data: { kind: "program", component: "SystemCommand" },
 };
 
-const preferences: FileNode = {
+export const preferences: FileNode = {
   id: "preferences",
   name: "Preferences",
   type: "program",
   icon: ICONS.prefs,
   data: { kind: "program", component: "Preferences" },
+};
+
+/**
+ * Not part of the drive — a view the shell can open from anywhere
+ * (help button, desktop menu).
+ */
+export const aboutOsNode: FileNode = {
+  id: "about-os",
+  name: "About Portfolio OS",
+  type: "ui",
+  icon: ICONS.about,
+  data: { kind: "ui", component: "AboutOSUI", props: {} },
 };
 
 export const desktopFileSystem: FileNode[] = [
@@ -98,21 +110,32 @@ export const desktopFileSystem: FileNode[] = [
   preferences,
 ];
 
-// Desktop sections layout — `ids` reference nodes in desktopFileSystem above.
-export const desktopSections = [
-  {
-    title: "Directories",
-    variant: "default" as const,
-    ids: ["c-drive", "recycle-bin"],
-  },
-  {
-    title: "Assets",
-    variant: "default" as const,
-    ids: ["profile-txt", "resume-pdf"],
-  },
-  {
-    title: "Executables",
-    variant: "active" as const,
-    ids: ["system-command", "preferences"],
-  },
+/** How the side rail groups those shortcuts. */
+export const desktopSections: { title: string; nodes: FileNode[] }[] = [
+  { title: "Directories", nodes: [cDrive, recycleBin] },
+  { title: "Assets", nodes: [profileTxt, resumePdf] },
+  { title: "Executables", nodes: [systemCommand, preferences] },
+];
+
+/**
+ * The tools this OS ships with — everything you *use* rather than read: the
+ * drive, the terminal, the bin, the settings. `kind` captions the tile.
+ */
+export const applications: { node: FileNode; kind: string }[] = [
+  { node: cDrive, kind: "Files" },
+  { node: systemCommand, kind: "Terminal" },
+  { node: preferences, kind: "Settings" },
+  { node: recycleBin, kind: "Trash" },
+];
+
+/**
+ * The guided tour: what a first-time visitor should open, in order, and why.
+ * Hand-curated — this is a recommendation, not a recently-used log.
+ */
+export const suggestedItems: { node: FileNode; reason: string }[] = [
+  { node: resumePdf, reason: "Start here" },
+  { node: projectsFolder, reason: "What I've shipped" },
+  { node: skillsFolder, reason: "What I build with" },
+  { node: experienceFolder, reason: "Where I've worked" },
+  { node: profileTxt, reason: "Who I am" },
 ];

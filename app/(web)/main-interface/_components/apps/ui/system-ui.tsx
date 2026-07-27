@@ -31,7 +31,7 @@ export function PropertiesUI({
           className="flex items-center justify-center shrink-0"
           style={{ width: 40, height: 40, color: "var(--os-text)" }}
         >
-          <FileGraphic icon={icon} size={32} strokeWidth={1.4} />
+          <FileGraphic icon={icon} size={32} />
         </div>
         <div>
           <div className="font-bold text-sm break-all">{targetName}</div>

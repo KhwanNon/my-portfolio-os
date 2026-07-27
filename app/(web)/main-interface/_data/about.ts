@@ -1,6 +1,7 @@
 import type { FileNode } from "@/app/shared/types/file-system";
 import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
+import { OWNER } from "./identity";
 
 // Flat folder — bio and contact first, personality files after.
 export const aboutFolder: FileNode = {
@@ -14,12 +15,12 @@ export const aboutFolder: FileNode = {
       uiNode({ id: "about-me", name: "me.ui" }, "PersonalBioUI", {
         bio: "Hello! I'm Khwanchai Nontawichit (Khwan) — a Mobile Developer from Thailand with 4+ years of professional Flutter experience, currently in a full-stack role where I own the mobile product end-to-end and also work across Go backends, database design, and web. I specialize in Clean Architecture and love building apps that are fast, maintainable, and a joy to use. I lead teams, mentor juniors, and care deeply about code quality and shipping reliable products.",
         facts: [
-          { label: "Name", value: "Khwanchai Nontawichit" },
-          { label: "Alias", value: "Khwan" },
+          { label: "Name", value: OWNER.name },
+          { label: "Alias", value: OWNER.alias },
           { label: "Location", value: "Bangkok, Thailand" },
-          { label: "Role", value: "Mobile Developer · Full-Stack" },
-          { label: "Experience", value: "4+ Years" },
-          { label: "Main Stack", value: "Flutter · Dart" },
+          { label: "Role", value: OWNER.role },
+          { label: "Experience", value: OWNER.experience },
+          { label: "Main Stack", value: OWNER.stack },
           { label: "Languages", value: "Thai · English" },
           { label: "Status", value: "Open to Opportunities" },
         ],

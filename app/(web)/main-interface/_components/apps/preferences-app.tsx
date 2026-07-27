@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useTheme } from "@/app/shared/hooks/use-theme";
+import { THEMES, useTheme } from "@/app/shared/hooks/use-theme";
 
 type Section = "os-version" | "theme" | "language";
 
@@ -8,16 +8,6 @@ const NAV_ITEMS: { id: Section; label: string }[] = [
   { id: "os-version", label: "OS Version" },
   { id: "theme", label: "Theme Mode" },
   { id: "language", label: "Language" },
-];
-
-const THEMES: {
-  id: "default" | "matrix" | "light";
-  label: string;
-  preview: string;
-}[] = [
-  { id: "default", label: "Dark Theme", preview: "#10151c" },
-  { id: "matrix", label: "Matrix Theme", preview: "#05080a" },
-  { id: "light", label: "Light Theme", preview: "#f4f7f8" },
 ];
 
 const LANGUAGES: { id: string; label: string }[] = [
@@ -116,7 +106,7 @@ function ThemeSection() {
               <div
                 className="w-4 h-4 rounded-full shrink-0"
                 style={{
-                  background: t.preview,
+                  background: t.swatch,
                   border: "1px solid var(--os-border-strong)",
                 }}
               />

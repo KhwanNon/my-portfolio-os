@@ -14,12 +14,11 @@ function hash(s: string): number {
 
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
+/** Mock mtime for `ls -l` and Properties — day padded so rows stay aligned. */
 export function fakeDate(node: FileNode): string {
-  const days = hash(node.id) % 365;
-  const d = new Date(2024, 0, 1 + days);
-  const mo = MONTHS[d.getMonth()];
+  const d = new Date(2024, 0, 1 + (hash(node.id) % 365));
   const day = String(d.getDate()).padStart(2, " ");
-  return `${mo} ${day}  ${d.getFullYear()}`;
+  return `${MONTHS[d.getMonth()]} ${day}  ${d.getFullYear()}`;
 }
 
 export function fakeSize(node: FileNode): number {

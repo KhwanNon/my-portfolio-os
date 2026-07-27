@@ -33,6 +33,7 @@ type Action =
     }
   | { type: "CLOSE"; id: string }
   | { type: "MINIMIZE"; id: string }
+  | { type: "MINIMIZE_ALL" }
   | { type: "RESTORE"; id: string }
   | { type: "MAXIMIZE"; id: string }
   | { type: "FOCUS"; id: string }
@@ -53,10 +54,11 @@ function getDefaultSize(fileNode: FileNode): { width: number; height: number } {
     ? { width: 420, height: 360 }
     : DEFAULT_WINDOW_SIZES[fileNode.id] ?? { width: 640, height: 460 };
   if (typeof window === "undefined") return target;
-  // Clamp to viewport (leave room for the system bar / taskbar / a bit of margin).
+  // Clamp to the workspace — the viewport minus the system bar, the floating
+  // taskbar, and a little breathing room.
   return {
     width: Math.min(target.width, Math.max(280, window.innerWidth - 32)),
-    height: Math.min(target.height, Math.max(200, window.innerHeight - 120)),
+    height: Math.min(target.height, Math.max(200, window.innerHeight - 168)),
   };
 }
 
@@ -125,6 +127,11 @@ function reducer(
         windows: state.windows.map((w) =>
           w.id === action.id ? { ...w, isMinimized: true } : w,
         ),
+      };
+    case "MINIMIZE_ALL":
+      return {
+        ...state,
+        windows: state.windows.map((w) => ({ ...w, isMinimized: true })),
       };
     case "RESTORE":
       return {
@@ -209,6 +216,8 @@ interface WindowManagerContextValue {
   openFile: (fileNode: FileNode) => void;
   closeWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
+  /** Clear the desktop — every window drops to the taskbar. */
+  minimizeAllWindows: () => void;
   restoreWindow: (id: string) => void;
   maximizeWindow: (id: string) => void;
   focusWindow: (id: string) => void;
@@ -289,6 +298,10 @@ export function WindowManagerProvider({
     (id: string) => dispatch({ type: "MINIMIZE", id }),
     [],
   );
+  const minimizeAllWindows = useCallback(
+    () => dispatch({ type: "MINIMIZE_ALL" }),
+    [],
+  );
   const restoreWindow = useCallback(
     (id: string) => dispatch({ type: "RESTORE", id }),
     [],
@@ -318,6 +331,7 @@ export function WindowManagerProvider({
         openFile,
         closeWindow,
         minimizeWindow,
+        minimizeAllWindows,
         restoreWindow,
         maximizeWindow,
         focusWindow,

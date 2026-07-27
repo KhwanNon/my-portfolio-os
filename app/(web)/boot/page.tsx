@@ -29,7 +29,11 @@ export default function BootScreen() {
   }, [handleInitialize]);
 
   return (
-    <main className="fixed inset-0 z-50 flex flex-col bg-os-bg text-os-accent font-os-mono overflow-hidden uppercase">
+    // The boot sequence is a CRT moment — it stays dark whatever the desktop theme is.
+    <main
+      data-theme="dark"
+      className="fixed inset-0 z-50 flex flex-col bg-os-bg text-os-accent font-os-mono overflow-hidden uppercase"
+    >
       {/* Visual FX Layers */}
       <div className="absolute inset-0 pointer-events-none z-60 bg-scanlines opacity-20" />
       <MatrixRain opacity={0.4} />

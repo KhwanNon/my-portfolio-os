@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { Copy, Minus, Square, X } from "lucide-react";
 import type { WindowInstance } from "@/app/modules/desktop/context/window-manager-context";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { useIsSmallViewport } from "../../_lib/use-viewport";
+import { FileGraphic } from "../file-graphic";
 import { SPRING_EXPRESSIVE } from "@/app/shared/constants/motion";
 
 interface WindowFrameProps {
@@ -13,6 +15,37 @@ interface WindowFrameProps {
 
 const MIN_WIDTH = 280;
 const MIN_HEIGHT = 180;
+
+/** Ghost round control in the title bar; `danger` tints the close action red. */
+function TitleButton({
+  label,
+  onClick,
+  danger,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  danger?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      title={label}
+      aria-label={label}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      className={`focus-ring grid h-8 w-8 cursor-pointer place-items-center rounded-full text-os-text-dim transition-colors duration-150 ${
+        danger
+          ? "hover:bg-os-error/12 hover:text-os-error"
+          : "hover:bg-os-surface-3"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
 
 export function WindowFrame({ window: win, children }: WindowFrameProps) {
   const {
@@ -143,10 +176,10 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.94, y: 6 }}
       transition={SPRING_EXPRESSIVE}
-      className="absolute flex flex-col rounded-xl overflow-hidden"
+      className="absolute flex flex-col overflow-hidden rounded-lg"
       style={{
         ...style,
-        border: "1px solid var(--os-border-strong)",
+        border: "1px solid var(--os-border)",
         background: "var(--os-surface)",
         boxShadow: "var(--shadow-3)",
       }}
@@ -166,9 +199,9 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     >
       {/* Title Bar */}
       <div
-        className="flex items-center justify-between px-3 select-none shrink-0"
+        className="flex shrink-0 select-none items-center justify-between gap-2 pl-4 pr-2"
         style={{
-          height: 36,
+          height: 44,
           background: "var(--os-header)",
           borderBottom: "1px solid var(--os-border)",
           cursor: effectivelyMaximized ? "default" : "move",
@@ -181,65 +214,40 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
         }}
       >
         {/* Title */}
-        <span
-          className="text-xs font-medium tracking-wide truncate"
-          style={{ color: "var(--os-text)" }}
-        >
-          {win.fileNode.name}
-        </span>
+        <div className="flex min-w-0 items-center gap-2">
+          <FileGraphic icon={win.fileNode.icon} size={16} />
+          <span
+            className="truncate text-[13px] font-medium"
+            style={{ color: "var(--os-text)" }}
+          >
+            {win.fileNode.name}
+          </span>
+        </div>
 
         {/* Window Controls */}
-        <div className="flex items-center gap-1.5 ml-2">
-          {/* Minimize */}
-          <button
-            className="w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold transition-opacity hover:opacity-100 opacity-70 cursor-pointer"
-            style={{
-              background: "var(--os-surface-1)",
-              border: "1px solid var(--os-border)",
-              color: "var(--os-text-dim)",
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              minimizeWindow(win.id);
-            }}
-            title="Minimize"
+        <div className="flex shrink-0 items-center gap-0.5">
+          <TitleButton
+            label="Minimize"
+            onClick={() => minimizeWindow(win.id)}
           >
-            _
-          </button>
+            <Minus size={15} strokeWidth={2} />
+          </TitleButton>
           {/* Maximize — hidden on mobile (auto-maximised already) */}
           {!isMobile && (
-            <button
-              className="w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold transition-opacity hover:opacity-100 opacity-70 cursor-pointer"
-              style={{
-                background: "var(--os-surface-1)",
-                border: "1px solid var(--os-border)",
-                color: "var(--os-text-dim)",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                maximizeWindow(win.id);
-              }}
-              title={win.isMaximized ? "Restore" : "Maximize"}
+            <TitleButton
+              label={win.isMaximized ? "Restore" : "Maximize"}
+              onClick={() => maximizeWindow(win.id)}
             >
-              {win.isMaximized ? "❐" : "□"}
-            </button>
+              {win.isMaximized ? (
+                <Copy size={13} strokeWidth={2} />
+              ) : (
+                <Square size={12} strokeWidth={2.2} />
+              )}
+            </TitleButton>
           )}
-          {/* Close */}
-          <button
-            className="w-5 h-5 rounded-sm flex items-center justify-center text-[10px] font-bold transition-colors hover:opacity-100 opacity-70 cursor-pointer"
-            style={{
-              background: "color-mix(in srgb, var(--os-error) 16%, transparent)",
-              border: "1px solid color-mix(in srgb, var(--os-error) 40%, transparent)",
-              color: "var(--os-error)",
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              closeWindow(win.id);
-            }}
-            title="Close"
-          >
-            ×
-          </button>
+          <TitleButton label="Close" danger onClick={() => closeWindow(win.id)}>
+            <X size={16} strokeWidth={2} />
+          </TitleButton>
         </div>
       </div>
 
@@ -260,7 +268,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
             height: 16,
             cursor: "nwse-resize",
             background:
-              "linear-gradient(135deg, transparent 0%, transparent 50%, var(--os-border-strong) 50%, var(--os-border-strong) 60%, transparent 60%, transparent 70%, var(--os-border-strong) 70%, var(--os-border-strong) 80%, transparent 80%)",
+              "linear-gradient(135deg, transparent 0%, transparent 50%, var(--os-border) 50%, var(--os-border) 60%, transparent 60%, transparent 70%, var(--os-border) 70%, var(--os-border) 80%, transparent 80%)",
           }}
           title="Resize"
         />

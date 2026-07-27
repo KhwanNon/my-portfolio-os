@@ -8,10 +8,55 @@
  * theme-invariant (shape/elevation don't change with color scheme).
  */
 :root {
-  /* Theme 1: Cyber Blue (Default) — dark, teal-seeded */
-  --os-bg: #10151c;
+  /* Theme 1: Daylight (Default) — M3 light, seeded with Google primary blue */
+  --os-bg: #f6f8fc;
+  --os-accent: #0b57d0;
+  --os-surface-1: #ffffff;
+  --os-surface-2: #ffffff;
+  --os-surface-3: #f0f4f9;
+  --os-header: var(--os-surface-1);
+  --os-surface: var(--os-surface-2);
+
+  --os-text: #1f1f1f;
+  --os-text-dim: #444746;
+  --os-text-faint: #747775;
+
+  --os-border: #e3e6ea;
+  --os-border-strong: #c7cbd1;
+
+  --os-accent-container: #d3e3fd;
+  --os-on-accent-container: #041e49;
+
+  --os-tertiary: #a15c00;
+  --os-error: #b3261e;
+
+  /*
+   * Icon palette. Colour is spent only on the apps — the disk, the terminal,
+   * the settings, the bin — so that a coloured chip *means* "this launches".
+   * Documents run on `neutral` and stay quiet; `ink` is the terminal's filled
+   * chip. Google product-icon values on Daylight; every theme restates the
+   * same five so nothing hardcodes a hex.
+   */
+  --os-icon-blue: #1a73e8;
+  --os-icon-cyan: #00796b;
+  --os-icon-red: #d93025;
+  --os-icon-ink: #202124;
+  --os-icon-neutral: #5f6368;
+
+  /* Elevation reads as soft neutral shadow on light surfaces, never as a line. */
+  --shadow-1: 0 1px 2px rgba(60, 64, 67, 0.1), 0 1px 3px 1px rgba(60, 64, 67, 0.06);
+  --shadow-2: 0 1px 3px rgba(60, 64, 67, 0.12), 0 4px 8px 3px rgba(60, 64, 67, 0.08);
+  --shadow-3: 0 4px 8px rgba(60, 64, 67, 0.12), 0 12px 28px 6px rgba(60, 64, 67, 0.1);
+
+  --background: var(--os-bg);
+  --foreground: var(--os-text);
+}
+
+/* Theme 2: Cyber Blue — dark, teal-seeded */
+[data-theme="dark"] {
+  --os-bg: #0c1117;
   --os-accent: #52d3d6;
-  --os-surface-1: #12181f;
+  --os-surface-1: #161d26;
   --os-surface-2: #1a222b;
   --os-surface-3: #232d38;
   --os-header: var(--os-surface-3);
@@ -27,19 +72,26 @@
   --os-accent-container: #1c3d3f;
   --os-on-accent-container: #a6eef0;
 
+  --os-tertiary: #e8a21a;
+  --os-error: #ff6b6b;
+
+  /* Same five, lifted to Material dark tones so they read on #161d26. */
+  --os-icon-blue: #8ab4f8;
+  --os-icon-cyan: #78d9ec;
+  --os-icon-red: #f28b82;
+  --os-icon-ink: #dfe6ea;
+  --os-icon-neutral: #9aa5ab;
+
   --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
   --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.22);
   --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.48), 0 4px 10px rgba(0, 0, 0, 0.26);
-
-  --background: var(--os-bg);
-  --foreground: var(--os-text);
 }
 
-/* Theme 2: Matrix Green — dark, green-seeded */
+/* Theme 3: Matrix Green — dark, green-seeded */
 [data-theme="matrix"] {
   --os-bg: #05080a;
   --os-accent: #00ff41;
-  --os-surface-1: #070c08;
+  --os-surface-1: #0e1911;
   --os-surface-2: #0d150e;
   --os-surface-3: #142016;
   --os-header: var(--os-surface-3);
@@ -55,48 +107,42 @@
   --os-accent-container: #123a1a;
   --os-on-accent-container: #9df7ad;
 
+  --os-tertiary: #e8a21a;
+  --os-error: #ff6b6b;
+
+  /* Phosphor set — the same five, pulled to what a CRT could actually emit. */
+  --os-icon-blue: #5ad2ff;
+  --os-icon-cyan: #39ffd0;
+  --os-icon-red: #ff5f56;
+  --os-icon-ink: #c8e6cc;
+  --os-icon-neutral: #7b9a7f;
+
   --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
   --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.22);
   --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.48), 0 4px 10px rgba(0, 0, 0, 0.26);
 }
 
-/* Theme 3: Minimal Light — real M3 light tonal scheme (not a hack) */
-[data-theme="light"] {
-  --os-bg: #f4f7f8;
-  --os-accent: #00787e;
-  --os-surface-1: #ffffff;
-  --os-surface-2: #eef2f3;
-  --os-surface-3: #e2e8ea;
-  --os-header: var(--os-surface-3);
-  --os-surface: var(--os-surface-2);
-
-  --os-text: #14201f;
-  --os-text-dim: #45514f;
-  --os-text-faint: #6f7b79;
-
-  --os-border: rgba(20, 32, 31, 0.12);
-  --os-border-strong: rgba(20, 32, 31, 0.22);
-
-  --os-accent-container: #cdeef0;
-  --os-on-accent-container: #003739;
-
-  --shadow-1: 0 1px 2px rgba(20, 32, 31, 0.1);
-  --shadow-2: 0 4px 10px rgba(20, 32, 31, 0.12);
-  --shadow-3: 0 10px 26px rgba(20, 32, 31, 0.16);
-}
-
-/* Roles that don't change with theme. */
-:root {
-  --os-tertiary: #e8a21a;
-  --os-error: #ff6b6b;
-}
-
+/*
+ * Every role also gets a Tailwind colour utility, so state variants that inline
+ * styles can't express (`hover:`, `focus:`) still speak in roles, never hex.
+ */
 @theme inline {
   --color-os-bg: var(--os-bg);
   --color-os-accent: var(--os-accent);
+  --color-os-accent-container: var(--os-accent-container);
+  --color-os-on-accent-container: var(--os-on-accent-container);
   --color-os-surface: var(--os-surface);
+  --color-os-surface-1: var(--os-surface-1);
+  --color-os-surface-2: var(--os-surface-2);
+  --color-os-surface-3: var(--os-surface-3);
+  --color-os-header: var(--os-header);
+  --color-os-border: var(--os-border);
+  --color-os-border-strong: var(--os-border-strong);
   --color-os-text: var(--os-text);
   --color-os-text-dim: var(--os-text-dim);
+  --color-os-text-faint: var(--os-text-faint);
+  --color-os-error: var(--os-error);
+  --color-os-tertiary: var(--os-tertiary);
   --font-os-sans: var(--font-roboto), system-ui, sans-serif;
   --font-os-mono: var(--font-roboto-mono), ui-monospace, monospace;
 }
@@ -183,13 +229,36 @@ body {
   animation: os-pulse-glow 2.4s ease-in-out infinite;
 }
 
-/* Light theme softens the visual fx so they don't fight the bright bg */
-[data-theme="light"] .bg-vignette,
-[data-theme="light"] .bg-ambient-grid {
+/* Ambient FX belong to the dark themes only — on Daylight they'd muddy the white. */
+.bg-vignette,
+.bg-ambient-grid {
   display: none;
 }
-[data-theme="light"] .glow-text {
-  text-shadow: none;
+[data-theme="dark"] .bg-vignette,
+[data-theme="dark"] .bg-ambient-grid,
+[data-theme="matrix"] .bg-vignette,
+[data-theme="matrix"] .bg-ambient-grid {
+  display: block;
+}
+
+/* Launcher tiles on the desktop — a glyph, a name, and one word of caption. */
+.desktop-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+}
+
+/* Detailed cards inside folder windows — wider, they carry a line of metadata. */
+.file-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+/* One keyboard-focus treatment for every interactive surface in the OS. */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--os-accent);
+  outline-offset: 2px;
 }
 
 /* Custom scrollbar (already used by file/folder panes). Neutral outline tone —

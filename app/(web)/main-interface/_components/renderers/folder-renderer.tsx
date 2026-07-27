@@ -1,13 +1,14 @@
 "use client";
 import { useMemo, useState } from "react";
+import { ArrowLeft, Home, LayoutGrid, List } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { FileIcon } from "../file-icon";
+import { FileGraphic } from "../file-graphic";
 import { desktopFileSystem } from "../../_data/file-system-data";
 import {
   findPath,
   walkPath,
-  getDisplayPath,
   canonicalizePath,
   type Path,
 } from "../../_lib/path-resolver";
@@ -16,14 +17,24 @@ interface FolderRendererProps {
   fileNode: FileNode;
 }
 
-function childrenAt(path: Path): FileNode[] | null {
+type ViewMode = "grid" | "list";
+
+/** What a folder window shows for a given path: its own icon plus its children. */
+interface FolderView {
+  icon?: string;
+  children: FileNode[] | null;
+}
+
+function viewAt(path: Path): FolderView {
   const walked = walkPath(desktopFileSystem, path);
-  if (!walked) return null;
-  if (walked.kind === "root") return walked.children;
-  if (walked.node.type === "folder" && walked.node.data?.kind === "folder") {
-    return walked.node.data.children;
+  if (!walked) return { children: null };
+  if (walked.kind === "root") return { icon: "cdrive", children: walked.children };
+
+  const { node } = walked;
+  if (node.type === "folder" && node.data?.kind === "folder") {
+    return { icon: node.icon, children: node.data.children };
   }
-  return null;
+  return { icon: node.icon, children: null };
 }
 
 export function FolderRenderer({ fileNode }: FolderRendererProps) {
@@ -37,9 +48,10 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
   const [path, setPath] = useState<Path>(initialPath);
   const [back, setBack] = useState<Path[]>([]);
+  const [view, setView] = useState<ViewMode>("grid");
 
-  const displayPath = getDisplayPath(desktopFileSystem, path);
-  const children = childrenAt(path);
+  const { icon, children } = viewAt(path);
+  const title = path.length === 0 ? "Home" : path[path.length - 1];
 
   const navigate = (next: Path) => {
     if (pathEquals(next, path)) return;
@@ -76,130 +88,200 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
     }
   };
 
-  const text = "var(--os-text)";
-
   return (
     <div
-      className="h-full w-full flex flex-col"
+      className="flex h-full w-full flex-col"
       style={{ background: "var(--os-surface)" }}
     >
-      {/* Toolbar — back button + clickable breadcrumbs */}
-      <div
-        className="flex items-center gap-2 px-3 py-2 shrink-0"
+      <header
+        className="shrink-0 px-5 pb-3 pt-4"
         style={{
-          borderBottom: "1px solid var(--os-border)",
           background: "var(--os-header)",
-          minHeight: 40,
+          borderBottom: "1px solid var(--os-border)",
         }}
       >
-        <button
-          onClick={goBack}
-          disabled={back.length === 0}
-          title="Back"
-          className="px-2 py-0.5 text-[11px] rounded-sm transition-opacity disabled:opacity-20 hover:opacity-100 opacity-70 cursor-pointer shrink-0"
-          style={{
-            border: "1px solid var(--os-border-strong)",
-            color: text,
-            background: "transparent",
-          }}
-        >
-          ◀
-        </button>
+        {/* Title row */}
+        <div className="flex items-center gap-2">
+          <IconButton label="Back" onClick={goBack} disabled={back.length === 0}>
+            <ArrowLeft size={17} strokeWidth={1.8} />
+          </IconButton>
+          <FileGraphic icon={icon} size={22} />
+          <h1
+            className="truncate text-[18px] font-semibold tracking-tight"
+            style={{ color: "var(--os-text)" }}
+          >
+            {title}
+          </h1>
+          {children !== null && (
+            <span
+              className="shrink-0 text-[12px]"
+              style={{ color: "var(--os-text-faint)" }}
+            >
+              {children.length} item{children.length === 1 ? "" : "s"}
+            </span>
+          )}
+
+          <div
+            className="ml-auto flex shrink-0 items-center gap-0.5 rounded-full p-1"
+            style={{ background: "var(--os-surface-3)" }}
+          >
+            <ViewButton
+              label="Grid view"
+              active={view === "grid"}
+              onClick={() => setView("grid")}
+            >
+              <LayoutGrid size={15} strokeWidth={1.8} />
+            </ViewButton>
+            <ViewButton
+              label="List view"
+              active={view === "list"}
+              onClick={() => setView("list")}
+            >
+              <List size={15} strokeWidth={1.8} />
+            </ViewButton>
+          </div>
+        </div>
 
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-1 min-w-0 overflow-x-auto text-[12px] font-os-mono">
-          <button
-            onClick={() => navigateToCrumb(-1)}
-            disabled={path.length === 0}
-            className="hover:underline cursor-pointer shrink-0 disabled:no-underline disabled:cursor-default"
-            style={{
-              color: path.length === 0 ? "var(--os-accent)" : text,
-              opacity: path.length === 0 ? 1 : 0.65,
-              fontWeight: path.length === 0 ? "bold" : "normal",
-              background: "none",
-              border: "none",
-              padding: 0,
-            }}
-          >
-            ~
-          </button>
-          {path.map((seg, i) => {
-            const isLast = i === path.length - 1;
-            return (
-              <span key={i} className="inline-flex items-center gap-1 shrink-0">
-                <span className="opacity-40" style={{ color: text }}>
-                  /
-                </span>
-                <button
-                  onClick={() => navigateToCrumb(i)}
-                  disabled={isLast}
-                  className="hover:underline cursor-pointer disabled:no-underline disabled:cursor-default truncate max-w-35"
-                  style={{
-                    color: isLast ? "var(--os-accent)" : text,
-                    opacity: isLast ? 1 : 0.65,
-                    fontWeight: isLast ? "bold" : "normal",
-                    background: "none",
-                    border: "none",
-                    padding: 0,
-                  }}
-                >
-                  {seg}
-                </button>
-              </span>
-            );
-          })}
-        </div>
-      </div>
+        <nav
+          aria-label="Breadcrumb"
+          className="mt-2 flex items-center gap-1 overflow-x-auto text-[12px]"
+        >
+          <Crumb active={path.length === 0} onClick={() => navigateToCrumb(-1)}>
+            <Home size={13} strokeWidth={1.9} />
+            <span>~</span>
+          </Crumb>
+          {path.map((seg, i) => (
+            <span key={i} className="flex shrink-0 items-center gap-1">
+              <span style={{ color: "var(--os-text-faint)" }}>/</span>
+              <Crumb
+                active={i === path.length - 1}
+                onClick={() => navigateToCrumb(i)}
+              >
+                <span className="max-w-40 truncate">{seg}</span>
+              </Crumb>
+            </span>
+          ))}
+        </nav>
+      </header>
 
-      {/* File grid */}
-      <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-4">
+      {/* Contents */}
+      <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto p-5">
         {children === null ? (
           <CenterMessage text="Path not found" />
         ) : children.length === 0 ? (
           <CenterMessage text="This folder is empty" />
-        ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, max-content)",
-              gap: 8,
-              justifyContent: "start",
-            }}
-          >
+        ) : view === "grid" ? (
+          <div className="file-grid">
             {children.map((child) => (
               <FileIcon
                 key={child.id}
                 fileNode={child}
+                layout="card"
                 onOpen={handleChildClick}
-                variant="folder"
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-0.5">
+            {children.map((child) => (
+              <FileIcon
+                key={child.id}
+                fileNode={child}
+                layout="row"
+                onOpen={handleChildClick}
               />
             ))}
           </div>
         )}
       </div>
-
-      {/* Status bar */}
-      <div
-        className="flex items-center justify-between px-3 py-1 shrink-0 text-[10px] opacity-70"
-        style={{
-          borderTop: "1px solid var(--os-border)",
-          color: "var(--os-text-dim)",
-        }}
-      >
-        <span>
-          {children?.length ?? 0} item{children?.length === 1 ? "" : "s"}
-        </span>
-        <span className="truncate ml-4 font-os-mono">{displayPath}</span>
-      </div>
     </div>
+  );
+}
+
+function IconButton({
+  label,
+  onClick,
+  disabled,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      title={label}
+      aria-label={label}
+      className="focus-ring grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-full transition-colors duration-200 hover:bg-os-surface-3 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
+      style={{ color: "var(--os-text-dim)" }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function ViewButton({
+  label,
+  active,
+  onClick,
+  children,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      aria-pressed={active}
+      className="focus-ring grid h-7 w-7 cursor-pointer place-items-center rounded-full transition-colors duration-200"
+      style={{
+        background: active ? "var(--os-surface-1)" : "transparent",
+        boxShadow: active ? "var(--shadow-1)" : "none",
+        color: active ? "var(--os-accent)" : "var(--os-text-faint)",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function Crumb({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={active}
+      className="focus-ring flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 transition-colors duration-150 hover:bg-os-surface-3 disabled:cursor-default disabled:hover:bg-transparent"
+      style={{
+        color: active ? "var(--os-accent)" : "var(--os-text-dim)",
+        fontWeight: active ? 500 : 400,
+      }}
+    >
+      {children}
+    </button>
   );
 }
 
 function CenterMessage({ text }: { text: string }) {
   return (
     <div
-      className="flex items-center justify-center h-full text-xs opacity-50"
-      style={{ color: "var(--os-text-dim)" }}
+      className="flex h-full items-center justify-center text-[13px]"
+      style={{ color: "var(--os-text-faint)" }}
     >
       {text}
     </div>

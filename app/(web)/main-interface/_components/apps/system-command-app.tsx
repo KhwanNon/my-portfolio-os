@@ -572,9 +572,11 @@ export function SystemCommandApp() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
+    // A terminal is a dark artifact — it keeps the dark palette on any theme.
     <div
+      data-theme="dark"
       className="h-full flex flex-col font-os-mono text-xs"
-      style={{ background: "#0d1117" }}
+      style={{ background: "var(--os-bg)" }}
       onMouseDown={(e) => {
         if (e.target !== inputRef.current) {
           e.preventDefault();
@@ -589,10 +591,10 @@ export function SystemCommandApp() {
             key={i}
             style={{
               color:
-                line.type === "error"   ? "#ff6b6b"
+                line.type === "error"   ? "var(--os-error)"
               : line.type === "success" ? "#3ddc84"
-              : line.type === "input"   ? "#ffffff"
-              : line.type === "system"  ? "rgba(82,211,214,0.65)"
+              : line.type === "input"   ? "var(--os-text)"
+              : line.type === "system"  ? "var(--os-text-dim)"
               : "var(--os-accent)",
             }}
           >
@@ -605,7 +607,7 @@ export function SystemCommandApp() {
       {/* Input row */}
       <div
         className="flex items-center px-4 py-3 shrink-0 gap-2"
-        style={{ borderTop: "1px solid rgba(82,211,214,0.15)", background: "#0d1117" }}
+        style={{ borderTop: "1px solid var(--os-border)", background: "var(--os-bg)" }}
       >
         <span className="opacity-70 shrink-0 whitespace-nowrap" style={{ color: "var(--os-accent)" }}>
           {prompt}
@@ -613,7 +615,7 @@ export function SystemCommandApp() {
         <input
           ref={inputRef}
           className="flex-1 bg-transparent outline-none text-xs font-os-mono caret-current"
-          style={{ color: "#ffffff" }}
+          style={{ color: "var(--os-text)" }}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}

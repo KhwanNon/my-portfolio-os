@@ -1,10 +1,12 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Search } from "lucide-react";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { desktopFileSystem } from "../_data/file-system-data";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { SPRING_EXPRESSIVE } from "@/app/shared/constants/motion";
+import { FileGraphic } from "./file-graphic";
 
 interface Entry {
   node: FileNode;
@@ -13,7 +15,6 @@ interface Entry {
 
 interface Result {
   node: FileNode;
-  category: "folder" | "app" | "file";
   absolutePath: string;
 }
 
@@ -32,21 +33,6 @@ function collectAll(root: FileNode[]): Entry[] {
   return out;
 }
 
-function categorise(node: FileNode): Result["category"] {
-  if (node.type === "folder") return "folder";
-  if (node.type === "program") return "app";
-  return "file";
-}
-
-function iconFor(r: Result) {
-  if (r.category === "folder") return "📁";
-  if (r.category === "app") return "⚡";
-  if (r.node.type === "link") return "🔗";
-  if (r.node.type === "pdf") return "📑";
-  if (r.node.type === "slide") return "🖼";
-  return "📄";
-}
-
 export function Spotlight() {
   const { openFile } = useWindowManager();
   const [open, setOpen] = useState(false);
@@ -63,18 +49,13 @@ export function Spotlight() {
       // Empty query: show top-level programs as quick launchers.
       return desktopFileSystem
         .filter((n) => n.type === "program")
-        .map((node) => ({
-          node,
-          category: categorise(node),
-          absolutePath: `~/${node.name}`,
-        }));
+        .map((node) => ({ node, absolutePath: `~/${node.name}` }));
     }
     const matches: Result[] = [];
     for (const { node, pathParts } of allEntries) {
       if (node.name.toLowerCase().includes(q)) {
         matches.push({
           node,
-          category: categorise(node),
           absolutePath:
             pathParts.length === 0 ? "~" : `~/${pathParts.join("/")}`,
         });
@@ -163,11 +144,11 @@ export function Spotlight() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.12 }}
-          className="fixed inset-0 flex items-start justify-center pt-16 sm:pt-32"
+          className="fixed inset-0 flex items-start justify-center pt-16 sm:pt-28"
           style={{
-            background: "rgba(0,0,0,0.55)",
-            backdropFilter: "blur(4px)",
-            WebkitBackdropFilter: "blur(4px)",
+            background: "rgba(32,33,36,0.32)",
+            backdropFilter: "blur(3px)",
+            WebkitBackdropFilter: "blur(3px)",
             zIndex: 9500,
           }}
           onMouseDown={(e) => {
@@ -180,25 +161,24 @@ export function Spotlight() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -8 }}
             transition={SPRING_EXPRESSIVE}
-            className="w-full max-w-xl mx-4 rounded-xl overflow-hidden"
+            className="mx-4 w-full max-w-xl overflow-hidden rounded-xl"
             style={{
-              background: "var(--os-surface)",
-              border: "1px solid var(--os-border-strong)",
+              background: "var(--os-surface-1)",
+              border: "1px solid var(--os-border)",
               boxShadow: "var(--shadow-3)",
             }}
             onMouseDown={(e) => e.stopPropagation()}
           >
             {/* Search input row */}
             <div
-              className="flex items-center gap-3 px-4 py-3"
+              className="flex items-center gap-3 px-4 py-3.5"
               style={{ borderBottom: "1px solid var(--os-border)" }}
             >
-              <span
-                className="text-xs opacity-60 font-os-mono"
+              <Search
+                size={18}
+                strokeWidth={1.8}
                 style={{ color: "var(--os-text-dim)" }}
-              >
-                ›_
-              </span>
+              />
               <input
                 ref={inputRef}
                 value={query}
@@ -209,14 +189,14 @@ export function Spotlight() {
                 placeholder="Search files, folders, apps…"
                 spellCheck={false}
                 autoComplete="off"
-                className="flex-1 bg-transparent outline-none text-sm"
+                className="flex-1 bg-transparent text-[14px] outline-none placeholder:text-os-text-faint"
                 style={{ color: "var(--os-text)" }}
               />
               <kbd
-                className="text-[9px] opacity-60 tracking-wide px-1.5 py-0.5 rounded-sm font-os-mono"
+                className="rounded-md px-1.5 py-0.5 text-[11px] font-medium"
                 style={{
-                  color: "var(--os-text-dim)",
-                  border: "1px solid var(--os-border-strong)",
+                  color: "var(--os-text-faint)",
+                  border: "1px solid var(--os-border)",
                 }}
               >
                 ESC
@@ -230,56 +210,63 @@ export function Spotlight() {
             >
               {results.length === 0 ? (
                 <div
-                  className="py-12 text-center text-xs opacity-50"
-                  style={{ color: "var(--os-text-dim)" }}
+                  className="py-12 text-center text-[13px]"
+                  style={{ color: "var(--os-text-faint)" }}
                 >
                   No results
                 </div>
               ) : (
-                results.map((r, i) => {
-                  const active = i === selectedIdx;
-                  return (
-                    <button
-                      key={r.node.id + ":" + i}
-                      data-idx={i}
-                      onClick={() => submit(r)}
-                      onMouseEnter={() => setSelectedIdx(i)}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors cursor-pointer"
-                      style={{
-                        background: active
-                          ? "var(--os-accent-container)"
-                          : "transparent",
-                        color: active ? "var(--os-on-accent-container)" : "var(--os-text)",
-                        borderLeft: `2px solid ${active ? "var(--os-accent)" : "transparent"}`,
-                      }}
-                    >
-                      <span className="text-base w-5 text-center opacity-80">
-                        {iconFor(r)}
-                      </span>
-                      <span className="flex-1 truncate text-sm">
-                        {r.node.name}
-                      </span>
-                      <span className="hidden sm:inline text-[9px] opacity-60">
-                        {r.category}
-                      </span>
-                      <span
-                        className="hidden md:inline text-[10px] opacity-50 truncate font-os-mono"
-                        style={{ maxWidth: 260 }}
+                <div className="p-2">
+                  {results.map((r, i) => {
+                    const active = i === selectedIdx;
+                    return (
+                      <button
+                        key={r.node.id + ":" + i}
+                        data-idx={i}
+                        onClick={() => submit(r)}
+                        onMouseEnter={() => setSelectedIdx(i)}
+                        className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors duration-150"
+                        style={{
+                          background: active
+                            ? "var(--os-accent-container)"
+                            : "transparent",
+                          color: active
+                            ? "var(--os-on-accent-container)"
+                            : "var(--os-text)",
+                        }}
                       >
-                        {r.absolutePath}
-                      </span>
-                    </button>
-                  );
-                })
+                        <FileGraphic
+                          icon={r.node.icon}
+                          size={17}
+                          className="shrink-0"
+                        />
+                        <span className="flex-1 truncate text-[13px]">
+                          {r.node.name}
+                        </span>
+                        <span
+                          className="hidden truncate text-[11px] md:inline"
+                          style={{
+                            maxWidth: 240,
+                            color: active
+                              ? "inherit"
+                              : "var(--os-text-faint)",
+                          }}
+                        >
+                          {r.absolutePath}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               )}
             </div>
 
             {/* Footer hints */}
             <div
-              className="flex items-center justify-between px-4 py-2 text-[10px] opacity-70"
+              className="flex items-center justify-between px-4 py-2.5 text-[11px]"
               style={{
                 borderTop: "1px solid var(--os-border)",
-                color: "var(--os-text-dim)",
+                color: "var(--os-text-faint)",
               }}
             >
               <span>↑ ↓ navigate · ⏎ open</span>
