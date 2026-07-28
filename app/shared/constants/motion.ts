@@ -1,4 +1,4 @@
-/** Shared spring used by every floating surface (windows, spotlight) so they move in sync. */
+/** Shared spring used by every floating surface (windows, search panel) so they move in sync. */
 export const SPRING_EXPRESSIVE = {
   type: "spring",
   stiffness: 380,

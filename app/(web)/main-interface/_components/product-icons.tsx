@@ -72,6 +72,14 @@ export const SlidersGlyph: ProductGlyph = ({ size }) => (
   </Art>
 );
 
+/** Envelope: the body, with the fold of the flap lying on the plane behind it. */
+export const MailGlyph: ProductGlyph = ({ size }) => (
+  <Art size={size}>
+    <rect x="2.8" y="5.4" width="18.4" height="13.2" rx="2.4" />
+    <path d="M4.6 7.9 12 13.1l7.4-5.2" opacity={PLANE} />
+  </Art>
+);
+
 /** Bin: a tapered body under its own lid, slotted down the face. */
 export const TrashGlyph: ProductGlyph = ({ size }) => (
   <Art size={size}>

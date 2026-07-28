@@ -1,0 +1,80 @@
+"use client";
+import { Moon, Sun, type LucideIcon } from "lucide-react";
+import { THEMES, useTheme, type ThemeId } from "@/app/shared/hooks/use-theme";
+
+const THEME_ICON: Record<ThemeId, LucideIcon> = {
+  daylight: Sun,
+  dark: Moon,
+};
+
+/**
+ * The colour scheme, as a track with one raised pill on it. Both schemes stay
+ * on screen rather than one button that swaps its own face: a single icon has
+ * to mean either "you are here" or "go there" and cannot say which, and this
+ * shows the state and the choice in the same object.
+ *
+ * It carries its own surface and shadow because it floats on the desktop now
+ * rather than riding in a bar — chrome that sits on the workspace has to be
+ * legible over whatever the workspace happens to be. It knows nothing about
+ * where it sits; the surface placing it owns that, the way the craft card is
+ * placed.
+ */
+export function ThemeToggle() {
+  const { theme, changeTheme } = useTheme();
+
+  return (
+    <div
+      role="group"
+      aria-label="Colour scheme"
+      className="flex shrink-0 items-center gap-0.5 rounded-full p-0.5"
+      style={{
+        background: "var(--os-surface-1)",
+        border: "1px solid var(--os-border)",
+        boxShadow: "var(--shadow-1)",
+      }}
+    >
+      {THEMES.map(({ id, label }) => {
+        const Icon = THEME_ICON[id];
+        return (
+          <SchemeButton
+            key={id}
+            label={`${label} theme`}
+            onClick={() => changeTheme(id)}
+            pressed={theme === id}
+          >
+            <Icon size={16} strokeWidth={1.8} />
+          </SchemeButton>
+        );
+      })}
+    </div>
+  );
+}
+
+/** One scheme in the toggle track — the chosen one rides above the other. */
+function SchemeButton({
+  label,
+  onClick,
+  pressed,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  pressed: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      aria-pressed={pressed}
+      className="focus-ring grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-full transition-[background-color,color] duration-200"
+      style={{
+        background: pressed ? "var(--os-surface-3)" : "transparent",
+        color: pressed ? "var(--os-accent)" : "var(--os-text-faint)",
+      }}
+    >
+      {children}
+    </button>
+  );
+}

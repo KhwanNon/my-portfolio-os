@@ -10,4 +10,12 @@ export const OWNER = {
   role: "Mobile Developer · Full-Stack",
   experience: "4+ Years",
   stack: "Flutter · Dart",
+
+  /**
+   * Where the dock's clock is telling the time *from*. It reads Bangkok rather
+   * than the visitor's own zone on purpose: a visitor already knows their hour,
+   * and what they cannot tell is whether an email lands here at nine in the
+   * morning or two in the night.
+   */
+  timeZone: "Asia/Bangkok",
 } as const;

@@ -1,96 +1,37 @@
 "use client";
-// The desktop: two cards — the tools you can launch, and a curated route
-// through the portfolio. They are separate panels rather than two bands under
-// one hairline, because they are answers to different questions: what can I
-// run, and what should I read. Windows float above this; it is the surface
+// The desktop proper: the home column centred in the space, and the craft card
+// holding the corner. Nothing is laid out in a grid — the rail carries every
+// shortcut and is never off screen, so the surface is a place to arrive at
+// rather than a place to store things. Windows float above this; it is what
 // they come back to.
-import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
-import { applications, cDrive, suggestedItems } from "../_data/file-system-data";
-import { FileIcon } from "./file-icon";
+import { CraftCard } from "./craft-card";
+import { HomeHero } from "./home-hero";
+import { ThemeToggle } from "./theme-toggle";
 
 export function DesktopSurface() {
-  const { openFile } = useWindowManager();
-
   return (
-    <>
-      <Panel title="Applications">
-        {/* The cards carry their own width, so there are no columns to define —
-            they pack from the left and wrap when the panel runs out, which is
-            what a launcher does. */}
-        <div className="flex flex-wrap gap-5">
-          {applications.map(({ node, kind }) => (
-            <FileIcon
-              key={node.id}
-              fileNode={node}
-              layout="desktop"
-              caption={kind}
-            />
-          ))}
-        </div>
-      </Panel>
-
-      <Panel
-        title="Suggested"
-        action={{ label: "View All", onSelect: () => openFile(cDrive) }}
-      >
-        {/* A list, not tiles: these are things to read, and a reading order is
-            what a list expresses. The line under each name is why it is worth
-            opening — the one thing a file manager can't tell you. */}
-        <div className="flex flex-col">
-          {suggestedItems.map(({ node, reason }) => (
-            <FileIcon
-              key={node.id}
-              fileNode={node}
-              layout="list"
-              caption={reason}
-            />
-          ))}
-        </div>
-      </Panel>
-    </>
-  );
-}
-
-/** One titled card of the desktop. */
-function Panel({
-  title,
-  action,
-  children,
-}: {
-  title: string;
-  action?: { label: string; onSelect: () => void };
-  children: React.ReactNode;
-}) {
-  return (
-    <section
-      className="rounded-xl p-3.5 sm:p-5"
-      style={{
-        background: "var(--os-surface-1)",
-        border: "1px solid var(--os-border)",
-        boxShadow: "var(--shadow-1)",
-      }}
-    >
-      <div className="mb-4 flex min-h-7 items-center justify-between gap-3">
-        <h2
-          className="text-[14px] font-semibold tracking-tight"
-          style={{ color: "var(--os-text)" }}
-        >
-          {title}
-        </h2>
-        {action && (
-          <button
-            onClick={action.onSelect}
-            className="focus-ring flex cursor-pointer items-center gap-2 rounded-md px-2.5 py-1 text-[12px] font-medium leading-5 transition-colors duration-200 hover:bg-os-surface-3"
-            style={{
-              border: "1px solid var(--os-border)",
-              color: "var(--os-text-dim)",
-            }}
-          >
-            {action.label}
-          </button>
-        )}
+    <div className="desktop-surface flex min-h-full flex-col">
+      {/* Top right: the one setting the shell exposes, in the corner a machine
+          keeps its settings in. Opposite the craft card on the diagonal, so the
+          two things pinned to the surface hold corners rather than a side. */}
+      <div className="absolute right-4 top-4 z-10">
+        <ThemeToggle />
       </div>
-      {children}
-    </section>
+
+      {/* The column takes the whole surface and centres in it. The extra room
+          underneath on small screens is the craft card's: the card is pinned to
+          a corner that, on a phone, is directly below the column. */}
+      <div className="flex flex-1 items-center justify-center px-6 pb-44 pt-16 sm:pb-20">
+        <HomeHero />
+      </div>
+
+      {/* Bottom right: the corner the eye lands on last — right for a statement
+          you read once, not a thing you reach for. It counterweights the centred
+          column rather than sitting in it. Capped against the surface so it
+          never eats a narrow desktop whole. */}
+      <div className="absolute bottom-4 right-4 w-64 max-w-[calc(100%-2rem)]">
+        <CraftCard />
+      </div>
+    </div>
   );
 }

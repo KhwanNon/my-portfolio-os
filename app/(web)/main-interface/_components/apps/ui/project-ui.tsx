@@ -1,7 +1,9 @@
 "use client";
+import { useState } from "react";
 import Image from "next/image";
 import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 import { TechIcon } from "./tech-icon";
+import { ImageLightbox } from "./image-lightbox";
 
 // ProjectUI — one window per project: description, screenshots, stack, and link.
 
@@ -32,6 +34,9 @@ export function ProjectUI({
   link,
 }: ProjectUIProps) {
   const shipped = status === "Completed" || status.startsWith("Live");
+  // Which shot the viewer is on, and `null` for "not open" — one piece of state
+  // rather than a flag and an index that could disagree about what is showing.
+  const [viewing, setViewing] = useState<number | null>(null);
   return (
     <Wrapper>
       <SectionTitle>Project</SectionTitle>
@@ -61,19 +66,29 @@ export function ProjectUI({
 
         <p className="opacity-80 leading-relaxed mb-3">{description}</p>
 
+        {/* The strip is the index, not the view: each shot is a button into the
+            full-size viewer, because 224px of a phone screen shows that a
+            screen exists and nothing about what is on it. */}
         {images.length > 0 && (
           <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2 mb-3">
             {images.map((src, i) => (
-              <Image
+              <button
                 key={src}
-                src={src}
-                alt={`${name} screenshot ${i + 1}`}
-                width={0}
-                height={0}
-                sizes="400px"
-                className="h-56 w-auto shrink-0 rounded-lg"
-                style={{ border: "1px solid var(--os-border)" }}
-              />
+                type="button"
+                onClick={() => setViewing(i)}
+                aria-label={`View ${name} screenshot ${i + 1} full size`}
+                className="focus-ring shrink-0 cursor-zoom-in rounded-lg transition-transform duration-200 hover:-translate-y-0.5"
+              >
+                <Image
+                  src={src}
+                  alt={`${name} screenshot ${i + 1}`}
+                  width={0}
+                  height={0}
+                  sizes="400px"
+                  className="h-56 w-auto rounded-lg"
+                  style={{ border: "1px solid var(--os-border)" }}
+                />
+              </button>
             ))}
           </div>
         )}
@@ -114,6 +129,14 @@ export function ProjectUI({
           </a>
         )}
       </Card>
+
+      <ImageLightbox
+        images={images}
+        index={viewing}
+        label={name}
+        onClose={() => setViewing(null)}
+        onIndexChange={setViewing}
+      />
     </Wrapper>
   );
 }

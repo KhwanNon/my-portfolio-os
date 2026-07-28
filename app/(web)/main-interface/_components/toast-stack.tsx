@@ -26,8 +26,9 @@ export function ToastStack({ toasts }: { toasts: Toast[] }) {
       className="fixed flex flex-col gap-2 text-[12px] pointer-events-none"
       style={{
         right: 16,
-        // Anchored to the viewport, so it clears the dock by hand.
-        bottom: "calc(var(--os-bar-h) + 16px)",
+        // Nothing to clear at the foot of the shell any more — the same margin
+        // it keeps from the right edge is the whole of it.
+        bottom: 16,
         zIndex: 9000,
       }}
     >

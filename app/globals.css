@@ -22,6 +22,10 @@
   /* Holds AA on the tonal surfaces too, not just on white — captions and meta
      columns sit on surface-3 whenever a row is hovered. */
   --os-text-faint: #6d706e;
+  /* One step below faint, and the only tier that gives up AA on body copy —
+     reserved for group labels, which are landmarks you scan past, never text
+     you read. Nothing that carries meaning on its own may use it. */
+  --os-text-subtle: #9aa0a6;
 
   --os-border: #e3e6ea;
   --os-border-strong: #c7cbd1;
@@ -29,20 +33,55 @@
   --os-accent-container: #d3e3fd;
   --os-on-accent-container: #041e49;
 
+  /*
+   * The brand primary. Deliberately *not* rolled out yet — it is spent on the
+   * rail's active row (icon + label) and nothing else, so `--os-accent` still
+   * carries focus rings, links and the rest. Widen its reach one surface at a
+   * time; don't swap it in for `--os-accent` wholesale.
+   */
+  --os-primary: #094cf2;
+
   --os-tertiary: #a15c00;
   --os-error: #b3261e;
 
   /*
+   * The two blooms washing the desktop, one per corner. Each theme states its
+   * own finished colour — strength baked in — because the weight that reads as
+   * "barely there" over white is not the weight that reads that way over ink.
+   */
+  --os-ambient-a: color-mix(in srgb, #4285f4 55%, transparent);
+  --os-ambient-b: color-mix(in srgb, #9334e6 45%, transparent);
+
+  /*
+   * The third bloom, in the middle of the surface and the middle of the two
+   * hues. Derived rather than picked, so it stays the midpoint if either of
+   * them is ever re-tuned — and because the substitution happens per element,
+   * this one line resolves to the right colour in both themes.
+   */
+  --os-ambient-c: color-mix(in srgb, var(--os-ambient-a), var(--os-ambient-b));
+
+  /*
+   * The desktop lies *over* the blooms, and this is how much of them it lets
+   * through — the one number to turn when the wash is too strong or too faint.
+   * More surface = more opaque = fainter colour. The aura underneath stays at
+   * full strength whatever this is set to.
+   */
+  --os-desktop-veil: color-mix(in srgb, var(--os-surface-1) 72%, transparent);
+
+  /*
    * Icon palette. Colour is spent only on the apps — the disk, the terminal,
-   * the settings, the bin — so that a coloured chip *means* "this launches".
-   * Documents run on `neutral` and stay quiet; `ink` is the terminal's filled
-   * chip. Google product-icon values on Daylight; every theme restates the
-   * same six so nothing hardcodes a hex.
+   * the settings, the bin, the mailbox — so that a coloured chip *means* "this
+   * launches". Documents run on `neutral` and stay quiet; `ink` is the
+   * terminal's filled chip. Google product-icon values on Daylight; every theme
+   * restates the same seven so nothing hardcodes a hex.
    */
   --os-icon-blue: #1a73e8;
   --os-icon-purple: #9334e6;
   --os-icon-yellow: #f9ab00;
   --os-icon-red: #d93025;
+  /* Contact's hue, and spent on nothing else — "reach me" is the one action on
+     this desktop, so it gets the one colour no other chip can claim. */
+  --os-icon-green: #1e8e3e;
   --os-icon-ink: #202124;
   --os-icon-neutral: #5f6368;
 
@@ -58,7 +97,7 @@
    * in the flow and reserve their own space; only overlays anchored to the
    * viewport have to know this number.
    */
-  --os-bar-h: 64px;
+  --os-bar-h: 52px;
 
   --background: var(--os-bg);
   --foreground: var(--os-text);
@@ -77,6 +116,7 @@
   --os-text: #e7edf0;
   --os-text-dim: #a9b6bd;
   --os-text-faint: #8a969e;
+  --os-text-subtle: #6b7780;
 
   --os-border: rgba(231, 237, 240, 0.12);
   --os-border-strong: rgba(231, 237, 240, 0.24);
@@ -84,14 +124,24 @@
   --os-accent-container: #1c3d3f;
   --os-on-accent-container: #a6eef0;
 
+  /* The new primary is a Daylight decision; this theme keeps the on-container
+     tone it already used, so the rail's active row is unchanged here. Blue that
+     dark would be unreadable on a teal container anyway. */
+  --os-primary: var(--os-on-accent-container);
+
   --os-tertiary: #e8a21a;
   --os-error: #ff6b6b;
 
-  /* Same six, lifted to Material dark tones so they read on #161d26. */
+  --os-ambient-a: color-mix(in srgb, #52d3d6 45%, transparent);
+  --os-ambient-b: color-mix(in srgb, #3b6fd4 55%, transparent);
+  --os-desktop-veil: color-mix(in srgb, var(--os-surface-1) 78%, transparent);
+
+  /* Same seven, lifted to Material dark tones so they read on #161d26. */
   --os-icon-blue: #8ab4f8;
   --os-icon-purple: #d7aefb;
   --os-icon-yellow: #fdd663;
   --os-icon-red: #f28b82;
+  --os-icon-green: #81c995;
   --os-icon-ink: #dfe6ea;
   --os-icon-neutral: #9aa5ab;
 
@@ -107,6 +157,7 @@
 @theme inline {
   --color-os-bg: var(--os-bg);
   --color-os-accent: var(--os-accent);
+  --color-os-primary: var(--os-primary);
   --color-os-accent-container: var(--os-accent-container);
   --color-os-on-accent-container: var(--os-on-accent-container);
   --color-os-surface: var(--os-surface);
@@ -118,6 +169,7 @@
   --color-os-text: var(--os-text);
   --color-os-text-dim: var(--os-text-dim);
   --color-os-text-faint: var(--os-text-faint);
+  --color-os-text-subtle: var(--os-text-subtle);
   --color-os-error: var(--os-error);
   --color-os-tertiary: var(--os-tertiary);
   --font-os-sans: var(--font-roboto), system-ui, sans-serif;
@@ -203,18 +255,58 @@ body {
   display: block;
 }
 
+/*
+ * The desktop, banded by group. The bands split the surface between them, so
+ * the hairlines land wherever the window happens to be tall — `minmax` is the
+ * floor that keeps a band usable on a short screen and lets the surface scroll
+ * instead of crushing them.
+ */
+/*
+ * The colour the desktop is lit by: two blooms bleeding in from opposite
+ * corners, laid on the workspace *underneath* the surface. Painted at full
+ * strength on purpose — the veil above is the only thing that dials it back, so
+ * changing how faint the wash reads never means re-tuning these stops. A radial
+ * stop with a long falloff is the same softness a heavy `blur()` would give and
+ * costs nothing to composite.
+ */
+.bg-ambient-aura {
+  background-image:
+    radial-gradient(
+      104rem 54rem at 92% -12%,
+      var(--os-ambient-a),
+      transparent 68%
+    ),
+    radial-gradient(
+      88rem 50rem at -10% 112%,
+      var(--os-ambient-b),
+      transparent 66%
+    ),
+    /* Listed last so it lies under the two corners: it is the light between
+       them, not a third thing competing with them. */
+    radial-gradient(
+      82rem 46rem at 50% 46%,
+      var(--os-ambient-c),
+      transparent 65%
+    );
+}
+
+/*
+ * The desktop surface itself — paper laid over that colour, not opaque. What
+ * shows through is the whole of the effect, and `--os-desktop-veil` is the
+ * single knob for it.
+ */
+.desktop-surface {
+  position: relative;
+  min-height: 100%;
+  background: var(--os-desktop-veil);
+}
+
+
 /* Detailed cards inside folder windows — wider, they carry a line of metadata. */
 .file-grid {
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-}
-
-/* Fades the trailing edge of a horizontal scroller, so an item cut off by the
-   edge reads as "there is more" rather than as the end of the row. When the
-   content fits, the fade falls on empty space and costs nothing. */
-.scroll-fade-x {
-  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
 }
 
 /* One keyboard-focus treatment for every interactive surface in the OS. */

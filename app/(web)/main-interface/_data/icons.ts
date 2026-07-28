@@ -10,5 +10,6 @@ export const ICONS = {
   link:    "link",
   sysCmd:  "sysCmd",
   prefs:   "prefs",
+  contact: "contact",
   about:   "about",
 } as const;

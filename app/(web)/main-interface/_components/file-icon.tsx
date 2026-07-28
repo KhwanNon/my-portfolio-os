@@ -6,21 +6,20 @@
 import { MoreVertical } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useFileInteraction } from "../_lib/use-file-interaction";
-import { FileGraphic, IconTile } from "./file-graphic";
+import { IconTile } from "./file-graphic";
 
 /**
- * "desktop" = launcher tile on the desktop, "list" = full-width entry in the
- * desktop's reading list, "card" = detailed tile in a folder window's grid,
- * "row" = dense line in a folder window's list.
+ * "desktop" = icon lying on the desktop, "card" = detailed tile in a folder
+ * window's grid, "row" = dense line in a folder window's list.
  */
-type Layout = "desktop" | "list" | "card" | "row";
+type Layout = "desktop" | "card" | "row";
 
 interface FileIconProps {
   fileNode: FileNode;
   layout: Layout;
   /**
    * Replaces the line under the name, for surfaces that know something better
-   * to say than the default — "Terminal", "Start here".
+   * to say than the default. The desktop draws no such line at all.
    */
   caption?: string;
   /** Override the default open behaviour */
@@ -56,83 +55,34 @@ export const FileIcon = ({
     onOpen,
   });
 
-  // Desktop: a launcher, not a listing. Big glyph, name, what it is — and
-  // nothing else, so it reads nothing like a file manager entry. It carries its
-  // own width rather than stretching to its column: an app icon is a portrait
-  // card, and one stretched wide reads as a row. The width is the one that
-  // holds the longest app name — "System Command" — on a single line; the
-  // clamp below is the safety net, not the intended reading.
+  // A desktop icon: artwork, name under it, and nothing else — no card, no
+  // caption, no metadata. The cell fills its grid track rather than carrying
+  // its own width, so a column of icons lines up on one axis the way a desktop
+  // arranges itself. Selection and hover are the only chrome it ever draws.
   if (layout === "desktop") {
     return (
       <div
         {...interaction}
-        className={`focus-ring group flex w-36 cursor-pointer select-none flex-col items-center gap-4 rounded-lg border px-3 py-10 transition-[background-color,box-shadow] duration-200 hover:shadow-(--shadow-2) ${
-          selected
-            ? "border-transparent bg-os-accent-container"
-            : "border-os-border bg-os-surface-1"
-        }`}
-      >
-        {/* Tinted in the icon's own tone, so a row of tiles reads at a glance. */}
-        <IconTile
-          icon={fileNode.icon}
-          size="lg"
-          className="transition-transform duration-200 group-hover:-translate-y-0.5"
-        />
-        <span className="flex flex-col items-center gap-0.5">
-          <span
-            className="line-clamp-2 text-center text-[13px] font-semibold leading-tight tracking-tight"
-            style={{ color: "var(--os-text)" }}
-          >
-            {fileNode.name}
-          </span>
-          {caption && (
-            <span
-              className="text-center text-[11px]"
-              style={{ color: "var(--os-text-faint)" }}
-            >
-              {caption}
-            </span>
-          )}
-        </span>
-      </div>
-    );
-  }
-
-  // The desktop's reading list: one entry per line, hairline-separated, so the
-  // eye runs down names instead of hunting across a grid. What it is sits far
-  // right, the way every file listing keeps its metadata column.
-  if (layout === "list") {
-    return (
-      <div
-        {...interaction}
-        className={`focus-ring group flex cursor-pointer select-none items-center gap-2.5 border-t border-os-border px-1.5 py-2.5 transition-colors duration-150 first:border-t-0 ${
+        title={fileNode.name}
+        // The desktop is white, so the hover has to *tint* rather than lift —
+        // surface-1 here would be the background painted onto itself.
+        className={`focus-ring group flex h-fit cursor-pointer select-none flex-col items-center gap-1.5 rounded-md px-1 py-2 transition-colors duration-150 ${
           selected ? "bg-os-accent-container" : "hover:bg-os-surface-3"
         }`}
       >
-        <IconTile icon={fileNode.icon} size="sm" />
-
-        <div className="min-w-0 flex-1">
-          <p
-            className="truncate text-[13px] font-semibold tracking-tight"
-            style={{ color: "var(--os-text)" }}
-          >
-            {fileNode.name}
-          </p>
-          {caption && (
-            <p
-              className="mt-0.5 truncate text-[11px]"
-              style={{ color: "var(--os-text-faint)" }}
-            >
-              {caption}
-            </p>
-          )}
-        </div>
-
+        {/* Shipped artwork at its largest; anything without it falls back to
+            its tinted chip. */}
+        <IconTile
+          icon={fileNode.icon}
+          size="lg"
+          artwork
+          className="transition-transform duration-200 group-hover:-translate-y-0.5"
+        />
         <span
-          className="shrink-0 text-[11px]"
-          style={{ color: "var(--os-text-faint)" }}
+          className="line-clamp-2 text-center text-[12px] font-medium leading-tight tracking-tight"
+          style={{ color: "var(--os-text)" }}
         >
-          {summarize(fileNode)}
+          {fileNode.name}
         </span>
       </div>
     );
@@ -146,7 +96,7 @@ export const FileIcon = ({
           selected ? "bg-os-accent-container" : "hover:bg-os-surface-3"
         }`}
       >
-        <FileGraphic icon={fileNode.icon} size={18} className="shrink-0" />
+        <IconTile icon={fileNode.icon} size="sm" artwork />
         <span
           className="flex-1 truncate text-[13px]"
           style={{ color: "var(--os-text)" }}
@@ -174,6 +124,7 @@ export const FileIcon = ({
     >
       <IconTile
         icon={fileNode.icon}
+        artwork
         className="transition-transform duration-200 group-hover:scale-105"
       />
 

@@ -3,7 +3,8 @@ import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
 import { OWNER } from "./identity";
 
-// Flat folder — bio and contact first, personality files after.
+// Flat folder — the bio first, personality files after. Contact was here and is
+// now its own dock slot; see `_data/contact.ts` for why it left.
 export const aboutFolder: FileNode = {
   id: "about",
   name: "About",
@@ -23,25 +24,6 @@ export const aboutFolder: FileNode = {
           { label: "Main Stack", value: OWNER.stack },
           { label: "Languages", value: "Thai · English" },
           { label: "Status", value: "Open to Opportunities" },
-        ],
-      }),
-      uiNode({ id: "about-contact", name: "contact.ui" }, "ContactUI", {
-        links: [
-          {
-            label: "Email",
-            value: "khwan.nontawichit@gmail.com",
-            href: "mailto:khwan.nontawichit@gmail.com",
-          },
-          {
-            label: "GitHub",
-            value: "github.com/KhwanNon",
-            href: "https://github.com/KhwanNon",
-          },
-          {
-            label: "Location",
-            value: "Bangkok, Thailand",
-            href: "https://maps.google.com/?q=Bangkok,Thailand",
-          },
         ],
       }),
       uiNode({ id: "about-hobbies", name: "hobbies.ui" }, "HobbiesUI", {

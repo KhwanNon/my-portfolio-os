@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { ContextMenuState } from "@/app/modules/desktop/context/window-manager-context";
-import { barHeight } from "@/app/modules/desktop/lib/workspace";
 
 interface ContextMenuProps {
   menu: ContextMenuState;
@@ -12,15 +11,14 @@ export function ContextMenu({ menu, onClose }: ContextMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ x: menu.x, y: menu.y });
 
-  // Clamp position once the menu is measured — to the viewport across, and to
-  // the dock's top edge down, so a menu opened low flips up rather than
-  // opening behind the bar.
+  // Clamp position once the menu is measured, so a menu opened near an edge
+  // flips back inside it rather than off the screen.
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
     const x = Math.min(menu.x, window.innerWidth - rect.width - 4);
-    const y = Math.min(menu.y, window.innerHeight - barHeight() - rect.height);
+    const y = Math.min(menu.y, window.innerHeight - rect.height - 4);
     setPos({ x: Math.max(4, x), y: Math.max(4, y) });
   }, [menu.x, menu.y]);
 

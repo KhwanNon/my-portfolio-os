@@ -6,6 +6,8 @@ import { experienceFolder } from "./experience";
 import { educationFile } from "./education";
 import { aboutFolder } from "./about";
 import { recycleBin } from "./recycle-bin";
+import { khwanCraftFile } from "./craft";
+import { contactApp } from "./contact";
 
 export const cDrive: FileNode = {
   id: "c-drive",
@@ -106,36 +108,55 @@ export const desktopFileSystem: FileNode[] = [
   recycleBin,
   profileTxt,
   resumePdf,
+  khwanCraftFile,
   systemCommand,
   preferences,
-];
-
-/** How the side rail groups those shortcuts. */
-export const desktopSections: { title: string; nodes: FileNode[] }[] = [
-  { title: "Directories", nodes: [cDrive, recycleBin] },
-  { title: "Assets", nodes: [profileTxt, resumePdf] },
-  { title: "Executables", nodes: [systemCommand, preferences] },
+  contactApp,
 ];
 
 /**
- * The tools this OS ships with — everything you *use* rather than read: the
- * drive, the terminal, the bin, the settings. `kind` captions the tile.
+ * What the desktop offers under its search field: the documents first, because
+ * the visit is short and they are the whole answer on their own, then the two
+ * folders for the reader who has time. Each of these is otherwise a click or
+ * two down inside C-DRIVE, and the desktop is the one surface with the room to
+ * say so outright.
+ *
+ * khwan-craft is not here — it has its own card in the corner, and a second way
+ * in would have been the same door twice.
  */
-export const applications: { node: FileNode; kind: string }[] = [
-  { node: cDrive, kind: "Files" },
-  { node: systemCommand, kind: "Terminal" },
-  { node: preferences, kind: "Settings" },
-  { node: recycleBin, kind: "Trash" },
+export const homeShortcuts: FileNode[] = [
+  resumePdf,
+  profileTxt,
+  projectsFolder,
+  experienceFolder,
 ];
 
 /**
- * The guided tour: what a first-time visitor should open, in order, and why.
- * Hand-curated — this is a recommendation, not a recently-used log.
+ * The dock's fixed slots: what this machine *opens*. Documents stay out of it.
+ * A dock is a place to launch from and a document is something you read, and
+ * the desktop already puts both within one click.
+ *
+ * Read left to right it is two groups, not one list. First what the visit is
+ * for — the work, and the way to answer it. Then the machine's own tools, in
+ * the order a shell has always kept them: the terminal, the settings, the bin.
+ * Contact sits second rather than last because a dock is read from the left and
+ * the far end is where the bin goes.
+ *
+ * Anything opened from outside this list joins the row for as long as its
+ * window lives; see `Taskbar`.
  */
-export const suggestedItems: { node: FileNode; reason: string }[] = [
-  { node: resumePdf, reason: "Start here" },
-  { node: projectsFolder, reason: "What I've shipped" },
-  { node: skillsFolder, reason: "What I build with" },
-  { node: experienceFolder, reason: "Where I've worked" },
-  { node: profileTxt, reason: "Who I am" },
+export const dockItems: FileNode[] = [
+  cDrive,
+  contactApp,
+  systemCommand,
+  preferences,
+  recycleBin,
 ];
+
+/*
+ * There is no desktop list any more. The surface is bare on purpose: the dock
+ * reaches every launcher and is on screen the whole time, and the home screen
+ * offers the documents outright under its search field — so a third copy lying
+ * on the wallpaper was one more place to keep in step and nowhere new to get to.
+ */
+

@@ -4,7 +4,6 @@ import { ArrowLeft, Home, LayoutGrid, List } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { FileIcon } from "../file-icon";
-import { FileGraphic } from "../file-graphic";
 import { desktopFileSystem } from "../../_data/file-system-data";
 import {
   findPath,
@@ -19,22 +18,16 @@ interface FolderRendererProps {
 
 type ViewMode = "grid" | "list";
 
-/** What a folder window shows for a given path: its own icon plus its children. */
-interface FolderView {
-  icon?: string;
-  children: FileNode[] | null;
-}
-
-function viewAt(path: Path): FolderView {
+/** What a folder window shows for a given path, or null where nothing lives. */
+function childrenAt(path: Path): FileNode[] | null {
   const walked = walkPath(desktopFileSystem, path);
-  if (!walked) return { children: null };
-  if (walked.kind === "root") return { icon: "cdrive", children: walked.children };
+  if (!walked) return null;
+  if (walked.kind === "root") return walked.children;
 
   const { node } = walked;
-  if (node.type === "folder" && node.data?.kind === "folder") {
-    return { icon: node.icon, children: node.data.children };
-  }
-  return { icon: node.icon, children: null };
+  return node.type === "folder" && node.data?.kind === "folder"
+    ? node.data.children
+    : null;
 }
 
 export function FolderRenderer({ fileNode }: FolderRendererProps) {
@@ -50,8 +43,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
   const [back, setBack] = useState<Path[]>([]);
   const [view, setView] = useState<ViewMode>("grid");
 
-  const { icon, children } = viewAt(path);
-  const title = path.length === 0 ? "Desktop" : path[path.length - 1];
+  const children = childrenAt(path);
 
   const navigate = (next: Path) => {
     if (pathEquals(next, path)) return;
@@ -93,59 +85,24 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
       className="flex h-full w-full flex-col"
       style={{ background: "var(--os-surface)" }}
     >
+      {/* One row: where you were, where you are, and how you'd like to see it.
+          The window's own title bar already names the folder, so the path is
+          the only label the contents need — and it sits where the reader is
+          already looking after pressing Back. */}
       <header
-        className="shrink-0 px-5 pb-3 pt-4"
+        className="flex shrink-0 items-center gap-2 px-4 py-3"
         style={{
           background: "var(--os-header)",
           borderBottom: "1px solid var(--os-border)",
         }}
       >
-        {/* Title row */}
-        <div className="flex items-center gap-2">
-          <IconButton label="Back" onClick={goBack} disabled={back.length === 0}>
-            <ArrowLeft size={17} strokeWidth={1.8} />
-          </IconButton>
-          <FileGraphic icon={icon} size={22} />
-          <h1
-            className="truncate text-[18px] font-semibold tracking-tight"
-            style={{ color: "var(--os-text)" }}
-          >
-            {title}
-          </h1>
-          {children !== null && (
-            <span
-              className="shrink-0 text-[12px]"
-              style={{ color: "var(--os-text-faint)" }}
-            >
-              {children.length} item{children.length === 1 ? "" : "s"}
-            </span>
-          )}
+        <IconButton label="Back" onClick={goBack} disabled={back.length === 0}>
+          <ArrowLeft size={17} strokeWidth={1.8} />
+        </IconButton>
 
-          <div
-            className="ml-auto flex shrink-0 items-center gap-0.5 rounded-full p-1"
-            style={{ background: "var(--os-surface-3)" }}
-          >
-            <ViewButton
-              label="Grid view"
-              active={view === "grid"}
-              onClick={() => setView("grid")}
-            >
-              <LayoutGrid size={15} strokeWidth={1.8} />
-            </ViewButton>
-            <ViewButton
-              label="List view"
-              active={view === "list"}
-              onClick={() => setView("list")}
-            >
-              <List size={15} strokeWidth={1.8} />
-            </ViewButton>
-          </div>
-        </div>
-
-        {/* Breadcrumbs */}
         <nav
           aria-label="Breadcrumb"
-          className="mt-2 flex items-center gap-1 overflow-x-auto text-[12px]"
+          className="custom-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto text-[13px]"
         >
           <Crumb active={path.length === 0} onClick={() => navigateToCrumb(-1)}>
             <Home size={13} strokeWidth={1.9} />
@@ -163,6 +120,26 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
             </span>
           ))}
         </nav>
+
+        <div
+          className="flex shrink-0 items-center gap-0.5 rounded-full p-1"
+          style={{ background: "var(--os-surface-3)" }}
+        >
+          <ViewButton
+            label="Grid view"
+            active={view === "grid"}
+            onClick={() => setView("grid")}
+          >
+            <LayoutGrid size={15} strokeWidth={1.8} />
+          </ViewButton>
+          <ViewButton
+            label="List view"
+            active={view === "list"}
+            onClick={() => setView("list")}
+          >
+            <List size={15} strokeWidth={1.8} />
+          </ViewButton>
+        </div>
       </header>
 
       {/* Contents */}
