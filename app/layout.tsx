@@ -32,10 +32,43 @@ const robotoMono = Roboto_Mono({
   subsets: ["latin"],
 });
 
+const TITLE = "Portfolio OS — Khwanchai Nontawichit";
+const DESCRIPTION =
+  "An interactive desktop operating system built as a portfolio. Window manager, virtual filesystem, terminal, and more — by Khwan, Mobile Developer (Flutter).";
+
+/**
+ * The tab and home-screen icons come from `app/icon.png` and
+ * `app/apple-icon.png` by file convention — Next writes those link tags itself,
+ * so the only mark named here is the one a link preview unfurls.
+ */
+/**
+ * Where the logo resolves from when a card is unfurled. A preview is fetched by
+ * something that is not this browser, so a relative path is not enough — and no
+ * domain is committed to here: the host tells us at build time, and localhost is
+ * only the answer when nobody has.
+ */
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
-  title: "Portfolio OS — Khwanchai Nontawichit",
-  description:
-    "An interactive desktop operating system built as a portfolio. Window manager, virtual filesystem, terminal, and more — by Khwan, Mobile Developer (Flutter).",
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    type: "website",
+    images: [{ url: "/assets/logo.png", width: 2000, height: 2000 }],
+  },
+  twitter: {
+    card: "summary",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/assets/logo.png"],
+  },
 };
 
 export default function RootLayout({

@@ -75,7 +75,6 @@ export const FileIcon = ({
         <IconTile
           icon={fileNode.icon}
           size="xl"
-          artwork
           className="transition-transform duration-200 group-hover:-translate-y-0.5"
         />
         <span
@@ -96,7 +95,7 @@ export const FileIcon = ({
           selected ? "bg-os-accent-container" : "hover:bg-os-surface-3"
         }`}
       >
-        <IconTile icon={fileNode.icon} size="sm" artwork />
+        <IconTile icon={fileNode.icon} size="sm" />
         <span
           className="flex-1 truncate text-[13px]"
           style={{ color: "var(--os-text)" }}
@@ -124,7 +123,6 @@ export const FileIcon = ({
     >
       <IconTile
         icon={fileNode.icon}
-        artwork
         className="transition-transform duration-200 group-hover:scale-105"
       />
 

@@ -134,7 +134,7 @@ function DockSlot({
       aria-label={`${node.name}${state}`}
       className="focus-ring group relative grid shrink-0 cursor-pointer place-items-center rounded-sm p-0.5 transition-transform duration-200 hover:-translate-y-0.5"
     >
-      <IconTile icon={node.icon} size="lg" artwork />
+      <IconTile icon={node.icon} size="lg" />
       <span
         className="absolute bottom-0 h-1 rounded-full transition-all duration-200"
         style={{

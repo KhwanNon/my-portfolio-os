@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { FileGraphic } from "../../file-graphic";
 import { Card, Wrapper, Row } from "./primitives";
 
@@ -56,10 +57,21 @@ export function PropertiesUI({
 export function AboutOSUI() {
   return (
     <Wrapper>
-      <div className="mb-3">
-        <div className="font-bold text-sm">Portfolio OS</div>
-        <div className="opacity-60 mt-0.5 text-[11px] font-os-mono">
-          Version 2.4.0 · Build 2024.Alpha
+      {/* The one place the OS names itself, so it wears its own logo here the
+          same way the tab and the desktop do. Clipped to the shell's ~28%
+          squircle — the artwork's corners are page-white. */}
+      <div className="flex items-center gap-3 mb-3">
+        <span
+          className="inline-flex shrink-0 overflow-hidden"
+          style={{ borderRadius: 12 }}
+        >
+          <Image src="/assets/logo.png" alt="" width={44} height={44} />
+        </span>
+        <div>
+          <div className="font-bold text-sm">Portfolio OS</div>
+          <div className="opacity-60 mt-0.5 text-[11px] font-os-mono">
+            Version 2.4.0 · Build 2024.Alpha
+          </div>
         </div>
       </div>
 

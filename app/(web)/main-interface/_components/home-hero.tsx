@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
@@ -20,10 +21,36 @@ import { OWNER } from "../_data/identity";
 import { useFileSearch, type SearchResult } from "../_lib/use-file-search";
 import { FileGraphic } from "./file-graphic";
 import { SearchResults } from "./search-results";
-import { SparkGlyph } from "./spark-glyph";
 
 /** What the field asks for — the one search this shell has. */
 const SEARCH_PLACEHOLDER = "Search files, folders, apps…";
+
+/**
+ * The shipped logo, standing where the drawn spark used to. Same mark either
+ * way — but this is the tile the browser tab and the home screen show, so the
+ * desktop opens on the thing you launched rather than on a second version of
+ * it.
+ *
+ * Clipped rather than drawn square: the artwork's corners are page-white, and
+ * the ~28% squircle every icon tile in this shell takes cuts them off, which is
+ * what keeps the tile a tile on the dark theme instead of a white card.
+ */
+function BrandLogo({ size = 64 }: { size?: number }) {
+  return (
+    <span
+      className="inline-flex shrink-0 overflow-hidden"
+      style={{ borderRadius: Math.round(size * 0.28) }}
+    >
+      <Image
+        src="/assets/logo.png"
+        alt="Portfolio OS"
+        width={size}
+        height={size}
+        priority
+      />
+    </span>
+  );
+}
 
 /**
  * Weight tapers down the column — mark, name, sentence — and then the field
@@ -35,7 +62,7 @@ const SEARCH_PLACEHOLDER = "Search files, folders, apps…";
 export function HomeHero() {
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col items-center text-center">
-      <SparkGlyph size={38} className="text-os-accent" />
+      <BrandLogo size={64} />
 
       <h1
         className="mt-5 text-[clamp(28px,5vw,42px)] font-semibold leading-[1.12] tracking-tight"
@@ -250,7 +277,7 @@ function ShortcutChip({ node }: { node: FileNode }) {
         color: "var(--os-text-dim)",
       }}
     >
-      <FileGraphic icon={node.icon} size={17} artwork className="shrink-0" />
+      <FileGraphic icon={node.icon} size={17} className="shrink-0" />
       {node.name}
     </button>
   );

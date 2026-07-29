@@ -37,12 +37,13 @@ interface IconSpec {
   tone: string;
   finish: Finish;
   /**
-   * Shipped app artwork, drawn instead of the glyph on surfaces that ask for it
-   * (`IconTile artwork`). Anywhere a thing is presented as something to open —
-   * the desktop, the dock, a folder's cards and rows — it wears its artwork, so
-   * one app is the same picture wherever it turns up. Below tile size the art
-   * turns to mush, so inline marks (search rows, chips) keep the drawn glyph,
-   * which is what line art is for.
+   * Shipped app artwork, drawn instead of the glyph wherever this icon appears
+   * — desktop, dock, folder cards and rows, search results, title bars,
+   * Properties. An app is one picture everywhere it turns up; a second drawing
+   * of the same app at small sizes would be a second identity for it, and the
+   * one place recognition matters most is the inline row you are skimming.
+   * Documents have no artwork and keep their glyph, which is what line art is
+   * for.
    */
   image?: string;
 }
@@ -110,8 +111,6 @@ interface FileGraphicProps {
   className?: string;
   /** Defaults to the icon's own tone; pass a colour to override it. */
   color?: string;
-  /** Draw the shipped artwork where an icon has it, in place of the glyph. */
-  artwork?: boolean;
 }
 
 export function FileGraphic({
@@ -119,7 +118,6 @@ export function FileGraphic({
   size = 24,
   className,
   color,
-  artwork,
 }: FileGraphicProps) {
   const { glyph: Glyph, tone, image } = specOf(icon);
 
@@ -127,7 +125,7 @@ export function FileGraphic({
   // bare — so it is clipped to the same ~28%-of-the-box squircle the chips use.
   // Left square, art drawn edge to edge reads as a hard tile in a column of
   // line art.
-  if (artwork && image) {
+  if (image) {
     return (
       <span
         className={`inline-flex shrink-0 overflow-hidden ${className ?? ""}`}
@@ -171,12 +169,6 @@ interface IconTileProps {
   icon?: string;
   size?: keyof typeof TILE;
   className?: string;
-  /**
-   * Draw the shipped artwork where an icon has it. The art is the whole icon —
-   * it brings its own ground — so it replaces the chip rather than sitting on
-   * one; anything without artwork falls back to its drawn chip unchanged.
-   */
-  artwork?: boolean;
 }
 
 /**
@@ -184,12 +176,7 @@ interface IconTileProps {
  * tile, folder card, reading row, dock slot — shows the same box, so one icon
  * is recognisable everywhere it appears and every row lines up.
  */
-export function IconTile({
-  icon,
-  size = "md",
-  className,
-  artwork,
-}: IconTileProps) {
+export function IconTile({ icon, size = "md", className }: IconTileProps) {
   const { box, glyph, px } = TILE[size];
   const { tone, finish, image } = specOf(icon);
   const filled = finish === "filled";
@@ -198,7 +185,7 @@ export function IconTile({
   // Shipped artwork carries its own ground, so there is no chip to paint under
   // it — only the box, clipped to the same squircle so art drawn edge to edge
   // takes the silhouette every other tile already has.
-  if (artwork && image) {
+  if (image) {
     return (
       <span
         className={`relative block shrink-0 overflow-hidden ${box} ${className ?? ""}`}
