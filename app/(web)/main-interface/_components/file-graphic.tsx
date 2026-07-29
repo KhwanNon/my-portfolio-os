@@ -63,13 +63,13 @@ const REGISTRY: Record<string, IconSpec> = {
   recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip",   image: "/assets/icon/bin.png"     },
   contact: { glyph: MailGlyph,     tone: "var(--os-icon-green)",  finish: "chip",   image: "/assets/icon/contact.png" },
 
-  // Documents. Red on the PDF is the one hue a file keeps — it is the format's
-  // own signal, the way every file manager already draws it. The two formats
-  // that ship artwork use it on the launcher surfaces and fall back to these
-  // glyph-and-plate rows everywhere the artwork would be too small to read.
-  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",    finish: "plain",  image: "/assets/icon/pdf.png" },
+  // Documents. No artwork here on purpose: painted art is the mark of something
+  // that launches, so a file drawn that way would claim to be an app. Red on the
+  // PDF is the one hue a file keeps — it is the format's own signal, the way
+  // every file manager already draws it.
+  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",    finish: "plain"  },
   folder:  { glyph: FolderGlyph,   tone: NEUTRAL,                 finish: "plain"  },
-  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain",  image: "/assets/icon/txt.png" },
+  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain"  },
   slide:   { glyph: SlideGlyph,    tone: NEUTRAL,                 finish: "plain"  },
   ui:      { glyph: LayersGlyph,   tone: NEUTRAL,                 finish: "plain"  },
   link:    { glyph: LinkGlyph,     tone: NEUTRAL,                 finish: "plain"  },
@@ -149,16 +149,19 @@ export function FileGraphic({
 }
 
 /**
- * The three chip sizes the shell uses: a reading row, a dock slot or folder
- * card, a desktop launcher. Radius is the step on the shape scale nearest ~28%
- * of the box — a squircle, the app-icon silhouette; any rounder and a tile
- * turns into a bubble, which is why the smallest chip rounds down rather than
- * up. Artwork takes ~55% of its chip at every size.
+ * The four chip sizes the shell uses: a reading row, a folder card, a dock
+ * slot, a desktop launcher. The dock stands a step above the card it used to
+ * share — the dock is the one row read at a glance from across the screen, and
+ * a card is read with the eye already on it. Radius is the step on the shape
+ * scale nearest ~28% of the box — a squircle, the app-icon silhouette; any
+ * rounder and a tile turns into a bubble, which is why the smallest chip rounds
+ * down rather than up. Artwork takes ~55% of its chip at every size.
  */
 const TILE = {
   sm: { box: "h-7 w-7 rounded-xs",   glyph: 15, px: 28 },
   md: { box: "h-9 w-9 rounded-sm",   glyph: 20, px: 36 },
-  lg: { box: "h-14 w-14 rounded-md", glyph: 31, px: 56 },
+  lg: { box: "h-11 w-11 rounded-md", glyph: 24, px: 44 },
+  xl: { box: "h-14 w-14 rounded-md", glyph: 31, px: 56 },
 } as const;
 
 /** The neutral plate a document sits on — a container, not a signal. */

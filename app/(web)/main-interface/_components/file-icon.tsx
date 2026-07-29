@@ -74,7 +74,7 @@ export const FileIcon = ({
             its tinted chip. */}
         <IconTile
           icon={fileNode.icon}
-          size="lg"
+          size="xl"
           artwork
           className="transition-transform duration-200 group-hover:-translate-y-0.5"
         />

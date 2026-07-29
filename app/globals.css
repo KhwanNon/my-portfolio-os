@@ -91,13 +91,17 @@
   --shadow-3: 0 4px 8px rgba(60, 64, 67, 0.12), 0 12px 28px 6px rgba(60, 64, 67, 0.1);
 
   /*
-   * Both chrome bars stand the same height — the system bar across the top, the
-   * dock across the foot — so the shell reads as one frame around the
-   * workspace, and the rail's brand band lines up with the top of it. They sit
-   * in the flow and reserve their own space; only overlays anchored to the
-   * viewport have to know this number.
+   * The dock across the foot, and the shell's only piece of chrome since the
+   * top bar and the side rail went. There is no vertical padding on the bar —
+   * this number *is* the padding: the tile it carries is 44px in a 48px slot,
+   * and what is left over is the air above and below it. Deliberately thinner
+   * than the 12px the row keeps at either end, so the bar reads as a band the
+   * tiles fill rather than a tray they sit in.
+   *
+   * It sits in the flow and reserves its own space; only overlays anchored to
+   * the viewport have to know this number.
    */
-  --os-bar-h: 52px;
+  --os-dock-h: 56px;
 
   --background: var(--os-bg);
   --foreground: var(--os-text);

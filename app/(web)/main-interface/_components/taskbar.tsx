@@ -5,24 +5,15 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  BatteryCharging,
-  BatteryFull,
-  BatteryLow,
-  BatteryMedium,
-  Wifi,
-  WifiOff,
-} from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import {
   useWindowManager,
   type WindowInstance,
 } from "@/app/modules/desktop/context/window-manager-context";
 import { dockItems } from "../_data/file-system-data";
-import { OWNER } from "../_data/identity";
 import { useFileMenu } from "../_lib/use-file-menu";
-import { useSystemStatus } from "../_lib/use-system-status";
 import { IconTile } from "./file-graphic";
+import { SystemStatus } from "./system-status";
 
 export function Taskbar() {
   const { windows } = useWindowManager();
@@ -44,7 +35,7 @@ export function Taskbar() {
       // hairline where a floating bar would take a shadow.
       className="relative z-300 flex shrink-0 items-center gap-3 px-3 sm:px-4"
       style={{
-        height: "var(--os-bar-h)",
+        height: "var(--os-dock-h)",
         background: "var(--os-surface-1)",
         borderTop: "1px solid var(--os-border)",
       }}
@@ -66,9 +57,8 @@ export function Taskbar() {
         ))}
       </div>
 
-      <div className="flex flex-1 items-center justify-end gap-3">
-        <SystemTray />
-        <Clock />
+      <div className="flex flex-1 items-center justify-end">
+        <SystemStatus />
       </div>
     </motion.nav>
   );
@@ -144,7 +134,7 @@ function DockSlot({
       aria-label={`${node.name}${state}`}
       className="focus-ring group relative grid shrink-0 cursor-pointer place-items-center rounded-sm p-0.5 transition-transform duration-200 hover:-translate-y-0.5"
     >
-      <IconTile icon={node.icon} artwork />
+      <IconTile icon={node.icon} size="lg" artwork />
       <span
         className="absolute bottom-0 h-1 rounded-full transition-all duration-200"
         style={{
@@ -219,143 +209,4 @@ function DockLabel({
     </AnimatePresence>,
     document.body,
   );
-}
-
-/**
- * What the machine has to say about itself, in one size and one colour — the
- * clock is not more important than the charge, and sizing it up said it was.
- * Colour is spent on trouble only: offline, or nearly flat and not charging.
- *
- * `dim`, the tier under body copy. These readings are chrome and should not
- * compete with the workspace, but the hour and the charge are things a visitor
- * reads, and the two tiers below this one are for text you scan past — `subtle`
- * gives up AA outright and may not carry a number that has to be legible.
- */
-function SystemTray() {
-  const { online, battery } = useSystemStatus();
-  const flat = battery !== null && battery.level <= 15 && !battery.charging;
-
-  return (
-    <div
-      className="flex shrink-0 items-center gap-2.5 text-[11px]"
-      style={{ color: "var(--os-text-dim)" }}
-    >
-      <span
-        title={online ? "Online" : "Offline"}
-        style={online ? undefined : { color: "var(--os-error)" }}
-      >
-        {online ? (
-          <Wifi size={14} strokeWidth={1.8} />
-        ) : (
-          <WifiOff size={14} strokeWidth={1.8} />
-        )}
-      </span>
-
-      {battery && (
-        <span
-          className="flex items-center gap-1"
-          title={`Battery ${battery.level}%${battery.charging ? ", charging" : ""}`}
-          style={flat ? { color: "var(--os-error)" } : undefined}
-        >
-          <BatteryGlyph level={battery.level} charging={battery.charging} />
-          <span className="tabular-nums">{battery.level}%</span>
-        </span>
-      )}
-    </div>
-  );
-}
-
-/**
- * Which drawing tells the truth about the charge. The icon carries the level
- * and the number states it. It runs a shade larger than the type beside it: an
- * 11px icon next to 11px text reads as the smaller of the two, and matching
- * them optically is what matching them means.
- */
-function BatteryGlyph({
-  level,
-  charging,
-}: {
-  level: number;
-  charging: boolean;
-}) {
-  const props = { size: 14, strokeWidth: 1.8 } as const;
-  if (charging) return <BatteryCharging {...props} />;
-  if (level >= 90) return <BatteryFull {...props} />;
-  if (level >= 40) return <BatteryMedium {...props} />;
-  return <BatteryLow {...props} />;
-}
-
-/**
- * The dock's last word, and the same size and colour as the tray it follows.
- * The date is held back below `sm`: at that width the row has to hold without
- * truncating, and the hour is the reading someone actually glances down for.
- */
-function Clock() {
-  const { date, weekday, time } = useClock();
-
-  return (
-    <div
-      className="flex shrink-0 items-baseline gap-1.5 text-[11px]"
-      style={{ color: "var(--os-text-dim)" }}
-    >
-      <span className="tabular-nums">{time}</span>
-      <span
-        title={weekday ? `${date}, ${weekday}` : undefined}
-        className="hidden sm:inline"
-      >
-        {date}
-      </span>
-    </div>
-  );
-}
-
-/**
- * The owner's wall clock, in 24 hours because a shell reads as a machine and a
- * machine does not say "PM". Ticks every second but only re-renders on a change
- * it can show, which is the minute — the alternative is re-rendering the dock
- * sixty times an hour for nothing.
- *
- * It reads Bangkok, not the visitor's own zone; see `OWNER.timeZone`. Renders
- * empty on the server and fills in on the first tick: the time is by definition
- * different by the time the page is read, so there is nothing to hydrate and no
- * mismatch to warn about.
- */
-function useClock() {
-  const [display, setDisplay] = useState({ date: "", weekday: "", time: "" });
-
-  useEffect(() => {
-    const update = () => {
-      const now = new Date();
-      const zone = { timeZone: OWNER.timeZone } as const;
-      // Kept apart rather than formatted as one string: the row shows the date
-      // and holds the weekday back for the tooltip, and only the caller knows
-      // which of them it has room for.
-      const next = {
-        date: now.toLocaleDateString("en-US", {
-          ...zone,
-          month: "short",
-          day: "numeric",
-        }),
-        weekday: now.toLocaleDateString("en-US", { ...zone, weekday: "short" }),
-        time: now.toLocaleTimeString("en-US", {
-          ...zone,
-          hour12: false,
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setDisplay((current) =>
-        current.date === next.date &&
-        current.weekday === next.weekday &&
-        current.time === next.time
-          ? current
-          : next,
-      );
-    };
-    update();
-    const id = setInterval(update, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return display;
 }
