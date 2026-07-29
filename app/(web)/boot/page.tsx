@@ -20,7 +20,7 @@ export default function BootScreen() {
   useEffect(() => {
     if (!isReady) return;
     markBooted();
-    router.replace("/main-interface");
+    router.replace("/desktop");
   }, [isReady, router]);
 
   return (
