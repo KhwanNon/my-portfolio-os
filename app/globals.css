@@ -208,19 +208,77 @@ body {
   font-family: var(--font-os-mono);
 }
 
-/* ─── Utility classes used across boot + desktop ────────────────────────────── */
+/* ─── Boot sequence ─────────────────────────────────────────────────────────── */
 
-/* CRT scanlines overlay — boot screen only (see app/(web)/boot/page.tsx). */
+/*
+ * The cold-start screen states its own palette instead of borrowing the
+ * desktop's. It is the moment *before* the OS exists, so it answers to neither
+ * theme — one periwinkle hue over white paper, declared once here so the whole
+ * sequence, rain canvas included, retunes from this one block.
+ */
+.boot-shell {
+  /*
+   * The same three blooms the desktop is lit by, restated rather than
+   * inherited: `--os-ambient-*` retunes per theme, and this screen has to look
+   * the same whichever one the desktop is set to. `-c` has to be repeated too
+   * — a custom property substitutes its `var()`s at the element that *declares*
+   * it, so the copy on `:root` would carry root's hues down here already mixed.
+   */
+  --os-bloom-a: #4285f4;
+  --os-bloom-b: #9334e6;
+  --os-ambient-a: color-mix(in srgb, var(--os-bloom-a) 55%, transparent);
+  --os-ambient-b: color-mix(in srgb, var(--os-bloom-b) 45%, transparent);
+  --os-ambient-c: color-mix(in srgb, var(--os-ambient-a), var(--os-ambient-b));
+
+  /* Plain paper, and how much of the wash it lets through — the desktop's own
+     setting, so the two screens are lit to the same depth and the handover
+     doesn't step. Restated rather than inherited because the desktop's copy
+     retunes per theme and this screen must not. */
+  --os-bg: #ffffff;
+  --os-desktop-veil: color-mix(in srgb, var(--os-bg) 72%, transparent);
+
+  /*
+   * `--os-ambient-c` resolved with its 50% alpha lifted off: the colour at the
+   * middle of that wash, borrowed for the things on top of it that have to be
+   * read. A literal rather than a mix of the two above because the rain canvas
+   * reads this through `getComputedStyle`, which substitutes `var()` but never
+   * evaluates `color-mix()`. Re-derive if the blooms are ever re-seeded.
+   */
+  --os-accent: #6661ee;
+
+  --os-text: #26243b;
+  --os-text-dim: #565377;
+  --os-text-faint: #807d9d;
+  --os-text-subtle: #a6a3be;
+
+  /*
+   * The rain falls through the same two hues the blooms behind it are made of,
+   * so a character's colour says where in the fall it has got to. It runs
+   * violet down to blue — against the blooms' own arrangement, which puts blue
+   * at the top — so the rain crosses the wash instead of doubling it and stays
+   * legible as its own layer. The midpoint it passes through is exactly
+   * `--os-accent`, which is where the CTA sits. Plain `var()` on the seeds, not
+   * `color-mix()`: the canvas reads these through `getComputedStyle`. See
+   * app/shared/components/matrix-rain.tsx.
+   */
+  --os-rain-from: var(--os-bloom-b);
+  --os-rain-to: var(--os-bloom-a);
+}
+
+/* CRT scanlines overlay — boot screen only (see app/(web)/boot/page.tsx). Ink
+   on paper: over a light surface the grain has to darken, not lighten. */
 .bg-scanlines {
   background-image: repeating-linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.04) 0px,
-    rgba(255, 255, 255, 0.04) 1px,
+    rgba(38, 36, 59, 0.06) 0px,
+    rgba(38, 36, 59, 0.06) 1px,
     transparent 1px,
     transparent 3px
   );
-  mix-blend-mode: overlay;
+  mix-blend-mode: multiply;
 }
+
+/* ─── Utility classes used across the desktop ───────────────────────────────── */
 
 /* Faint dot/grid pattern for the desktop background */
 .bg-ambient-grid {
@@ -240,13 +298,6 @@ body {
     transparent 40%,
     rgba(0, 0, 0, 0.35) 100%
   );
-}
-
-/* Glowing text — boot status header only. */
-.glow-text {
-  text-shadow:
-    0 0 6px color-mix(in srgb, var(--os-accent) 60%, transparent),
-    0 0 14px color-mix(in srgb, var(--os-accent) 35%, transparent);
 }
 
 /* Ambient FX belong to the dark theme only — on Daylight they'd muddy the white. */
@@ -295,14 +346,18 @@ body {
 }
 
 /*
- * The desktop surface itself — paper laid over that colour, not opaque. What
- * shows through is the whole of the effect, and `--os-desktop-veil` is the
- * single knob for it.
+ * Paper laid over that colour, not opaque. What shows through is the whole of
+ * the effect, and `--os-desktop-veil` is the single knob for it. Two callers:
+ * the desktop, where the paper is also the surface windows sit on, and the boot
+ * screen, which wants the wash without the layout that comes with it.
  */
+.bg-desktop-veil,
+.desktop-surface {
+  background: var(--os-desktop-veil);
+}
 .desktop-surface {
   position: relative;
   min-height: 100%;
-  background: var(--os-desktop-veil);
 }
 
 

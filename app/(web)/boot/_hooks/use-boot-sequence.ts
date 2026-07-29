@@ -1,31 +1,14 @@
 // src/hooks/use-boot-sequence.ts
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { animate } from "framer-motion";
-import { BOOT_STEPS, INITIAL_LOGS } from "../_constants/boot-config";
+import { BOOT_STEPS } from "../_constants/boot-config";
 
 export function useBootSequence() {
-  const [logs, setLogs] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [percent, setPercent] = useState(0);
   const [isReady, setIsReady] = useState(false);
 
-  // Memoized log update logic
-  const pushLog = useCallback((msg: string) => {
-    setLogs((prev) => [...prev, msg].slice(-12));
-  }, []);
-
   useEffect(() => {
-    let isFinal = false;
-
-    // 1. Background Log Noise
-    const logInterval = setInterval(() => {
-      if (isFinal) return;
-      const randomLog =
-        INITIAL_LOGS[Math.floor(Math.random() * INITIAL_LOGS.length)];
-      pushLog(randomLog);
-    }, 400);
-
-    // 2. Main Boot Sequence
     const runSequence = async () => {
       await new Promise((r) => setTimeout(r, 400));
       setCurrentStep(1);
@@ -45,24 +28,17 @@ export function useBootSequence() {
       await new Promise((r) => setTimeout(r, 500));
       setCurrentStep(5);
 
-      isFinal = true;
-      clearInterval(logInterval);
-
-      // Final System Dump
-      const finalDump = ["[SYS] BOOT COMPLETE", "WELCOME, OPERATOR."];
-      for (const msg of finalDump) {
-        await new Promise((r) => setTimeout(r, 100));
-        pushLog(msg);
-      }
+      // Nothing to press any more, so this beat is the only thing standing
+      // between the final step appearing and the desktop replacing it. Shorten
+      // it and `OVERRIDE_SUCCESSFUL` is gone before it can be read.
+      await new Promise((r) => setTimeout(r, 500));
       setIsReady(true);
     };
 
     runSequence();
-    return () => clearInterval(logInterval);
-  }, [pushLog]);
+  }, []);
 
   return {
-    logs,
     currentStep,
     percent,
     isReady,

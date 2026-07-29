@@ -2,50 +2,47 @@
 "use client";
 import { MatrixRain } from "@/app/shared/components/matrix-rain";
 import { useRouter } from "next/navigation";
-import { useEffect, useCallback } from "react";
-import { STORAGE_KEYS } from "@/app/shared/constants/storage";
+import { useEffect } from "react";
+import { markBooted } from "@/app/shared/state/boot-session";
 import { useBootSequence } from "./_hooks/use-boot-sequence";
 import { BootFooter } from "./_components/boot-footer";
-import { LogViewer } from "./_components/log-viewer";
 import { StatusDisplay } from "./_components/status-display";
 
 export default function BootScreen() {
   const router = useRouter();
-  const { logs, currentStep, percent, isReady, stepText } = useBootSequence();
+  const { currentStep, percent, isReady, stepText } = useBootSequence();
 
-  const handleInitialize = useCallback(() => {
-    localStorage.setItem(STORAGE_KEYS.hasBooted, "1");
-    router.push("/main-interface");
-  }, [router]);
-
-  // Any key or click enters the desktop — mid-sequence it acts as a skip.
+  // The sequence runs itself and hands over when it is done. Nothing to press
+  // and nothing to skip: a boot that asks for input isn't booting, it's a door.
+  // `replace`, not `push`: with the sequence replaying on every load, leaving it
+  // in history would mean Back lands on a boot screen that immediately boots
+  // forward again — a door that closes itself.
   useEffect(() => {
-    window.addEventListener("keydown", handleInitialize);
-    window.addEventListener("pointerdown", handleInitialize);
-    return () => {
-      window.removeEventListener("keydown", handleInitialize);
-      window.removeEventListener("pointerdown", handleInitialize);
-    };
-  }, [handleInitialize]);
+    if (!isReady) return;
+    markBooted();
+    router.replace("/main-interface");
+  }, [isReady, router]);
 
   return (
-    // The boot sequence is a CRT moment — it stays dark whatever the desktop theme is.
-    <main
-      data-theme="dark"
-      className="fixed inset-0 z-50 flex flex-col bg-os-bg text-os-accent font-os-mono overflow-hidden uppercase"
-    >
-      {/* Visual FX Layers */}
-      <div className="absolute inset-0 pointer-events-none z-60 bg-scanlines opacity-20" />
-      <MatrixRain opacity={0.4} />
+    // `boot-shell` carries the screen's own palette (see app/globals.css), so the
+    // sequence looks the same whichever theme the desktop is set to.
+    <main className="boot-shell fixed inset-0 z-50 flex flex-col bg-os-bg text-os-text-dim font-os-mono overflow-hidden uppercase">
+      {/* ── Ambient FX layers (back → front) ───────────────────────────────
+            The desktop's own stack, reused: the three blooms it is lit by, then
+            the paper veiling them. Negative depths keep the whole stack under
+            the boot content but over `main`'s background. The rain falls on top
+            of the veil, not under it — veiled, it would read as smudged paper
+            rather than as characters. */}
+      <div className="absolute inset-0 -z-30 bg-ambient-aura pointer-events-none" />
+      <div className="absolute inset-0 -z-20 bg-desktop-veil pointer-events-none" />
+      <MatrixRain opacity={0.09} />
 
-      <LogViewer logs={logs} />
+      <div className="absolute inset-0 pointer-events-none z-60 bg-scanlines opacity-20" />
 
       <StatusDisplay
         stepText={stepText}
         percent={percent}
         isSyncing={currentStep === 2}
-        isReady={isReady}
-        onInitialize={handleInitialize}
       />
 
       <BootFooter isComplete={currentStep === 5} />

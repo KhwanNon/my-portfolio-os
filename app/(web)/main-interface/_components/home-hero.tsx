@@ -10,11 +10,11 @@ import {
   useRef,
   useState,
 } from "react";
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
+import { BrandLogo } from "@/app/shared/components/brand-logo";
 import { SPRING_EXPRESSIVE } from "@/app/shared/constants/motion";
 import { homeShortcuts } from "../_data/file-system-data";
 import { OWNER } from "../_data/identity";
@@ -26,33 +26,6 @@ import { SearchResults } from "./search-results";
 const SEARCH_PLACEHOLDER = "Search files, folders, apps…";
 
 /**
- * The shipped logo, standing where the drawn spark used to. Same mark either
- * way — but this is the tile the browser tab and the home screen show, so the
- * desktop opens on the thing you launched rather than on a second version of
- * it.
- *
- * Clipped rather than drawn square: the artwork's corners are page-white, and
- * the ~28% squircle every icon tile in this shell takes cuts them off, which is
- * what keeps the tile a tile on the dark theme instead of a white card.
- */
-function BrandLogo({ size = 64 }: { size?: number }) {
-  return (
-    <span
-      className="inline-flex shrink-0 overflow-hidden"
-      style={{ borderRadius: Math.round(size * 0.28) }}
-    >
-      <Image
-        src="/assets/logo.png"
-        alt="Portfolio OS"
-        width={size}
-        height={size}
-        priority
-      />
-    </span>
-  );
-}
-
-/**
  * Weight tapers down the column — mark, name, sentence — and then the field
  * and the shortcuts put a base under it, so the block sits on something
  * instead of trailing off. Colour is spent once, on the mark: every line here
@@ -62,7 +35,7 @@ function BrandLogo({ size = 64 }: { size?: number }) {
 export function HomeHero() {
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col items-center text-center">
-      <BrandLogo size={64} />
+      <BrandLogo size={64} priority />
 
       <h1
         className="mt-5 text-[clamp(28px,5vw,42px)] font-semibold leading-[1.12] tracking-tight"

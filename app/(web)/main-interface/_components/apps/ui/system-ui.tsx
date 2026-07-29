@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import { BrandLogo } from "@/app/shared/components/brand-logo";
 import { FileGraphic } from "../../file-graphic";
 import { Card, Wrapper, Row } from "./primitives";
 
@@ -61,12 +61,7 @@ export function AboutOSUI() {
           same way the tab and the desktop do. Clipped to the shell's ~28%
           squircle — the artwork's corners are page-white. */}
       <div className="flex items-center gap-3 mb-3">
-        <span
-          className="inline-flex shrink-0 overflow-hidden"
-          style={{ borderRadius: 12 }}
-        >
-          <Image src="/assets/logo.png" alt="" width={44} height={44} />
-        </span>
+        <BrandLogo size={44} alt="" />
         <div>
           <div className="font-bold text-sm">Portfolio OS</div>
           <div className="opacity-60 mt-0.5 text-[11px] font-os-mono">

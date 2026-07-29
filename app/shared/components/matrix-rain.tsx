@@ -49,35 +49,54 @@ export const MatrixRain = ({
       .fill(0)
       .map(() => (Math.random() * 0.8 + 0.9) * speedMultiplier);
 
-    const draw = () => {
-      // Fetch dynamic theme colors from the DOM root to support runtime theme switching
-      const bgColor =
-        getComputedStyle(document.documentElement)
-          .getPropertyValue("--os-bg")
-          .trim() || "#000";
-      const accentColor =
-        getComputedStyle(document.documentElement)
-          .getPropertyValue("--os-accent")
-          .trim() || "#00ff41";
+    // The ramp the characters are painted through. Rebuilt only when the
+    // palette or the viewport actually changes — the key is what makes that
+    // cheap enough to check every frame.
+    let rampKey = "";
+    let ramp: CanvasGradient | undefined;
 
-      // Apply a semi-transparent fill over the previous frame to create the "motion trail" effect
-      ctx.fillStyle = `rgba(${hexToRgb(bgColor)}, 0.15)`;
+    const draw = () => {
+      // Colors are read off the canvas itself, not the DOM root: that picks up
+      // runtime theme switches *and* any palette a host scopes to its subtree.
+      const styles = getComputedStyle(canvas);
+      const readVar = (name: string, fallback: string) =>
+        styles.getPropertyValue(name).trim() || fallback;
+
+      const bgColor = readVar("--os-bg", "#000");
+      const accentColor = readVar("--os-accent", "#00ff41");
+      // The two ends of the fall. A host that names neither gets its accent at
+      // both stops, which is a flat colour — the gradient costs it nothing.
+      const fromColor = readVar("--os-rain-from", accentColor);
+      const toColor = readVar("--os-rain-to", accentColor);
+
+      const nextRampKey = `${fromColor}|${toColor}|${canvas.height}`;
+      let gradient = ramp;
+      if (!gradient || nextRampKey !== rampKey) {
+        gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, fromColor);
+        gradient.addColorStop(1, toColor);
+        ramp = gradient;
+        rampKey = nextRampKey;
+      }
+
+      // Apply a semi-transparent fill over the previous frame to create the
+      // "motion trail" effect. The alpha rides on globalAlpha rather than being
+      // spliced into the colour, so the palette can hand us any CSS colour.
+      ctx.globalAlpha = 0.15;
+      ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
 
       ctx.font = `bold ${fontSize}px monospace`;
+      // A canvas gradient is anchored to the canvas, not to the glyph, so one
+      // fill style colours every character by where on the fall it landed.
+      ctx.fillStyle = gradient;
 
       for (let i = 0; i < drops.length; i++) {
         // Shuffle characters between frames for a high-speed "decryption" flicker effect
         const text = Math.random() > 0.5 ? "1" : "0";
         const x = (i * fontSize) / density;
         const y = drops[i] * fontSize;
-
-        // Randomly highlight characters in white to simulate "head" of the data stream
-        if (Math.random() > 0.99) {
-          ctx.fillStyle = "#fff";
-        } else {
-          ctx.fillStyle = accentColor;
-        }
 
         // Apply glow effect for a cinematic terminal aesthetic
         ctx.shadowBlur = 8;
@@ -94,21 +113,6 @@ export const MatrixRain = ({
         drops[i] += speeds[i];
       }
     };
-
-    /** Utility: Converts hex color strings to RGB format for use in rgba() values */
-    function hexToRgb(hex: string) {
-      hex = hex.replace("#", "");
-      if (hex.length === 3)
-        hex = hex
-          .split("")
-          .map((s) => s + s)
-          .join("");
-      const bigint = parseInt(hex, 16);
-      const r = (bigint >> 16) & 255;
-      const g = (bigint >> 8) & 255;
-      const b = bigint & 255;
-      return `${r}, ${g}, ${b}`;
-    }
 
     // High-frequency animation interval (approx. 40 FPS)
     const interval = setInterval(draw, 25);

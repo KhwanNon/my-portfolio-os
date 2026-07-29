@@ -1,4 +1,6 @@
 "use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Taskbar } from "./_components/taskbar";
 import { DesktopSurface } from "./_components/desktop-surface";
@@ -10,6 +12,7 @@ import {
   WindowManagerProvider,
   useWindowManager,
 } from "@/app/modules/desktop/context/window-manager-context";
+import { hasBooted } from "@/app/shared/state/boot-session";
 import { aboutOsNode, desktopFileSystem } from "./_data/file-system-data";
 
 const TERMINAL_ID = "system-command";
@@ -116,6 +119,19 @@ function Desktop() {
 }
 
 export default function MainInterfaceScreen() {
+  const router = useRouter();
+  // Reaching the desktop means coming through the boot screen — on a refresh or
+  // a direct link the flag is back to false, so the machine starts up again
+  // rather than the desktop simply being there. Rendering nothing in the
+  // meantime keeps a frame of desktop from flashing behind the redirect.
+  const booted = hasBooted();
+
+  useEffect(() => {
+    if (!booted) router.replace("/boot");
+  }, [booted, router]);
+
+  if (!booted) return null;
+
   return (
     <WindowManagerProvider>
       <Desktop />
