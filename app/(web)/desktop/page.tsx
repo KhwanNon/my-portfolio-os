@@ -83,6 +83,12 @@ function Desktop() {
         <div className="absolute inset-0 bg-ambient-aura pointer-events-none" />
         <div className="absolute inset-0 bg-ambient-grid opacity-[0.05] pointer-events-none" />
         <div className="absolute inset-0 bg-vignette pointer-events-none z-10" />
+        {/* The veil, painted static and at full strength from the first frame —
+              same pairing the boot screen already uses. Arriving from boot is a
+              route change, not a mount this component controls the pacing of, so
+              the aura must never be caught bare: if the veil faded in with the
+              content below, the three blooms would flash unveiled for a beat. */}
+        <div className="absolute inset-0 z-10 bg-desktop-veil pointer-events-none" />
 
         {/* ── Desktop: the surface windows open from ───────────────────── */}
         <motion.main

@@ -347,12 +347,12 @@ body {
 
 /*
  * Paper laid over that colour, not opaque. What shows through is the whole of
- * the effect, and `--os-desktop-veil` is the single knob for it. Two callers:
- * the desktop, where the paper is also the surface windows sit on, and the boot
- * screen, which wants the wash without the layout that comes with it.
+ * the effect, and `--os-desktop-veil` is the single knob for it. Painted as its
+ * own static layer on both the boot screen and the desktop workspace — never
+ * inside something that fades in, or the aura shows bare and vivid for the
+ * split second before the veil catches up.
  */
-.bg-desktop-veil,
-.desktop-surface {
+.bg-desktop-veil {
   background: var(--os-desktop-veil);
 }
 .desktop-surface {
