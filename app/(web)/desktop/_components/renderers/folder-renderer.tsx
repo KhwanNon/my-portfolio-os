@@ -41,7 +41,9 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
   const [path, setPath] = useState<Path>(initialPath);
   const [back, setBack] = useState<Path[]>([]);
-  const [view, setView] = useState<ViewMode>("grid");
+  // List by default: a folder here holds a handful of named things to read, not
+  // artwork to browse, and the dense rows put the whole shelf on screen at once.
+  const [view, setView] = useState<ViewMode>("list");
 
   const children = childrenAt(path);
 

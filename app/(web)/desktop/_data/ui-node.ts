@@ -12,7 +12,7 @@ import { ICONS } from "./icons";
  * silently render a blank panel.
  */
 export function uiNode<K extends UiComponentName>(
-  base: { id: string; name: string; icon?: string },
+  base: { id: string; name: string; icon?: string; featured?: boolean },
   component: K,
   props: UiComponentProps<K>,
 ): FileNode {
@@ -21,6 +21,7 @@ export function uiNode<K extends UiComponentName>(
     name: base.name,
     type: "ui",
     icon: base.icon ?? ICONS.ui,
+    featured: base.featured,
     // Cast at this trusted seam: `props` is already checked against `component`
     // above; `FileData.props` is deliberately loose for the generic renderer.
     data: { kind: "ui", component, props: props as Record<string, unknown> },

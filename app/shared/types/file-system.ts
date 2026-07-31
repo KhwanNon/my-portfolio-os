@@ -6,6 +6,8 @@ export interface FileNode {
   type: FileType;
   /** Key into the FileGraphic icon registry (e.g. "folder", "txt", "sysCmd"). */
   icon?: string;
+  /** The one node to open first. Folders inherit the mark — see `leadsToFeatured`. */
+  featured?: boolean;
   data?: FileData;
 }
 

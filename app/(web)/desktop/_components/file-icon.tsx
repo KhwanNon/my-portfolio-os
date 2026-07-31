@@ -6,7 +6,9 @@
 import { MoreVertical } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useFileInteraction } from "../_lib/use-file-interaction";
+import { leadsToFeatured } from "../_lib/featured";
 import { IconTile } from "./file-graphic";
+import { FeaturedStar } from "./featured-star";
 
 /**
  * "desktop" = icon lying on the desktop, "card" = detailed tile in a folder
@@ -54,6 +56,9 @@ export const FileIcon = ({
   const { selected, interaction, openMenuAt } = useFileInteraction(fileNode, {
     onOpen,
   });
+  // Stays put when the row is selected: a mark that vanishes the moment you
+  // click the thing it marks is a mark you can't trust.
+  const featured = leadsToFeatured(fileNode);
 
   // A desktop icon: artwork, name under it, and nothing else — no card, no
   // caption, no metadata. The cell fills its grid track rather than carrying
@@ -96,11 +101,14 @@ export const FileIcon = ({
         }`}
       >
         <IconTile icon={fileNode.icon} size="sm" />
-        <span
-          className="flex-1 truncate text-[13px]"
-          style={{ color: "var(--os-text)" }}
-        >
-          {fileNode.name}
+        <span className="flex min-w-0 flex-1 items-center gap-1.5">
+          {featured && <FeaturedStar size={12} />}
+          <span
+            className="truncate text-[13px]"
+            style={{ color: "var(--os-text)" }}
+          >
+            {fileNode.name}
+          </span>
         </span>
         <span
           className="shrink-0 text-[11px]"
@@ -127,12 +135,15 @@ export const FileIcon = ({
       />
 
       <div className="min-w-0 flex-1">
-        <p
-          className="truncate text-[13px] font-semibold tracking-tight"
-          style={{ color: "var(--os-text)" }}
-        >
-          {fileNode.name}
-        </p>
+        <div className="flex items-center gap-1.5">
+          {featured && <FeaturedStar size={12} />}
+          <p
+            className="min-w-0 truncate text-[13px] font-semibold tracking-tight"
+            style={{ color: "var(--os-text)" }}
+          >
+            {fileNode.name}
+          </p>
+        </div>
         <p
           className="mt-0.5 truncate text-[11px]"
           style={{ color: "var(--os-text-faint)" }}

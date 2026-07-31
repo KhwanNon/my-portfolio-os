@@ -46,6 +46,25 @@
   --os-success: #1e8e3e;
 
   /*
+   * The mark on the one project to open first — the star on it and on every
+   * folder above it, and the card on the desktop that points at it. The mark is
+   * the star alone; nothing else is repainted. Deliberately not `--os-accent`:
+   * accent is what everything interactive already wears, so a recommendation
+   * painted in it would be one more control rather than a thing being singled
+   * out. Yellow is spent on the star and on nothing else — not the label beside
+   * it, not a border, not a rim: one yellow shape per surface.
+   *
+   * It is 1.8:1 on white, under the 3:1 a meaningful graphic owes, and that is
+   * a decision rather than an oversight. Every darker yellow that clears the bar
+   * has turned orange by the time it gets there, and a rim in the darker tone
+   * reads as an orange outline around a yellow star. So the star is left as the
+   * colour it is meant to be, and the meaning never rests on it alone: it
+   * carries a label for assistive tech, and the card that shows it says
+   * "Recommended" in words at full text contrast.
+   */
+  --os-featured: #fabb05;
+
+  /*
    * The two blooms washing the desktop, one per corner. Each theme states its
    * own finished colour — strength baked in — because the weight that reads as
    * "barely there" over white is not the weight that reads that way over ink.
@@ -150,6 +169,10 @@
   --os-error: #ff6b6b;
   --os-success: #81c995;
 
+  /* The same star, lifted for the navy — where yellow has no contrast problem
+     to solve in the first place. */
+  --os-featured: #fbbf24;
+
   /* The two again, as light: the teal, and the ground's own hue raised until it
      glows. The second bloom is not a third colour — it is this navy at the top
      of its range, which is why the aura reads as the surface being lit rather
@@ -220,6 +243,10 @@
   --os-error: #ffffff;
   --os-success: #ffffff;
 
+  /* Yellow is a colour, and this screen has none. The mark still works — a star
+     is a shape before it is a hue. */
+  --os-featured: var(--os-accent);
+
   /* The same seven, with the hue taken out of them. Nothing in this window
      draws a glyph today — the title bar shows the terminal's own artwork — but
      the set is restated so no icon dropped in here can smuggle a colour back. */
@@ -260,6 +287,7 @@
   --color-os-text-subtle: var(--os-text-subtle);
   --color-os-error: var(--os-error);
   --color-os-tertiary: var(--os-tertiary);
+  --color-os-featured: var(--os-featured);
   --font-os-sans: var(--font-roboto), system-ui, sans-serif;
   --font-os-mono: var(--font-roboto-mono), ui-monospace, monospace;
 }

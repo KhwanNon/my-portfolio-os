@@ -5,6 +5,7 @@
 // rather than a place to store things. Windows float above this; it is what
 // they come back to.
 import { CraftCard } from "./craft-card";
+import { FeaturedCard } from "./featured-card";
 import { HomeHero } from "./home-hero";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -21,15 +22,19 @@ export function DesktopSurface() {
       {/* The column takes the whole surface and centres in it. The extra room
           underneath on small screens is the craft card's: the card is pinned to
           a corner that, on a phone, is directly below the column. */}
-      <div className="flex flex-1 items-center justify-center px-6 pb-44 pt-16 sm:pb-20">
+      <div className="flex flex-1 items-center justify-center px-6 pb-72 pt-16 sm:pb-20">
         <HomeHero />
       </div>
 
       {/* Bottom right: the corner the eye lands on last — right for a statement
           you read once, not a thing you reach for. It counterweights the centred
           column rather than sitting in it. Capped against the surface so it
-          never eats a narrow desktop whole. */}
-      <div className="absolute bottom-4 right-4 w-64 max-w-[calc(100%-2rem)]">
+          never eats a narrow desktop whole.
+
+          The recommendation sits above the standard, in reading order: what to
+          look at first, then what it was all built to. */}
+      <div className="absolute bottom-4 right-4 flex w-64 max-w-[calc(100%-2rem)] flex-col gap-2">
+        <FeaturedCard />
         <CraftCard />
       </div>
     </div>

@@ -3,12 +3,20 @@ import type { UiComponentProps } from "../_components/apps/ui-registry";
 import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
 
-/** One project = one .ui file: description, screenshots, stack, and link together. */
+/**
+ * One project = one .ui file: description, screenshots, stack, and link
+ * together. `featured` is authored once here and read twice — by the window,
+ * and by the folders above it, which inherit the mark.
+ */
 function makeProject(
   id: string,
   props: UiComponentProps<"ProjectUI">,
 ): FileNode {
-  return uiNode({ id, name: `${props.name}.ui` }, "ProjectUI", props);
+  return uiNode(
+    { id, name: `${props.name}.ui`, featured: props.featured },
+    "ProjectUI",
+    props,
+  );
 }
 
 /**
@@ -28,6 +36,14 @@ function shots(
   );
 }
 
+/**
+ * What the desktop card says about the featured project, in the one line it
+ * has. Kept here beside the project rather than in the component, because it is
+ * copy about this work — the card only borrows it.
+ */
+export const FEATURED_PITCH =
+  "The largest thing I have built alone — an offline-first, security-hardened meeting platform for government.";
+
 /** A shelf in the projects cabinet — folders here hold nothing but projects. */
 function folder(id: string, name: string, children: FileNode[]): FileNode {
   return {
@@ -39,9 +55,43 @@ function folder(id: string, name: string, children: FileNode[]): FileNode {
   };
 }
 
-// Positioning: Flutter Craftsman / Shipper — Flutter production work leads,
-// React Native follows, web closes each shelf.
+/**
+ * Positioning: Flutter Craftsman / Shipper. Ordered by what a visitor gets from
+ * reading one more entry, which is not the same as by date:
+ *
+ *   1. the featured project, then the four with the most of my own work in them
+ *   2. everything else that has a public link — a store page is a claim someone
+ *      can check, so a linked entry outranks an unlinked one of the same weight
+ *   3. the rest, oldest habits last
+ *
+ * The list is authored in that order rather than sorted at runtime: there is no
+ * field that encodes "how much of this is mine", and inventing one to recover an
+ * order I already know would be a worse file than this comment.
+ */
 const workMobile: FileNode[] = [
+  // Delivered under NDA: no screenshots, no client name, no store link. What is
+  // left is the architecture, which is the part worth reading anyway.
+  makeProject("proj-gov-meeting", {
+    name: "Government Meeting System",
+    type: "Mobile · Work",
+    description:
+      "A tablet application for running government meetings — agendas, participants, and the confidential documents that go with them. It is delivered under NDA, so this entry describes how it is built rather than what it looks like. Two constraints shaped every decision: meeting rooms where the network is unusable, and devices that cannot be assumed to be safe.",
+    highlights: [
+      "Offline-first by design — the encrypted local database is the source of truth, so a meeting runs start to finish with no connection and reconciles once there is one",
+      "Two-way sync: an inbound pipeline pulls meetings, agendas and attachments under a download policy per file type, while an outbound outbox captures everything the user does",
+      "The outbox is a durable queue with a processor per action — comments, document edits, read receipts — so a push that fails is retried rather than lost",
+      "Live meeting state over a WebSocket channel, with background workers carrying sync on when the app is not in the foreground",
+      "Document workflow on a commercial PDF SDK: open, annotate and save while offline, with the edits travelling home through the same outbox",
+      "Hardened for material that matters — encrypted database key in secure storage, per-document encryption, device-integrity and jailbreak checks, and screen capture blocked at the platform layer",
+      "Clean architecture per feature across fourteen feature modules, Bloc for state and GetIt for injection — sole author of the mobile codebase",
+      "Also contributed to the Go backend — clean architecture, LDAP and national digital-ID sign-in, WebSocket and SQL Server — alongside the platform team",
+    ],
+    stack: ["Flutter", "Dart", "Bloc", "Drift", "SQLite", "WebSocket", "Go"],
+    status: "In Production",
+    year: "2026",
+    platform: "iPad & Android Tablet",
+    featured: true,
+  }),
   makeProject("proj-mol-portal", {
     name: "MOL Portal",
     type: "Mobile · Work",
@@ -66,75 +116,6 @@ const workMobile: FileNode[] = [
         url: "https://play.google.com/store/apps/details?id=com.molportal.mol_portal",
       },
     ],
-  }),
-  makeProject("proj-vn", {
-    name: "VN",
-    type: "Mobile · Work",
-    description:
-      "Cross-platform mobile application built with Flutter and shipped to production on the Play Store.",
-    highlights: [
-      "Single Flutter codebase serving both Android and iOS",
-      "Built and maintained as part of a production mobile team",
-      "Shipped to both the App Store and the Play Store",
-    ],
-    stack: ["Flutter", "Dart"],
-    status: "Live on both stores",
-    year: "2022",
-    platform: "iOS & Android",
-    images: shots("vn", 4),
-    links: [
-      {
-        label: "App Store",
-        url: "https://apps.apple.com/app/vn-english-anywhere/id1630679292",
-      },
-      {
-        label: "Play Store",
-        url: "https://play.google.com/store/apps/details?id=com.viknavara.vnenglish",
-      },
-    ],
-  }),
-  makeProject("proj-mypinmall", {
-    name: "MyPinmall",
-    type: "Mobile · Work",
-    description:
-      "A group-buying marketplace shipped to both stores: pin a product, invite friends, and the price falls as the group fills. Built in Flutter with Riverpod. I worked across several areas of the app inside the product team rather than owning it end to end.",
-    highlights: [
-      "Group-buy mechanics as the core of the product — tiered prices that drop as a group fills, a countdown on every campaign, and slots remaining shown on each tier",
-      "Pin to Share: a product is pinned and shared to pull friends into the same buy, which is what makes the group price reachable",
-      "A full storefront around it — categories, campaigns, product options, cart, favourites and order tracking",
-      "Checkout covering how people actually pay in Thailand: QR through mobile banking, bank transfer, and cash on delivery",
-      "Flutter with Riverpod for state, on a single codebase serving iOS and Android",
-    ],
-    stack: ["Flutter", "Dart", "Riverpod"],
-    status: "Live on both stores",
-    year: "2023",
-    platform: "iOS & Android",
-    images: shots("my-pinmall", 4),
-    links: [
-      {
-        label: "App Store",
-        url: "https://apps.apple.com/app/mypinmall/id6468960970",
-      },
-      {
-        label: "Play Store",
-        url: "https://play.google.com/store/apps/details?id=com.mypinmall.myapp",
-      },
-    ],
-  }),
-  makeProject("proj-enfagrow", {
-    name: "Enfagrow",
-    type: "Mobile · Work",
-    description:
-      "Cross-platform mobile application for the Enfagrow brand, built with Flutter with a focus on a smooth, visually polished user experience.",
-    highlights: [
-      "Single Flutter codebase serving both Android and iOS",
-      "Brand-facing UI built to design-team specification",
-    ],
-    stack: ["Flutter", "Dart"],
-    status: "Completed",
-    year: "2022",
-    platform: "iOS & Android",
-    images: shots("enfagrow", 4),
   }),
   makeProject("proj-ailearn", {
     name: "aiLearn",
@@ -181,6 +162,75 @@ const workMobile: FileNode[] = [
         url: "https://play.google.com/store/apps/details?id=ai.myorder.app",
       },
     ],
+  }),
+  makeProject("proj-mypinmall", {
+    name: "MyPinmall",
+    type: "Mobile · Work",
+    description:
+      "A group-buying marketplace shipped to both stores: pin a product, invite friends, and the price falls as the group fills. Built in Flutter with Riverpod. I worked across several areas of the app inside the product team rather than owning it end to end.",
+    highlights: [
+      "Group-buy mechanics as the core of the product — tiered prices that drop as a group fills, a countdown on every campaign, and slots remaining shown on each tier",
+      "Pin to Share: a product is pinned and shared to pull friends into the same buy, which is what makes the group price reachable",
+      "A full storefront around it — categories, campaigns, product options, cart, favourites and order tracking",
+      "Checkout covering how people actually pay in Thailand: QR through mobile banking, bank transfer, and cash on delivery",
+      "Flutter with Riverpod for state, on a single codebase serving iOS and Android",
+    ],
+    stack: ["Flutter", "Dart", "Riverpod"],
+    status: "Live on both stores",
+    year: "2023",
+    platform: "iOS & Android",
+    images: shots("my-pinmall", 4),
+    links: [
+      {
+        label: "App Store",
+        url: "https://apps.apple.com/app/mypinmall/id6468960970",
+      },
+      {
+        label: "Play Store",
+        url: "https://play.google.com/store/apps/details?id=com.mypinmall.myapp",
+      },
+    ],
+  }),
+  makeProject("proj-vn", {
+    name: "VN",
+    type: "Mobile · Work",
+    description:
+      "Cross-platform mobile application built with Flutter and shipped to production on the Play Store.",
+    highlights: [
+      "Single Flutter codebase serving both Android and iOS",
+      "Built and maintained as part of a production mobile team",
+      "Shipped to both the App Store and the Play Store",
+    ],
+    stack: ["Flutter", "Dart"],
+    status: "Live on both stores",
+    year: "2022",
+    platform: "iOS & Android",
+    images: shots("vn", 4),
+    links: [
+      {
+        label: "App Store",
+        url: "https://apps.apple.com/app/vn-english-anywhere/id1630679292",
+      },
+      {
+        label: "Play Store",
+        url: "https://play.google.com/store/apps/details?id=com.viknavara.vnenglish",
+      },
+    ],
+  }),
+  makeProject("proj-enfagrow", {
+    name: "Enfagrow",
+    type: "Mobile · Work",
+    description:
+      "Cross-platform mobile application for the Enfagrow brand, built with Flutter with a focus on a smooth, visually polished user experience.",
+    highlights: [
+      "Single Flutter codebase serving both Android and iOS",
+      "Brand-facing UI built to design-team specification",
+    ],
+    stack: ["Flutter", "Dart"],
+    status: "Completed",
+    year: "2022",
+    platform: "iOS & Android",
+    images: shots("enfagrow", 4),
   }),
   makeProject("proj-g2g", {
     name: "G2G",

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 import { TechIcon } from "./tech-icon";
 import { ImageLightbox } from "./image-lightbox";
+import { FeaturedStar } from "../../featured-star";
 
 // ProjectUI — one window per project: description, screenshots, stack, and links.
 
@@ -20,6 +21,9 @@ interface ProjectUIProps {
   images?: string[];
   /** Where the work can be seen. A shipped app is often on two stores. */
   links?: Array<{ label: string; url: string }>;
+  /** Marks the project to read first — a star beside the name, here and in the
+   * folder listing that led here. */
+  featured?: boolean;
 }
 
 export function ProjectUI({
@@ -33,6 +37,7 @@ export function ProjectUI({
   platform,
   images = [],
   links = [],
+  featured = false,
 }: ProjectUIProps) {
   const shipped = status === "Completed" || status.startsWith("Live");
   // Which shot the viewer is on, and `null` for "not open" — one piece of state
@@ -44,7 +49,10 @@ export function ProjectUI({
       <Card>
         <div className="flex items-start justify-between mb-3">
           <div>
-            <div className="font-bold text-sm">{name}</div>
+            <div className="flex items-center gap-1.5">
+              {featured && <FeaturedStar />}
+              <div className="font-bold text-sm">{name}</div>
+            </div>
             {type && (
               <div className="opacity-60 mt-0.5 text-[11px]">{type}</div>
             )}
