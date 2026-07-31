@@ -5,7 +5,7 @@ import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 import { TechIcon } from "./tech-icon";
 import { ImageLightbox } from "./image-lightbox";
 
-// ProjectUI — one window per project: description, screenshots, stack, and link.
+// ProjectUI — one window per project: description, screenshots, stack, and links.
 
 interface ProjectUIProps {
   name?: string;
@@ -18,7 +18,8 @@ interface ProjectUIProps {
   platform?: string;
   /** Public paths to screenshots, rendered as a horizontal strip. */
   images?: string[];
-  link?: { label: string; url: string };
+  /** Where the work can be seen. A shipped app is often on two stores. */
+  links?: Array<{ label: string; url: string }>;
 }
 
 export function ProjectUI({
@@ -31,7 +32,7 @@ export function ProjectUI({
   year = "",
   platform,
   images = [],
-  link,
+  links = [],
 }: ProjectUIProps) {
   const shipped = status === "Completed" || status.startsWith("Live");
   // Which shot the viewer is on, and `null` for "not open" — one piece of state
@@ -44,14 +45,18 @@ export function ProjectUI({
         <div className="flex items-start justify-between mb-3">
           <div>
             <div className="font-bold text-sm">{name}</div>
-            {type && <div className="opacity-60 mt-0.5 text-[11px]">{type}</div>}
+            {type && (
+              <div className="opacity-60 mt-0.5 text-[11px]">{type}</div>
+            )}
           </div>
           <div className="text-right shrink-0 ml-4 space-y-1">
             <div>
               <span
                 className="text-[11px] px-2 py-0.5 rounded-md font-medium"
                 style={{
-                  color: shipped ? "var(--os-on-accent-container)" : "var(--os-tertiary)",
+                  color: shipped
+                    ? "var(--os-on-accent-container)"
+                    : "var(--os-tertiary)",
                   background: shipped
                     ? "var(--os-accent-container)"
                     : "color-mix(in srgb, var(--os-tertiary) 15%, transparent)",
@@ -111,22 +116,29 @@ export function ProjectUI({
         )}
 
         <div className="flex flex-wrap">
-          {stack.map((s) => <Badge key={s} text={s} icon={<TechIcon name={s} />} />)}
+          {stack.map((s) => (
+            <Badge key={s} text={s} icon={<TechIcon name={s} />} />
+          ))}
         </div>
 
-        {link && (
-          <a
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-medium rounded-md transition-opacity opacity-90 hover:opacity-100"
-            style={{
-              color: "var(--os-on-accent-container)",
-              background: "var(--os-accent-container)",
-            }}
-          >
-            {link.label} ↗
-          </a>
+        {links.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-3">
+            {links.map((link) => (
+              <a
+                key={link.url}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-md transition-opacity opacity-90 hover:opacity-100"
+                style={{
+                  color: "var(--os-on-accent-container)",
+                  background: "var(--os-accent-container)",
+                }}
+              >
+                {link.label} ↗
+              </a>
+            ))}
+          </div>
         )}
       </Card>
 

@@ -56,10 +56,16 @@ const workMobile: FileNode[] = [
       "Left it more maintainable than I found it: main.dart pulled apart into an app/core module, a shared complaint module, unit tests around the API layer, and a GitHub Actions workflow running analyze and test on every PR",
     ],
     stack: ["Flutter", "Dart", "GetX", "Dio", "GitHub Actions"],
-    status: "In Production",
+    status: "Live on Play Store",
     year: "2026",
     platform: "iOS & Android",
     images: shots("mol", 11),
+    links: [
+      {
+        label: "Play Store",
+        url: "https://play.google.com/store/apps/details?id=com.molportal.mol_portal",
+      },
+    ],
   }),
   makeProject("proj-vn", {
     name: "VN",
@@ -69,17 +75,51 @@ const workMobile: FileNode[] = [
     highlights: [
       "Single Flutter codebase serving both Android and iOS",
       "Built and maintained as part of a production mobile team",
-      "Live on the Play Store",
+      "Shipped to both the App Store and the Play Store",
     ],
     stack: ["Flutter", "Dart"],
-    status: "Live on Play Store",
+    status: "Live on both stores",
     year: "2022",
     platform: "iOS & Android",
     images: shots("vn", 4),
-    link: {
-      label: "Play Store",
-      url: "https://play.google.com/store/apps/details?id=com.viknavara.vn",
-    },
+    links: [
+      {
+        label: "App Store",
+        url: "https://apps.apple.com/app/vn-english-anywhere/id1630679292",
+      },
+      {
+        label: "Play Store",
+        url: "https://play.google.com/store/apps/details?id=com.viknavara.vnenglish",
+      },
+    ],
+  }),
+  makeProject("proj-mypinmall", {
+    name: "MyPinmall",
+    type: "Mobile · Work",
+    description:
+      "A group-buying marketplace shipped to both stores: pin a product, invite friends, and the price falls as the group fills. Built in Flutter with Riverpod. I worked across several areas of the app inside the product team rather than owning it end to end.",
+    highlights: [
+      "Group-buy mechanics as the core of the product — tiered prices that drop as a group fills, a countdown on every campaign, and slots remaining shown on each tier",
+      "Pin to Share: a product is pinned and shared to pull friends into the same buy, which is what makes the group price reachable",
+      "A full storefront around it — categories, campaigns, product options, cart, favourites and order tracking",
+      "Checkout covering how people actually pay in Thailand: QR through mobile banking, bank transfer, and cash on delivery",
+      "Flutter with Riverpod for state, on a single codebase serving iOS and Android",
+    ],
+    stack: ["Flutter", "Dart", "Riverpod"],
+    status: "Live on both stores",
+    year: "2023",
+    platform: "iOS & Android",
+    images: shots("my-pinmall", 4),
+    links: [
+      {
+        label: "App Store",
+        url: "https://apps.apple.com/app/mypinmall/id6468960970",
+      },
+      {
+        label: "Play Store",
+        url: "https://play.google.com/store/apps/details?id=com.mypinmall.myapp",
+      },
+    ],
   }),
   makeProject("proj-enfagrow", {
     name: "Enfagrow",
@@ -110,10 +150,12 @@ const workMobile: FileNode[] = [
     year: "2023",
     platform: "iOS & Android",
     images: shots("ailearn", 4),
-    link: {
-      label: "Play Store",
-      url: "https://play.google.com/store/apps/details?id=ai.myorder&hl=th&gl=US",
-    },
+    links: [
+      {
+        label: "Play Store",
+        url: "https://play.google.com/store/apps/details?id=cloud.learncloud.ailearn",
+      },
+    ],
   }),
   makeProject("proj-myorder", {
     name: "My Order",
@@ -125,10 +167,20 @@ const workMobile: FileNode[] = [
       "Built and enhanced within a collaborative product team",
     ],
     stack: ["React Native", "TypeScript"],
-    status: "Completed",
+    status: "Live on both stores",
     year: "2023",
     platform: "iOS & Android",
     images: shots("myorder", 4, "jpg"),
+    links: [
+      {
+        label: "App Store",
+        url: "https://apps.apple.com/app/myorder/id6550900392",
+      },
+      {
+        label: "Play Store",
+        url: "https://play.google.com/store/apps/details?id=ai.myorder.app",
+      },
+    ],
   }),
   makeProject("proj-g2g", {
     name: "G2G",
@@ -163,6 +215,32 @@ const workMobile: FileNode[] = [
 ];
 
 const workWeb: FileNode[] = [
+  makeProject("proj-swu-ai", {
+    name: "SWU AI",
+    type: "Web · Work",
+    description:
+      "A private AI assistant for Srinakharinwirot University, signed into with a university account. My part was the administration side: the platform shipped with two fixed roles, and the university needed many — so I designed and built a role and permission system across the front end, the API and the database, where an administrator defines a role and decides exactly what it can see.",
+    highlights: [
+      "Designed permissions as data rather than code — a features catalogue joined to roles with a uniqueness constraint per pair — so adding a role is rows in a table, not a release",
+      "Replaced the fixed admin/user split with named roles created from the UI: added a role reference to the user table by migration and rewired every role check in the codebase onto it",
+      "One flag lookup per session drives the whole admin surface — nav entries hide, the panel refuses entry when the role has no admin access, and a user lands on the first tab their role can actually open",
+      "Built sub-admin delegation on top of it, so a group can be administered by someone who is not a full administrator",
+      "Also owned the auth work around it: LDAP/university sign-in, a global fetch interceptor and token watcher so an expired session is caught anywhere instead of failing one request at a time",
+      "Front, back and schema were all mine — Svelte admin screens, FastAPI routers for roles, features and their mapping, and the migrations underneath",
+    ],
+    stack: [
+      "SvelteKit",
+      "TypeScript",
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "SQLAlchemy",
+    ],
+    status: "In Production",
+    year: "2025",
+    platform: "Web",
+    images: shots("swu-ai", 4),
+  }),
   makeProject("proj-the-blacklist", {
     name: "The Blacklist",
     type: "Web · Work",
@@ -247,7 +325,25 @@ const personalWeb: FileNode[] = [
     year: "2026",
     platform: "Web · Installable PWA",
     images: shots("c-docs", 6),
-    link: { label: "Live Demo", url: "https://c-docs-web.vercel.app" },
+    links: [{ label: "Live Demo", url: "https://c-docs-web.vercel.app" }],
+  }),
+  makeProject("proj-dataq", {
+    name: "DataQ AI",
+    type: "Web · Personal",
+    description:
+      "An idea taken as far as a website: a data-quality service for teams training AI models, offering two products — RefAI to refine messy, unstructured data into clean datasets, and SynAI to generate realistic synthetic data. The marketing site is drafted; the products behind it are not built.",
+    highlights: [
+      "Worked the product out by writing its site first — positioning, the two-product split, solution pages, security posture and pricing, before a line of the service existed",
+      "Landing, solution, store, security, about, blog and contact are drafted; the product pages themselves are still stubs, which is exactly how far the thinking got",
+      "Priced as a credit model — free tier, monthly and annual plans, and top-up packs — to test whether the economics hold before building anything",
+      "Next.js App Router with shadcn/ui on Radix primitives, Tailwind and Framer Motion, over a canvas particle-globe hero",
+      "Kept here as a record of a direction considered rather than a product shipped",
+    ],
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    status: "Concept",
+    year: "2025",
+    platform: "Web",
+    images: shots("dataq", 7),
   }),
   makeProject("proj-portfolio-os", {
     name: "Portfolio OS",
@@ -265,7 +361,7 @@ const personalWeb: FileNode[] = [
     status: "In Development",
     year: "2026",
     platform: "Web",
-    link: { label: "GitHub", url: "https://github.com/KhwanNon" },
+    links: [{ label: "GitHub", url: "https://github.com/KhwanNon" }],
   }),
 ];
 
