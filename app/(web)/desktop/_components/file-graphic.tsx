@@ -32,6 +32,22 @@ type Finish =
   /** Document: the mark on a neutral plate that carries no meaning of its own. */
   | "plain";
 
+/**
+ * The two inkings of one drawing: the same picture, weighted for a light ground
+ * and for a dark one. A single artwork cannot serve both — line art dark enough
+ * to read on Daylight goes to a smudge on the dark scheme.
+ */
+interface ArtPair {
+  light: string;
+  dark: string;
+}
+
+/** Both files of a pair, named off one stem so the table names a picture once. */
+const art = (name: string): ArtPair => ({
+  light: `/assets/icon/${name}.png`,
+  dark: `/assets/icon/${name}-dark.png`,
+});
+
 interface IconSpec {
   glyph: ProductGlyph;
   tone: string;
@@ -45,7 +61,7 @@ interface IconSpec {
    * Documents have no artwork and keep their glyph, which is what line art is
    * for.
    */
-  image?: string;
+  image?: ArtPair;
 }
 
 const NEUTRAL = "var(--os-icon-neutral)";
@@ -58,11 +74,11 @@ const REGISTRY: Record<string, IconSpec> = {
   // Apps. System Command is the one solid chip in the set — a terminal is a
   // surface you type into, and drawing it as ink makes it the anchor the other
   // three are read against; they keep the same footprint on a washed chip.
-  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",    finish: "filled", image: "/assets/icon/command.png" },
-  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)",   finish: "chip",   image: "/assets/icon/c.png"       },
-  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-purple)", finish: "chip",   image: "/assets/icon/setting.png" },
-  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip",   image: "/assets/icon/bin.png"     },
-  contact: { glyph: MailGlyph,     tone: "var(--os-icon-green)",  finish: "chip",   image: "/assets/icon/contact.png" },
+  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",    finish: "filled", image: art("command") },
+  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)",   finish: "chip",   image: art("c")       },
+  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-purple)", finish: "chip",   image: art("setting") },
+  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip",   image: art("bin")     },
+  contact: { glyph: MailGlyph,     tone: "var(--os-icon-green)",  finish: "chip",   image: art("contact") },
 
   // Documents. No artwork here on purpose: painted art is the mark of something
   // that launches, so a file drawn that way would claim to be an app. Red on the
@@ -105,6 +121,39 @@ export function iconSurface(icon?: string): string {
   return `linear-gradient(150deg, ${wash(tone, 9)}, ${wash(tone, 4)})`;
 }
 
+/**
+ * Both inkings of one artwork, drawn into the same box — CSS shows the one the
+ * scheme asks for and hides the other (`.icon-art-*` in globals.css). Drawing
+ * the pair rather than picking in JS is what keeps the right one on screen from
+ * the first paint: the theme lives in `data-theme`, which no server render can
+ * know, so a chosen picture would land light and then swap. It also means the
+ * artwork follows whichever scope it is drawn inside — the terminal keeps the
+ * dark palette on a light desktop, and its icons come along.
+ */
+function Artwork({
+  image,
+  size,
+  px,
+}: {
+  image: ArtPair;
+  /** A fixed box, for the bare graphic. Omit to let the art fill its tile. */
+  size?: number;
+  /** Rendered tile width, so the optimiser picks the file that size deserves. */
+  px?: number;
+}) {
+  const shape = size
+    ? { width: size, height: size }
+    : { fill: true, sizes: `${px}px` };
+  const fit = size ? "" : " object-contain";
+
+  return (
+    <>
+      <Image src={image.light} alt="" {...shape} className={`icon-art-light${fit}`} />
+      <Image src={image.dark}  alt="" {...shape} className={`icon-art-dark${fit}`}  />
+    </>
+  );
+}
+
 interface FileGraphicProps {
   icon?: string;
   size?: number;
@@ -131,7 +180,7 @@ export function FileGraphic({
         className={`inline-flex shrink-0 overflow-hidden ${className ?? ""}`}
         style={{ borderRadius: Math.round(size * 0.28) }}
       >
-        <Image src={image} alt="" width={size} height={size} />
+        <Artwork image={image} size={size} />
       </span>
     );
   }
@@ -190,13 +239,7 @@ export function IconTile({ icon, size = "md", className }: IconTileProps) {
       <span
         className={`relative block shrink-0 overflow-hidden ${box} ${className ?? ""}`}
       >
-        <Image
-          src={image}
-          alt=""
-          fill
-          sizes={`${px}px`}
-          className="object-contain"
-        />
+        <Artwork image={image} px={px} />
       </span>
     );
   }

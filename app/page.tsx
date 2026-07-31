@@ -11,5 +11,9 @@ export default function Root() {
     router.replace("/boot");
   }, [router]);
 
-  return <div className="bg-black h-screen w-full" />;
+  // The paper the boot screen is about to land on, in whichever theme is set —
+  // so the redirect passes through a held frame rather than a flash of another
+  // colour. No `boot-shell` here: that class is the rain's ramp, and there is
+  // no rain on a screen that exists for one tick.
+  return <div className="bg-os-bg h-screen w-full" />;
 }

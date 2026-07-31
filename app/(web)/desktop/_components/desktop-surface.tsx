@@ -6,10 +6,18 @@
 // they come back to.
 import { CraftCard } from "./craft-card";
 import { HomeHero } from "./home-hero";
+import { ThemeToggle } from "./theme-toggle";
 
 export function DesktopSurface() {
   return (
     <div className="desktop-surface flex min-h-full flex-col">
+      {/* Top right: the one setting the shell exposes, in the corner a machine
+          keeps its settings in. Opposite the craft card on the diagonal, so the
+          two things pinned to the surface hold corners rather than a side. */}
+      <div className="absolute right-4 top-4 z-10">
+        <ThemeToggle />
+      </div>
+
       {/* The column takes the whole surface and centres in it. The extra room
           underneath on small screens is the craft card's: the card is pinned to
           a corner that, on a phone, is directly below the column. */}

@@ -9,7 +9,7 @@ export const DEFAULT_THEME: ThemeId = "daylight";
 
 export const THEMES: { id: ThemeId; label: string; swatch: string }[] = [
   { id: "daylight", label: "Daylight", swatch: "#ffffff" },
-  { id: "dark", label: "Cyber Blue", swatch: "#10151c" },
+  { id: "dark", label: "Cyber Blue", swatch: "#182035" },
 ];
 
 /**

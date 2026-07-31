@@ -24,8 +24,9 @@ export default function BootScreen() {
   }, [isReady, router]);
 
   return (
-    // `boot-shell` carries the screen's own palette (see app/globals.css), so the
-    // sequence looks the same whichever theme the desktop is set to.
+    // The palette is the desktop's, inherited — the sequence boots in whichever
+    // theme is set. `boot-shell` adds only the rain's own ramp on top of it (see
+    // app/globals.css).
     <main className="boot-shell fixed inset-0 z-50 flex flex-col bg-os-bg text-os-text-dim font-os-mono overflow-hidden uppercase">
       {/* ── Ambient FX layers (back → front) ───────────────────────────────
             The desktop's own stack, reused: the three blooms it is lit by, then

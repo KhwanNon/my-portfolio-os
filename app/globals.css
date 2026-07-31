@@ -107,25 +107,37 @@
   --foreground: var(--os-text);
 }
 
-/* Theme 2: Cyber Blue — dark, teal-seeded */
+/*
+ * Theme 2: Cyber Blue — two colours and everything else derived from them. The
+ * navy is the ground and the whole surface staircase is that one hue held at
+ * 224° and stepped in lightness (15 → 18 → 21 → 25%), so no step introduces a
+ * colour; the teal is the only hue that ever arrives from outside it, which is
+ * what makes it read as *the* accent rather than as one more blue. Even the
+ * text ramp is tinted toward the ground — a neutral grey over a navy this
+ * saturated reads as a foreign sheet laid on top.
+ */
 [data-theme="dark"] {
-  --os-bg: #0c1117;
+  --os-bg: #182035;
   --os-accent: #52d3d6;
-  --os-surface-1: #161d26;
-  --os-surface-2: #1a222b;
-  --os-surface-3: #232d38;
+  --os-surface-1: #1e2740;
+  --os-surface-2: #232d49;
+  --os-surface-3: #2b3757;
   --os-header: var(--os-surface-3);
   --os-surface: var(--os-surface-2);
 
-  --os-text: #e7edf0;
-  --os-text-dim: #a9b6bd;
-  --os-text-faint: #8a969e;
-  --os-text-subtle: #6b7780;
+  /* Tinted white and three steps down it. `faint` is set by the hardest ground
+     it has to hold AA on — surface-3, the hover row — not by the bg. */
+  --os-text: #e6ebf5;
+  --os-text-dim: #a8b3ce;
+  --os-text-faint: #97a2be;
+  --os-text-subtle: #6f7a99;
 
-  --os-border: rgba(231, 237, 240, 0.12);
-  --os-border-strong: rgba(231, 237, 240, 0.24);
+  --os-border: rgba(230, 235, 245, 0.12);
+  --os-border-strong: rgba(230, 235, 245, 0.24);
 
-  --os-accent-container: #1c3d3f;
+  /* The accent's own low tone. It lifts with the surfaces it sits among —
+     a container pitched for a near-black ground reads as a hole in this one. */
+  --os-accent-container: #1d474b;
   --os-on-accent-container: #a6eef0;
 
   /* The new primary is a Daylight decision; this theme keeps the on-container
@@ -136,18 +148,23 @@
   --os-tertiary: #e8a21a;
   --os-error: #ff6b6b;
 
+  /* The two again, as light: the teal, and the ground's own hue raised until it
+     glows. The second bloom is not a third colour — it is this navy at the top
+     of its range, which is why the aura reads as the surface being lit rather
+     than as something painted on it. */
   --os-ambient-a: color-mix(in srgb, #52d3d6 45%, transparent);
   --os-ambient-b: color-mix(in srgb, #3b6fd4 55%, transparent);
   --os-desktop-veil: color-mix(in srgb, var(--os-surface-1) 78%, transparent);
 
-  /* Same seven, lifted to Material dark tones so they read on #161d26. */
+  /* Same seven, lifted to Material dark tones so they read on #1e2740. The two
+     that carry no hue of their own take the ground's, like the text ramp. */
   --os-icon-blue: #8ab4f8;
   --os-icon-purple: #d7aefb;
   --os-icon-yellow: #fdd663;
   --os-icon-red: #f28b82;
   --os-icon-green: #81c995;
-  --os-icon-ink: #dfe6ea;
-  --os-icon-neutral: #9aa5ab;
+  --os-icon-ink: #e0e6f2;
+  --os-icon-neutral: #9aa4bd;
 
   --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
   --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.22);
@@ -211,58 +228,41 @@ body {
 /* ─── Boot sequence ─────────────────────────────────────────────────────────── */
 
 /*
- * The cold-start screen states its own palette instead of borrowing the
- * desktop's. It is the moment *before* the OS exists, so it answers to neither
- * theme — one periwinkle hue over white paper, declared once here so the whole
- * sequence, rain canvas included, retunes from this one block.
+ * The cold-start screen is lit by the desktop's own palette — same paper, same
+ * blooms, same text ramp — and inherits every one of them, so it boots in
+ * whichever theme is set and the handover to /desktop doesn't step.
+ *
+ * It used to restate all of that as literals to hold one look across both
+ * themes. That reasoning only held on Daylight: on the dark scheme it meant
+ * booting white and cutting to ink, the hardest step there is, shown only to
+ * the people who had asked for dark. Inheriting collapses the block to the one
+ * thing that is boot's alone and nowhere else in the OS — the rain.
+ */
+
+/*
+ * The ramp the fall is painted through, so a character's colour says where in
+ * the fall it has got to. It runs against the aura's own arrangement — the hue
+ * the blooms put at the top is the one the rain ends on — so the fall crosses
+ * the wash instead of doubling it and stays legible as its own layer.
+ *
+ * Literals, not `var()` onto the ambient tokens: the canvas reads these through
+ * `getComputedStyle`, which substitutes `var()` but never evaluates
+ * `color-mix()`, and every ambient token is a mix. These are the seeds those
+ * mixes are built from — re-seed both together. See
+ * app/shared/components/matrix-rain.tsx.
  */
 .boot-shell {
-  /*
-   * The same three blooms the desktop is lit by, restated rather than
-   * inherited: `--os-ambient-*` retunes per theme, and this screen has to look
-   * the same whichever one the desktop is set to. `-c` has to be repeated too
-   * — a custom property substitutes its `var()`s at the element that *declares*
-   * it, so the copy on `:root` would carry root's hues down here already mixed.
-   */
-  --os-bloom-a: #4285f4;
-  --os-bloom-b: #9334e6;
-  --os-ambient-a: color-mix(in srgb, var(--os-bloom-a) 55%, transparent);
-  --os-ambient-b: color-mix(in srgb, var(--os-bloom-b) 45%, transparent);
-  --os-ambient-c: color-mix(in srgb, var(--os-ambient-a), var(--os-ambient-b));
+  --os-rain-from: #9334e6;
+  --os-rain-to: #4285f4;
+}
 
-  /* Plain paper, and how much of the wash it lets through — the desktop's own
-     setting, so the two screens are lit to the same depth and the handover
-     doesn't step. Restated rather than inherited because the desktop's copy
-     retunes per theme and this screen must not. */
-  --os-bg: #ffffff;
-  --os-desktop-veil: color-mix(in srgb, var(--os-bg) 72%, transparent);
-
-  /*
-   * `--os-ambient-c` resolved with its 50% alpha lifted off: the colour at the
-   * middle of that wash, borrowed for the things on top of it that have to be
-   * read. A literal rather than a mix of the two above because the rain canvas
-   * reads this through `getComputedStyle`, which substitutes `var()` but never
-   * evaluates `color-mix()`. Re-derive if the blooms are ever re-seeded.
-   */
-  --os-accent: #6661ee;
-
-  --os-text: #26243b;
-  --os-text-dim: #565377;
-  --os-text-faint: #807d9d;
-  --os-text-subtle: #a6a3be;
-
-  /*
-   * The rain falls through the same two hues the blooms behind it are made of,
-   * so a character's colour says where in the fall it has got to. It runs
-   * violet down to blue — against the blooms' own arrangement, which puts blue
-   * at the top — so the rain crosses the wash instead of doubling it and stays
-   * legible as its own layer. The midpoint it passes through is exactly
-   * `--os-accent`, which is where the CTA sits. Plain `var()` on the seeds, not
-   * `color-mix()`: the canvas reads these through `getComputedStyle`. See
-   * app/shared/components/matrix-rain.tsx.
-   */
-  --os-rain-from: var(--os-bloom-b);
-  --os-rain-to: var(--os-bloom-a);
+/* The dark scheme's own two, lifted. Its aura is seeded with a mid teal and a
+   navy, and the navy is gone at 9% over a ground that *is* navy — so the fall
+   takes the tones this theme already draws its icons in: the same two hues, at
+   the weight ink needs. */
+[data-theme="dark"] .boot-shell {
+  --os-rain-from: #8ab4f8;
+  --os-rain-to: #52d3d6;
 }
 
 /* CRT scanlines overlay — boot screen only (see app/(web)/boot/page.tsx). Ink
@@ -276,6 +276,19 @@ body {
     transparent 3px
   );
   mix-blend-mode: multiply;
+}
+
+/* Over ink the grain has to invert with the paper: `multiply` on a near-black
+   ground has nothing left to darken, so the scanlines simply vanish. */
+[data-theme="dark"] .bg-scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(230, 235, 245, 0.06) 0px,
+    rgba(230, 235, 245, 0.06) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: screen;
 }
 
 /* ─── Utility classes used across the desktop ───────────────────────────────── */
@@ -307,6 +320,23 @@ body {
 }
 [data-theme="dark"] .bg-vignette,
 [data-theme="dark"] .bg-ambient-grid {
+  display: block;
+}
+
+/*
+ * App artwork ships as a light/dark pair, both drawn into the same box (see
+ * `Artwork` in file-graphic.tsx). The swap is CSS rather than state so the right
+ * drawing is showing at first paint — nothing has to hydrate for it — and so it
+ * follows `data-theme` wherever that is set, which is how the terminal's icons
+ * stay dark on a Daylight desktop.
+ */
+.icon-art-dark {
+  display: none;
+}
+[data-theme="dark"] .icon-art-light {
+  display: none;
+}
+[data-theme="dark"] .icon-art-dark {
   display: block;
 }
 
