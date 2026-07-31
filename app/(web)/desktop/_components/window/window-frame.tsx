@@ -18,6 +18,23 @@ const MIN_WIDTH = 280;
 const MIN_HEIGHT = 180;
 
 /**
+ * Programs that bring their own colour scheme, by the component they render.
+ * A window normally wears whatever the desktop is wearing; the terminal is the
+ * exception, and it is the *frame* that carries the scope rather than the app
+ * inside it — a black screen under a white title bar is two objects, not one
+ * window. Anything not listed here inherits the desktop's scheme, which is the
+ * right answer for every other app.
+ */
+const WINDOW_SCHEME: Record<string, string> = {
+  SystemCommand: "console",
+};
+
+const schemeOf = (win: WindowInstance) =>
+  win.fileNode.data?.kind === "program"
+    ? WINDOW_SCHEME[win.fileNode.data.component]
+    : undefined;
+
+/**
  * Keep `value` inside the workspace. When the box is too small to satisfy both
  * ends, `min` wins — a window stays usable rather than collapsing to fit.
  */
@@ -204,6 +221,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.94, y: 6 }}
       transition={SPRING_EXPRESSIVE}
+      data-theme={schemeOf(win)}
       className="absolute flex flex-col overflow-hidden rounded-lg"
       style={{
         ...style,

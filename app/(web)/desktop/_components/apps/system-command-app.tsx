@@ -572,9 +572,10 @@ export function SystemCommandApp() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    // A terminal is a dark artifact — it keeps the dark palette on any theme.
+    // Scheme-free on purpose: the frame puts this window in `console` (see
+    // WINDOW_SCHEME in window/window-frame.tsx), so the screen and the title bar
+    // above it are one black object on either desktop theme.
     <div
-      data-theme="dark"
       className="h-full flex flex-col font-os-mono text-xs"
       style={{ background: "var(--os-bg)" }}
       onMouseDown={(e) => {
@@ -592,7 +593,7 @@ export function SystemCommandApp() {
             style={{
               color:
                 line.type === "error"   ? "var(--os-error)"
-              : line.type === "success" ? "#3ddc84"
+              : line.type === "success" ? "var(--os-success)"
               : line.type === "input"   ? "var(--os-text)"
               : line.type === "system"  ? "var(--os-text-dim)"
               : "var(--os-accent)",

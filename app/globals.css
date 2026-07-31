@@ -43,6 +43,7 @@
 
   --os-tertiary: #a15c00;
   --os-error: #b3261e;
+  --os-success: #1e8e3e;
 
   /*
    * The two blooms washing the desktop, one per corner. Each theme states its
@@ -147,6 +148,7 @@
 
   --os-tertiary: #e8a21a;
   --os-error: #ff6b6b;
+  --os-success: #81c995;
 
   /* The two again, as light: the teal, and the ground's own hue raised until it
      glows. The second bloom is not a third colour — it is this navy at the top
@@ -169,6 +171,71 @@
   --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
   --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.22);
   --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.48), 0 4px 10px rgba(0, 0, 0, 0.26);
+}
+
+/*
+ * Console — the System Command window, and nothing else. Not a scheme you can
+ * pick: it is scoped to that one window (see WINDOW_SCHEME in
+ * window/window-frame.tsx) and never lands on <html>, so the terminal shows the
+ * same face on Daylight as it does on Cyber Blue.
+ *
+ * It is the one surface in the OS with no hue at all. A terminal is ink on a
+ * black screen — it is the picture everyone already holds of the thing — and
+ * borrowing a scheme's colour made it read as one more app window that happened
+ * to be dark, rather than as the machine underneath them. Everything it has to
+ * say it says in brightness: the ground, three steps of grey, and white at the
+ * top for the lines that must not be missed.
+ */
+[data-theme="console"] {
+  --os-bg: #0e0e0e;
+  --os-surface-1: #161616;
+  --os-surface-2: #121212;
+  --os-surface-3: #232323;
+  /* A step off the body ground and no more — enough for the bar to read as
+     chrome, not so much that it becomes a band laid across the screen. */
+  --os-header: #1a1a1a;
+  --os-surface: var(--os-surface-2);
+
+  /* The output ramp, brightest first: your own typed line, the machine's
+     answer, its asides. `subtle` keeps its place at the foot of the ramp. */
+  --os-text: #f5f5f5;
+  --os-text-dim: #a8a8a8;
+  --os-text-faint: #8a8a8a;
+  --os-text-subtle: #6b6b6b;
+
+  --os-border: rgba(255, 255, 255, 0.12);
+  --os-border-strong: rgba(255, 255, 255, 0.26);
+
+  /* No accent to speak of — the prompt and the body of the output, which on a
+     monochrome screen is simply "text that isn't yours". */
+  --os-accent: #d5d5d5;
+  --os-accent-container: #262626;
+  --os-on-accent-container: #f5f5f5;
+  --os-primary: var(--os-accent);
+  --os-tertiary: var(--os-text-dim);
+
+  /* Both signals arrive as the brightest thing on screen, because that is all
+     a monochrome screen has to offer. It costs nothing: the line already says
+     which it is in words — `error:` — and colour was never carrying that alone. */
+  --os-error: #ffffff;
+  --os-success: #ffffff;
+
+  /* The same seven, with the hue taken out of them. Nothing in this window
+     draws a glyph today — the title bar shows the terminal's own artwork — but
+     the set is restated so no icon dropped in here can smuggle a colour back. */
+  --os-icon-blue: #c8c8c8;
+  --os-icon-purple: #c8c8c8;
+  --os-icon-yellow: #c8c8c8;
+  --os-icon-red: #c8c8c8;
+  --os-icon-green: #c8c8c8;
+  --os-icon-ink: #f0f0f0;
+  --os-icon-neutral: #9a9a9a;
+
+  /* Cast on whatever desktop it floats over, so it is pitched for the harder of
+     the two: a black window needs a black shadow to sit on white paper. */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.34), 0 1px 2px rgba(0, 0, 0, 0.26);
+  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.42), 0 2px 4px rgba(0, 0, 0, 0.24);
+  --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.52), 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /*
@@ -329,14 +396,17 @@ body {
  * drawing is showing at first paint — nothing has to hydrate for it — and so it
  * follows `data-theme` wherever that is set, which is how the terminal's icons
  * stay dark on a Daylight desktop.
+ *
+ * Both dark scopes take the dark inking: what the pair is choosing between is a
+ * light ground and a dark one, not one named scheme and another.
  */
 .icon-art-dark {
   display: none;
 }
-[data-theme="dark"] .icon-art-light {
+:is([data-theme="dark"], [data-theme="console"]) .icon-art-light {
   display: none;
 }
-[data-theme="dark"] .icon-art-dark {
+:is([data-theme="dark"], [data-theme="console"]) .icon-art-dark {
   display: block;
 }
 

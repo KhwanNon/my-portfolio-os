@@ -23,10 +23,12 @@ import {
   siPostman,
   siPython,
   siReact,
+  siSqlite,
   siSupabase,
   siTailwindcss,
   siTypescript,
   siVuedotjs,
+  siWebassembly,
   siXcode,
 } from "simple-icons";
 
@@ -53,9 +55,11 @@ const TECH_ICONS: Record<string, SimpleIcon> = {
   vue: siVuedotjs,
   "vue.js": siVuedotjs,
   "framer motion": siFramer,
+  webassembly: siWebassembly,
 
   // Backend & services
   firebase: siFirebase,
+  sqlite: siSqlite,
   firestore: siFirebase,
   "firebase auth": siFirebase,
   "firebase fcm": siFirebase,

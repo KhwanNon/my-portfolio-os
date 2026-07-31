@@ -8,9 +8,9 @@ const COLORS: Record<Toast["kind"], { fg: string; bg: string; border: string }> 
     border: "color-mix(in srgb, var(--os-accent) 45%, transparent)",
   },
   success: {
-    fg: "#3ddc84",
-    bg: "rgba(61,220,132,0.12)",
-    border: "rgba(61,220,132,0.4)",
+    fg: "var(--os-success)",
+    bg: "color-mix(in srgb, var(--os-success) 12%, transparent)",
+    border: "color-mix(in srgb, var(--os-success) 40%, transparent)",
   },
   error: {
     fg: "var(--os-error)",
