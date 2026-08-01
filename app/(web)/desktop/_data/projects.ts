@@ -112,7 +112,46 @@ function workMobile(L: Localize): FileNode[] {
       stack: ["Flutter", "Dart", "Bloc", "Drift", "SQLite", "WebSocket", "Go"],
       status: L("In Production", "ใช้งานจริงแล้ว"),
       year: "2026",
-      platform: L("iPad & Android Tablet", "iPad และแท็บเล็ต Android"),
+      platform: L("iPad · Enterprise iOS", "iPad · iOS สำหรับองค์กร"),
+      featured: true,
+    }),
+    makeProject("proj-ailearn", {
+      name: "aiLearn",
+      type: L("Mobile · Work", "มือถือ · งานบริษัท"),
+      description: L(
+        "A TOEIC exam-prep app where I own the mobile side end to end — architecture and every feature, plus everything that keeps it running after launch: builds, versions, and the release pipeline. It takes a learner from a skill diagnostic through a personalized roadmap to a full simulated exam, scored and broken down by part.",
+        "แอปเตรียมสอบ TOEIC ที่ผมดูแลฝั่งมือถือทั้งหมดตั้งแต่สถาปัตยกรรมและทุกฟีเจอร์ ไปจนถึงสิ่งที่ต้องดูแลต่อหลังเปิดใช้งานจริง ทั้งการ build เวอร์ชัน และไปป์ไลน์การปล่อยแอป พาผู้เรียนจากการวัดระดับทักษะ ไปสู่แผนการเรียนรู้ส่วนตัว จนถึงข้อสอบจำลองเต็มรูปแบบที่ให้คะแนนแยกตามพาร์ท",
+      ),
+      highlights: L(
+        [
+          "A learning roadmap built from a skill diagnostic, with simulated exams — per-part answer sheets, a predicted overall score, and a strengths/weaknesses breakdown to act on",
+          "Clean architecture (domain → data → application) across a dozen feature areas: exams, learn map, performance, bookmarks, rewards and content",
+          "Auth through Firebase — OTP alongside Google and Apple sign-in — with Analytics and Crashlytics wired in from day one",
+          "Monetization via in-app purchase: a coin store and an unlimited-access unlock gate the premium content",
+          "Real-time pieces over WebSocket and SSE, plus local push notifications for study reminders",
+          "Owned the release pipeline end to end — three flavors (dev/staging/production) built through Fastlane and a Makefile, wired to reusable GitHub Actions CI/CD for Android and iOS — and kept it running after launch: builds, versions, and Play Store maintenance",
+        ],
+        [
+          "แผนการเรียนรู้ที่สร้างจากผลวัดระดับทักษะ พร้อมข้อสอบจำลอง มีกระดาษคำตอบแยกตามพาร์ท คะแนนรวมที่คาดการณ์ไว้ และสรุปจุดแข็งจุดอ่อนให้นำไปพัฒนาต่อ",
+          "วาง clean architecture (domain → data → application) ครอบคลุมฟีเจอร์กว่าสิบส่วน ทั้งข้อสอบ แผนการเรียน ผลการเรียนรู้ บุ๊กมาร์ก รางวัล และคอนเทนต์",
+          "ระบบล็อกอินผ่าน Firebase ทั้ง OTP และล็อกอินด้วย Google กับ Apple พร้อมวาง Analytics และ Crashlytics ไว้ตั้งแต่ต้น",
+          "สร้างรายได้ผ่าน in-app purchase ทั้งร้านเหรียญและการปลดล็อกแบบไม่จำกัด เพื่อเข้าถึงคอนเทนต์พรีเมียม",
+          "ส่วนเรียลไทม์ทำงานผ่าน WebSocket และ SSE พร้อมการแจ้งเตือนในเครื่องเพื่อกระตุ้นให้กลับมาเรียน",
+          "ดูแลไปป์ไลน์การปล่อยแอปทั้งหมด สร้างสามเวอร์ชัน (dev/staging/production) ผ่าน Fastlane และ Makefile เชื่อมกับ GitHub Actions CI/CD แบบ reusable ทั้ง Android และ iOS และดูแลต่อหลังเปิดใช้งาน ทั้งการ build เวอร์ชัน และดูแล Play Store",
+        ],
+      ),
+      stack: ["Flutter", "Dart", "Bloc", "Firebase", "Fastlane", "GitHub Actions"],
+      status: L("Live on Play Store", "อยู่บน Play Store แล้ว"),
+      delivered: true,
+      year: "2024",
+      platform: L("iOS & Android", "iOS และ Android"),
+      images: shots("ailearn", 8),
+      links: [
+        {
+          label: "Play Store",
+          url: "https://play.google.com/store/apps/details?id=cloud.learncloud.ailearn",
+        },
+      ],
       featured: true,
     }),
     makeProject("proj-mol-portal", {
@@ -150,36 +189,6 @@ function workMobile(L: Localize): FileNode[] {
         {
           label: "Play Store",
           url: "https://play.google.com/store/apps/details?id=com.molportal.mol_portal",
-        },
-      ],
-    }),
-    makeProject("proj-ailearn", {
-      name: "aiLearn",
-      type: L("Mobile · Work", "มือถือ · งานบริษัท"),
-      description: L(
-        "A learning app with AI assistance built in, written in Flutter and released on the Play Store.",
-        "แอปเรียนรู้ที่มี AI ช่วยสอน เขียนด้วย Flutter และปล่อยขึ้น Play Store แล้ว",
-      ),
-      highlights: L(
-        [
-          "One Flutter codebase covering iOS and Android",
-          "Released to the Play Store and maintained after launch",
-        ],
-        [
-          "ใช้โค้ด Flutter ชุดเดียวครอบคลุมทั้ง iOS และ Android",
-          "ปล่อยขึ้น Play Store และดูแลต่อหลังเปิดใช้งาน",
-        ],
-      ),
-      stack: ["Flutter", "Dart"],
-      status: L("Live on Play Store", "อยู่บน Play Store แล้ว"),
-      delivered: true,
-      year: "2023",
-      platform: L("iOS & Android", "iOS และ Android"),
-      images: shots("ailearn", 4),
-      links: [
-        {
-          label: "Play Store",
-          url: "https://play.google.com/store/apps/details?id=cloud.learncloud.ailearn",
         },
       ],
     }),
