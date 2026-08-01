@@ -93,7 +93,7 @@ function workMobile(L: Localize): FileNode[] {
           "Two-way sync: an inbound pipeline pulls meetings, agendas and attachments under a download policy per file type, while an outbound outbox captures everything the user does",
           "The outbox is a durable queue with a processor per action — comments, document edits, read receipts — so a push that fails is retried rather than lost",
           "Live meeting state over a WebSocket channel, with background workers carrying sync on when the app is not in the foreground",
-          "Document workflow on a commercial PDF SDK: open, annotate and save while offline, with the edits travelling home through the same outbox",
+          "Document workflow on a commercial PDF SDK: open, annotate and save while offline, with the edits traveling home through the same outbox",
           "Hardened for material that matters — encrypted database key in secure storage, per-document encryption, device-integrity and jailbreak checks, and screen capture blocked at the platform layer",
           "Clean architecture per feature across fourteen feature modules, Bloc for state and GetIt for injection — sole author of the mobile codebase",
           "Also contributed to the Go backend — clean architecture, LDAP and national digital-ID sign-in, WebSocket and SQL Server — alongside the platform team",
@@ -157,17 +157,17 @@ function workMobile(L: Localize): FileNode[] {
       name: "aiLearn",
       type: L("Mobile · Work", "มือถือ · งานบริษัท"),
       description: L(
-        "AI-assisted learning mobile application, built with Flutter and shipped to production on the Play Store.",
-        "แอปมือถือเพื่อการเรียนรู้ที่มี AI ช่วย พัฒนาด้วย Flutter และปล่อยใช้งานจริงบน Play Store",
+        "A learning app with AI assistance built in, written in Flutter and released on the Play Store.",
+        "แอปเรียนรู้ที่มี AI ช่วยสอน เขียนด้วย Flutter และปล่อยขึ้น Play Store แล้ว",
       ),
       highlights: L(
         [
-          "Cross-platform learning experience on a single codebase",
-          "Live on the Play Store",
+          "One Flutter codebase covering iOS and Android",
+          "Released to the Play Store and maintained after launch",
         ],
         [
-          "ประสบการณ์การเรียนรู้ข้ามแพลตฟอร์มจากโค้ดชุดเดียว",
-          "เปิดให้ดาวน์โหลดแล้วบน Play Store",
+          "ใช้โค้ด Flutter ชุดเดียวครอบคลุมทั้ง iOS และ Android",
+          "ปล่อยขึ้น Play Store และดูแลต่อหลังเปิดใช้งาน",
         ],
       ),
       stack: ["Flutter", "Dart"],
@@ -187,17 +187,17 @@ function workMobile(L: Localize): FileNode[] {
       name: "My Order",
       type: L("Mobile · Work", "มือถือ · งานบริษัท"),
       description: L(
-        "Cross-platform ordering application built with React Native and TypeScript, with a strong emphasis on code quality, scalability, and maintainability.",
-        "แอปสั่งซื้อสินค้าแบบข้ามแพลตฟอร์ม พัฒนาด้วย React Native และ TypeScript โดยให้ความสำคัญกับคุณภาพโค้ด การรองรับการขยายตัว และการดูแลต่อในระยะยาว",
+        "An ordering app for iOS and Android, written in React Native and TypeScript. Typed throughout, so the parts that changed most often could be changed safely.",
+        "แอปสั่งซื้อสินค้าสำหรับ iOS และ Android เขียนด้วย React Native และ TypeScript กำหนดชนิดข้อมูลไว้ทั้งระบบ ส่วนที่ต้องแก้บ่อยที่สุดจึงแก้ได้โดยไม่พัง",
       ),
       highlights: L(
         [
-          "React Native + TypeScript for typed, maintainable cross-platform code",
-          "Built and enhanced within a collaborative product team",
+          "React Native with TypeScript across one codebase for both platforms",
+          "Built and extended as part of the product team, on an app already selling",
         ],
         [
-          "ใช้ React Native คู่กับ TypeScript เพื่อให้โค้ดข้ามแพลตฟอร์มมีชนิดข้อมูลชัดเจนและดูแลต่อได้",
-          "พัฒนาและต่อยอดร่วมกับทีมโปรดักต์",
+          "ใช้ React Native คู่กับ TypeScript บนโค้ดชุดเดียวรองรับทั้งสองแพลตฟอร์ม",
+          "พัฒนาและต่อยอดร่วมกับทีมโปรดักต์ บนแอปที่เปิดขายอยู่จริง",
         ],
       ),
       stack: ["React Native", "TypeScript"],
@@ -228,7 +228,7 @@ function workMobile(L: Localize): FileNode[] {
         [
           "Group-buy mechanics as the core of the product — tiered prices that drop as a group fills, a countdown on every campaign, and slots remaining shown on each tier",
           "Pin to Share: a product is pinned and shared to pull friends into the same buy, which is what makes the group price reachable",
-          "A full storefront around it — categories, campaigns, product options, cart, favourites and order tracking",
+          "A full storefront around it — categories, campaigns, product options, cart, favorites and order tracking",
           "Checkout covering how people actually pay in Thailand: QR through mobile banking, bank transfer, and cash on delivery",
           "Flutter with Riverpod for state, on a single codebase serving iOS and Android",
         ],
@@ -261,18 +261,18 @@ function workMobile(L: Localize): FileNode[] {
       name: "VN",
       type: L("Mobile · Work", "มือถือ · งานบริษัท"),
       description: L(
-        "Cross-platform mobile application built with Flutter and shipped to production on the Play Store.",
-        "แอปมือถือข้ามแพลตฟอร์มที่พัฒนาด้วย Flutter และปล่อยใช้งานจริงบน Play Store",
+        "An English-learning app, built in Flutter and released on both stores.",
+        "แอปเรียนภาษาอังกฤษ พัฒนาด้วย Flutter และปล่อยขึ้นทั้งสองสโตร์",
       ),
       highlights: L(
         [
-          "Single Flutter codebase serving both Android and iOS",
-          "Built and maintained as part of a production mobile team",
-          "Shipped to both the App Store and the Play Store",
+          "One Flutter codebase serving both Android and iOS",
+          "Built and maintained inside the mobile team, on an app with users on it",
+          "Released to the App Store and the Play Store",
         ],
         [
           "ใช้โค้ด Flutter ชุดเดียวรองรับทั้ง Android และ iOS",
-          "พัฒนาและดูแลในฐานะสมาชิกทีมมือถือที่ส่งงานขึ้นใช้จริง",
+          "พัฒนาและดูแลอยู่ในทีมมือถือ บนแอปที่มีผู้ใช้จริงอยู่แล้ว",
           "ปล่อยขึ้นทั้ง App Store และ Play Store",
         ],
       ),
@@ -297,17 +297,17 @@ function workMobile(L: Localize): FileNode[] {
       name: "Enfagrow",
       type: L("Mobile · Work", "มือถือ · งานบริษัท"),
       description: L(
-        "Cross-platform mobile application for the Enfagrow brand, built with Flutter with a focus on a smooth, visually polished user experience.",
-        "แอปมือถือข้ามแพลตฟอร์มของแบรนด์ Enfagrow พัฒนาด้วย Flutter โดยเน้นให้ใช้งานลื่นและงานภาพเนี้ยบ",
+        "A consumer app for the Enfagrow brand, built in Flutter. Brand work, so the screens had to match the design down to the spacing.",
+        "แอปสำหรับผู้บริโภคของแบรนด์ Enfagrow พัฒนาด้วย Flutter เป็นงานแบรนด์ หน้าจอจึงต้องตรงกับดีไซน์ถึงระดับระยะห่าง",
       ),
       highlights: L(
         [
-          "Single Flutter codebase serving both Android and iOS",
-          "Brand-facing UI built to design-team specification",
+          "One Flutter codebase serving both Android and iOS",
+          "Built to the design team's specification, screen by screen",
         ],
         [
           "ใช้โค้ด Flutter ชุดเดียวรองรับทั้ง Android และ iOS",
-          "ทำ UI ที่เป็นหน้าตาของแบรนด์ตามสเปกที่ทีมดีไซน์กำหนด",
+          "ทำตามสเปกที่ทีมดีไซน์กำหนดทีละหน้าจอ",
         ],
       ),
       stack: ["Flutter", "Dart"],
@@ -321,17 +321,17 @@ function workMobile(L: Localize): FileNode[] {
       name: "G2G",
       type: L("Mobile · Work", "มือถือ · งานบริษัท"),
       description: L(
-        "Cross-platform mobile application built with React Native and TypeScript, focused on code quality and long-term maintainability.",
-        "แอปมือถือข้ามแพลตฟอร์มที่พัฒนาด้วย React Native และ TypeScript โดยเน้นคุณภาพโค้ดและการดูแลต่อในระยะยาว",
+        "A cross-platform app in React Native and TypeScript, delivered to both stores from a single codebase.",
+        "แอปข้ามแพลตฟอร์มที่เขียนด้วย React Native และ TypeScript ส่งมอบขึ้นทั้งสองสโตร์จากโค้ดชุดเดียว",
       ),
       highlights: L(
         [
-          "React Native + TypeScript cross-platform delivery",
-          "Static typing for safer refactors and clearer structure",
+          "React Native with TypeScript, one codebase for iOS and Android",
+          "Types carried through the app, so a refactor could be trusted",
         ],
         [
-          "ส่งมอบงานข้ามแพลตฟอร์มด้วย React Native และ TypeScript",
-          "ใช้การกำหนดชนิดข้อมูลแบบ static เพื่อให้รีแฟกเตอร์ได้ปลอดภัยและโครงสร้างอ่านง่ายขึ้น",
+          "ใช้ React Native คู่กับ TypeScript โค้ดชุดเดียวสำหรับ iOS และ Android",
+          "กำหนดชนิดข้อมูลไว้ตลอดทั้งแอป การรีแฟกเตอร์จึงทำได้อย่างมั่นใจ",
         ],
       ),
       stack: ["React Native", "TypeScript"],
@@ -345,17 +345,17 @@ function workMobile(L: Localize): FileNode[] {
       name: "EVP Network",
       type: L("Mobile · Work", "มือถือ · งานบริษัท"),
       description: L(
-        "Cross-platform network application built with React Native and TypeScript, delivered as part of a production mobile team.",
-        "แอปเครือข่ายข้ามแพลตฟอร์มที่พัฒนาด้วย React Native และ TypeScript ส่งมอบในฐานะส่วนหนึ่งของทีมมือถือที่ทำงานจริง",
+        "A network application in React Native and TypeScript, delivered as part of the mobile team.",
+        "แอปเครือข่ายที่เขียนด้วย React Native และ TypeScript ส่งมอบในฐานะสมาชิกทีมมือถือ",
       ),
       highlights: L(
         [
-          "React Native + TypeScript cross-platform delivery",
-          "Built and maintained collaboratively in production",
+          "React Native with TypeScript, one codebase for iOS and Android",
+          "Built and kept running alongside the rest of the team",
         ],
         [
-          "ส่งมอบงานข้ามแพลตฟอร์มด้วย React Native และ TypeScript",
-          "พัฒนาและดูแลร่วมกับทีมในระบบที่ใช้งานจริง",
+          "ใช้ React Native คู่กับ TypeScript โค้ดชุดเดียวสำหรับ iOS และ Android",
+          "พัฒนาและดูแลให้ระบบเดินต่อได้ร่วมกับทีม",
         ],
       ),
       stack: ["React Native", "TypeScript"],
@@ -412,17 +412,17 @@ function workWeb(L: Localize): FileNode[] {
       name: "The Blacklist",
       type: L("Web · Work", "เว็บ · งานบริษัท"),
       description: L(
-        "Dynamic, performant web application built with Nuxt, focused on scalability and a modern, responsive user experience.",
-        "เว็บแอปพลิเคชันที่ทำงานลื่นและยืดหยุ่น พัฒนาด้วย Nuxt โดยเน้นการรองรับการขยายตัวและประสบการณ์ใช้งานที่ทันสมัยและปรับตามขนาดหน้าจอ",
+        "A Nuxt web application, built to stay quick as the number of screens grew and to work down to a phone.",
+        "เว็บแอปพลิเคชันที่ทำด้วย Nuxt ออกแบบให้ยังทำงานเร็วแม้จำนวนหน้าจะเพิ่มขึ้น และใช้งานได้ลงไปถึงหน้าจอมือถือ",
       ),
       highlights: L(
         [
-          "Nuxt framework for a streamlined, feature-rich web app",
-          "Responsive UI with a focus on user experience",
+          "Nuxt for routing and rendering, with the page structure kept flat enough to follow",
+          "Laid out for phone through desktop from the same components",
         ],
         [
-          "ใช้เฟรมเวิร์ก Nuxt เพื่อให้ได้เว็บแอปที่ฟีเจอร์ครบและโครงสร้างกระชับ",
-          "UI ที่ปรับตามขนาดหน้าจอ โดยให้ความสำคัญกับประสบการณ์ผู้ใช้",
+          "ใช้ Nuxt ทั้งการจัดเส้นทางและการเรนเดอร์ โดยคุมโครงสร้างหน้าไม่ให้ซับซ้อนเกินกว่าจะตามอ่านได้",
+          "วางเลย์เอาต์ให้ครอบคลุมตั้งแต่มือถือถึงเดสก์ท็อปด้วยคอมโพเนนต์ชุดเดียวกัน",
         ],
       ),
       stack: ["Nuxt", "Vue"],
@@ -441,7 +441,7 @@ function personalMobile(L: Localize): FileNode[] {
       name: "Langridge",
       type: L("Mobile · Personal", "มือถือ · โปรเจกต์ส่วนตัว"),
       description: L(
-        "A voice interpreter that runs entirely on the phone. One person speaks and the other hears it in their own language — speech recognition, translation by a quantised LLM running through llama.cpp, and speech synthesis all happen on the device, so a conversation works with no network and nothing spoken ever leaves the handset.",
+        "A voice interpreter that runs entirely on the phone. One person speaks and the other hears it in their own language — speech recognition, translation by a quantized LLM running through llama.cpp, and speech synthesis all happen on the device, so a conversation works with no network and nothing spoken ever leaves the handset.",
         "ล่ามแปลเสียงที่ทำงานบนเครื่องทั้งหมด ฝ่ายหนึ่งพูด อีกฝ่ายได้ยินเป็นภาษาของตัวเอง ทั้งการรู้จำเสียง การแปลด้วย LLM ที่ผ่านการ quantise แล้วรันผ่าน llama.cpp และการสังเคราะห์เสียง เกิดขึ้นบนเครื่องทั้งหมด บทสนทนาจึงทำงานได้โดยไม่ต้องมีเน็ต และไม่มีสิ่งที่พูดออกไปหลุดออกจากเครื่องเลย",
       ),
       highlights: L(
@@ -477,10 +477,10 @@ function personalMobile(L: Localize): FileNode[] {
       ),
       highlights: L(
         [
-          "Annotations are a typed model (pen / shape / text) keyed by page — a stroke stays an object that can be recoloured or removed, not pixels burned into the page",
+          "Annotations are a typed model (pen / shape / text) keyed by page — a stroke stays an object that can be recolored or removed, not pixels burned into the page",
           "The eraser works by geometry rather than by painting over: point-to-segment distance for strokes, and edge or radius tests for rectangles, circles and triangles",
           "Pages render at 2× device pixels, and the drawing layer turns pointer-transparent under the select tool so the document still scrolls normally",
-          "Floating, draggable tool rail — pen, highlighter, shape, text, eraser — with a grouped colour palette and a stroke size per tool",
+          "Floating, draggable tool rail — pen, highlighter, shape, text, eraser — with a grouped color palette and a stroke size per tool",
           "Reads from asset, file or network; the demo streams a real PDF straight off the web",
           "Kept deliberately small (~1,800 lines, annotations in memory only) — the point was to find where an annotation engine gets hard, not to ship one",
         ],
@@ -517,7 +517,7 @@ function personalWeb(L: Localize): FileNode[] {
           "Encrypted at rest with AES-GCM; the key is generated on-device and downloaded as a file, and a wrong key simply fails to decrypt — there is no password to check",
           "Clean architecture (domain → application → infrastructure) lets the identical use cases run on OPFS in the browser and better-sqlite3 on the server",
           "Full Markdown editing: GFM, KaTeX math, Mermaid diagrams, syntax highlighting, live split preview, autosave and undo history",
-          "Workspace essentials — folders, favourites, recents, trash with restore, ⌘K search, templates, and whole-workspace export/import",
+          "Workspace essentials — folders, favorites, recents, trash with restore, ⌘K search, templates, and whole-workspace export/import",
           "Durability taken seriously: single-writer tab lock, persistent-storage requests, and backup nudges against silent OPFS eviction",
         ],
         [
@@ -582,23 +582,23 @@ function personalWeb(L: Localize): FileNode[] {
       name: "Portfolio OS",
       type: L("Web · Personal", "เว็บ · โปรเจกต์ส่วนตัว"),
       description: L(
-        "This portfolio itself — a Next.js web app styled as a desktop operating system with a window manager, file system, terminal, and theme switching.",
-        "ตัวพอร์ตโฟลิโอนี้เอง เป็นเว็บแอป Next.js ที่ทำหน้าตาเป็นระบบปฏิบัติการเดสก์ท็อป มีทั้งตัวจัดการหน้าต่าง ระบบไฟล์ เทอร์มินัล และการสลับธีม",
+        "This portfolio — a Next.js app built as a desktop operating system, with a window manager, a virtual file system, a working terminal, and everything it says written in both English and Thai.",
+        "ตัวพอร์ตโฟลิโอนี้เอง เป็นแอป Next.js ที่สร้างเป็นระบบปฏิบัติการเดสก์ท็อป มีทั้งตัวจัดการหน้าต่าง ระบบไฟล์เสมือน เทอร์มินัลที่ใช้งานได้จริง และทุกข้อความเขียนไว้ทั้งภาษาไทยและอังกฤษ",
       ),
       highlights: L(
         [
-          "Custom window manager with drag, minimize, maximize, z-index",
-          "Virtual typed file system (folder, txt, ui, pdf, slide, link)",
-          "Working terminal with command parsing",
-          "Dual-theme support (Daylight, Cyber Blue)",
-          "Framer Motion animations throughout",
+          "Window manager written from scratch — drag, minimize, maximize, stacking order",
+          "A typed virtual file system (folder, txt, ui, pdf, slide, link) that search, the terminal and Properties all read from",
+          "A terminal that parses its own commands, with path completion and man pages",
+          "Two color schemes, plus motion, language and start-up as real preferences the OS remembers",
+          "Both languages authored beside the content they describe, so a missing translation is a compile error",
         ],
         [
-          "ตัวจัดการหน้าต่างที่เขียนเอง ลากได้ ย่อได้ ขยายได้ พร้อมจัดลำดับชั้นหน้าต่าง",
-          "ระบบไฟล์เสมือนที่มีชนิดข้อมูลชัดเจน (โฟลเดอร์ txt ui pdf สไลด์ ลิงก์)",
-          "เทอร์มินัลที่ใช้งานได้จริง พร้อมตัวแยกวิเคราะห์คำสั่ง",
-          "รองรับสองธีม (Daylight และ Cyber Blue)",
-          "ใช้ Framer Motion ทำแอนิเมชันตลอดทั้งระบบ",
+          "ตัวจัดการหน้าต่างที่เขียนเองทั้งหมด ลากได้ ย่อได้ ขยายได้ พร้อมจัดลำดับชั้นหน้าต่าง",
+          "ระบบไฟล์เสมือนที่มีชนิดข้อมูลชัดเจน (โฟลเดอร์ txt ui pdf สไลด์ ลิงก์) โดยการค้นหา เทอร์มินัล และหน้าคุณสมบัติ อ่านจากต้นทางเดียวกัน",
+          "เทอร์มินัลที่แยกวิเคราะห์คำสั่งเอง เติมพาธให้อัตโนมัติ และมีหน้า man ของแต่ละคำสั่ง",
+          "มีสองโทนสี และมีทั้งการเคลื่อนไหว ภาษา กับการเริ่มระบบ เป็นการตั้งค่าจริงที่ระบบจำไว้ให้",
+          "เขียนทั้งสองภาษาไว้ข้างเนื้อหาที่มันอธิบาย ถ้าแปลไม่ครบจะคอมไพล์ไม่ผ่าน",
         ],
       ),
       stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "React"],

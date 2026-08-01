@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_Thai, Roboto, Roboto_Mono } from "next/font/google";
-import { STORAGE_KEYS } from "@/app/shared/constants/storage";
+import { SETTINGS_BOOTSTRAP } from "@/app/shared/settings/settings";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -11,18 +11,6 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#182035" },
   ],
 };
-
-/**
- * Re-applies the saved theme and language before first paint. English and
- * Daylight are the defaults, so only the other value of each needs writing — a
- * returning visitor never sees a flash of white, or of English, before their
- * own settings land.
- */
-const SETTINGS_BOOTSTRAP = `try{var s=localStorage,d=document.documentElement,t=s.getItem(${JSON.stringify(
-  STORAGE_KEYS.theme,
-)});if(t==="dark")d.setAttribute("data-theme",t);var l=s.getItem(${JSON.stringify(
-  STORAGE_KEYS.locale,
-)});if(l==="th")d.lang=l}catch(e){}`;
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -92,8 +80,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // The bootstrap script below writes `data-theme` and `lang` before React
-    // hydrates.
+    // The bootstrap script below writes `data-theme`, `lang` and `data-motion`
+    // before React hydrates.
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOTSTRAP }} />

@@ -23,7 +23,7 @@ const EN = {
 
   dock: {
     label: "Dock",
-    minimized: ", minimised",
+    minimized: ", minimized",
     running: ", running",
   },
 
@@ -124,7 +124,9 @@ const EN = {
 
   project: {
     platform: "Platform:",
-    recommended: "Recommended",
+    recommended: "Start here",
+    /** The star's own label, for a reader who meets it without the word beside it. */
+    featuredMark: "Featured — open this one first",
     openFile: (name: string) => `Open ${name}`,
     screenshotAlt: (name: string, n: number) => `${name} screenshot ${n}`,
     screenshotOpen: (name: string, n: number) =>
@@ -154,31 +156,67 @@ const EN = {
   },
 
   theme: {
-    group: "Colour scheme",
+    group: "Color scheme",
     option: (label: string) => `${label} theme`,
   },
 
   prefs: {
+    title: "Preferences",
     nav: {
       osVersion: "OS Version",
       theme: "Theme Mode",
       language: "Language",
+      motion: "Motion",
+      startup: "Startup",
     },
     active: "Active",
+    /**
+     * The choice that names no value and hands the question back to the device.
+     * It says what the device answered, because "System" on its own tells a
+     * reader what the setting is doing but never what they are looking at.
+     */
+    system: {
+      label: "System",
+      detail: (value: string) => `Follows this device — ${value}`,
+    },
+    motion: {
+      full: {
+        label: "Full motion",
+        detail: "Windows spring open and the desktop settles in.",
+      },
+      reduced: {
+        label: "Reduced motion",
+        detail: "Nothing slides or springs. Everything else stays as it is.",
+      },
+    },
+    startup: {
+      boot: {
+        label: "Boot sequence",
+        detail: "Start the machine up every time you arrive.",
+      },
+      instant: {
+        label: "Straight to desktop",
+        detail: "Skip the start-up screen and go in.",
+      },
+    },
+    reset: {
+      action: "Reset to defaults",
+      done: "Preferences reset ✓",
+    },
     os: {
-      copyright: "© 2024 Khwanchai Nontawichit. All rights reserved.",
-      version: "Version 2.4.0 (Build 2024.Alpha)",
+      copyright: "© 2026 Khwanchai Nontawichit. All rights reserved.",
+      version: "Version 2.4.0 (Build 2026.01)",
       deviceHeading: "Device Specifications",
       device: [
         ["Device Name", "Portfolio Master Unit"],
         ["Developer", "Khwanchai (Khwan)"],
         ["Main Stack", "Flutter · React · Next.js"],
-        ["Efficiency", "High-Performance Coding"],
+        ["Focus", "Fast apps, code that stays readable"],
       ] as [string, string][],
       systemHeading: "System Specifications",
       system: [
         ["Edition", "Portfolio Pro Edition"],
-        ["Experience", "4+ Years of Professional Dev"],
+        ["Experience", "4+ years shipping production apps"],
         ["Install Date", "10/24/2024"],
         ["OS Build", "22631.3447"],
       ] as [string, string][],
@@ -187,7 +225,7 @@ const EN = {
   },
 
   aboutOs: {
-    version: "Version 2.4.0 · Build 2024.Alpha",
+    version: "Version 2.4.0 · Build 2026.01",
     rows: [
       ["Engine", "Next.js 16 · React 19"],
       ["Shell", "sys-cmd v1.0"],
@@ -201,7 +239,7 @@ const EN = {
     tips: [
       "Right-click any icon for Open / Copy Path / Properties.",
       "Drag a window's bottom-right corner to resize.",
-      "Double-click the title bar to maximise.",
+      "Double-click the title bar to maximize.",
     ],
     /** Split around the command names, which stay as they are typed. */
     terminalTip: {
@@ -227,7 +265,7 @@ const TH: Strings = {
   dock: {
     label: "ด็อก",
     minimized: " (ย่อไว้)",
-    running: " (กำลังเปิดอยู่)",
+    running: " (เปิดอยู่)",
   },
 
   status: {
@@ -322,7 +360,8 @@ const TH: Strings = {
 
   project: {
     platform: "แพลตฟอร์ม:",
-    recommended: "แนะนำให้อ่านก่อน",
+    recommended: "เริ่มอ่านที่นี่",
+    featuredMark: "โปรเจกต์แนะนำ — เปิดอันนี้ก่อน",
     openFile: (name) => `เปิด ${name}`,
     screenshotAlt: (name, n) => `ภาพหน้าจอ ${name} ที่ ${n}`,
     screenshotOpen: (name, n) => `ดูภาพหน้าจอ ${name} ที่ ${n} แบบเต็ม`,
@@ -356,26 +395,57 @@ const TH: Strings = {
   },
 
   prefs: {
+    title: "การตั้งค่า",
     nav: {
       osVersion: "เวอร์ชันระบบ",
       theme: "ธีม",
       language: "ภาษา",
+      motion: "การเคลื่อนไหว",
+      startup: "การเริ่มระบบ",
     },
     active: "ใช้อยู่",
+    system: {
+      label: "ตามระบบ",
+      detail: (value) => `ตามการตั้งค่าของเครื่อง — ${value}`,
+    },
+    motion: {
+      full: {
+        label: "เคลื่อนไหวเต็มรูปแบบ",
+        detail: "หน้าต่างเด้งเปิด เดสก์ท็อปค่อย ๆ เข้าที่",
+      },
+      reduced: {
+        label: "ลดการเคลื่อนไหว",
+        detail: "ไม่มีการเลื่อนหรือเด้ง ส่วนอื่นยังอยู่ครบเหมือนเดิม",
+      },
+    },
+    startup: {
+      boot: {
+        label: "เล่นหน้าจอเริ่มระบบ",
+        detail: "เริ่มระบบใหม่ทุกครั้งที่เข้ามา",
+      },
+      instant: {
+        label: "เข้าเดสก์ท็อปทันที",
+        detail: "ข้ามหน้าจอเริ่มระบบไปเลย",
+      },
+    },
+    reset: {
+      action: "คืนค่าเริ่มต้น",
+      done: "คืนค่าการตั้งค่าแล้ว ✓",
+    },
     os: {
-      copyright: "© 2024 ขวัญชัย นนทวิชิต สงวนลิขสิทธิ์",
-      version: "เวอร์ชัน 2.4.0 (บิลด์ 2024.Alpha)",
+      copyright: "© 2026 ขวัญชัย นนทวิชิต สงวนลิขสิทธิ์",
+      version: "เวอร์ชัน 2.4.0 (บิลด์ 2026.01)",
       deviceHeading: "ข้อมูลจำเพาะของเครื่อง",
       device: [
         ["ชื่อเครื่อง", "Portfolio Master Unit"],
         ["ผู้พัฒนา", "ขวัญชัย (ขวัญ)"],
         ["สแตกหลัก", "Flutter · React · Next.js"],
-        ["จุดเด่น", "เขียนโค้ดที่รันได้เร็วและดูแลต่อได้"],
+        ["จุดเด่น", "แอปที่เร็ว และโค้ดที่ยังอ่านรู้เรื่อง"],
       ],
       systemHeading: "ข้อมูลจำเพาะของระบบ",
       system: [
         ["รุ่น", "Portfolio Pro Edition"],
-        ["ประสบการณ์", "พัฒนาแอปมืออาชีพ 4+ ปี"],
+        ["ประสบการณ์", "ส่งแอปขึ้นใช้งานจริงมา 4+ ปี"],
         ["วันที่ติดตั้ง", "24/10/2024"],
         ["บิลด์ระบบ", "22631.3447"],
       ],
@@ -384,7 +454,7 @@ const TH: Strings = {
   },
 
   aboutOs: {
-    version: "เวอร์ชัน 2.4.0 · บิลด์ 2024.Alpha",
+    version: "เวอร์ชัน 2.4.0 · บิลด์ 2026.01",
     rows: [
       ["เอนจิน", "Next.js 16 · React 19"],
       ["เชลล์", "sys-cmd v1.0"],
@@ -398,7 +468,7 @@ const TH: Strings = {
     tips: [
       "คลิกขวาที่ไอคอนใดก็ได้ เพื่อเปิด / คัดลอกพาธ / ดูคุณสมบัติ",
       "ลากมุมขวาล่างของหน้าต่างเพื่อปรับขนาด",
-      "ดับเบิลคลิกแถบชื่อเรื่องเพื่อขยายเต็มจอ",
+      "ดับเบิลคลิกแถบชื่อหน้าต่างเพื่อขยายเต็มจอ",
     ],
     terminalTip: {
       lead: "ในเทอร์มินัล ลองพิมพ์ ",

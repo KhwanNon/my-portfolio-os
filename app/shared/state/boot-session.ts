@@ -1,3 +1,9 @@
+import {
+  currentValue,
+  type Motion,
+  type Startup,
+} from "@/app/shared/settings/settings";
+
 /*
  * Whether the boot sequence has already run in this page load.
  *
@@ -16,3 +22,27 @@ export const markBooted = () => {
 };
 
 export const hasBooted = () => booted;
+
+/**
+ * Whether an arrival gets the sequence at all. Two ways to say no, and both are
+ * settled before the machine starts rather than during it — a boot that asks for
+ * input isn't booting, it's a door:
+ *
+ *   - Startup is set to go straight to the desktop.
+ *   - Motion is reduced. The sequence is three and a half seconds of pure
+ *     movement with nothing in it to read, which is precisely what that setting
+ *     is about.
+ *
+ * Takes the two values rather than reading them, so the same rule serves a
+ * render and an effect: a render has to read preferences through the store's
+ * React binding, or the server's answer and the browser's disagree across
+ * hydration, and an effect can simply ask.
+ */
+export function bootSequenceWanted(startup: Startup, motion: Motion): boolean {
+  return startup === "boot" && motion !== "reduced";
+}
+
+/** The same question, asked from an effect. */
+export function wantsBootSequence(): boolean {
+  return bootSequenceWanted(currentValue("startup"), currentValue("motion"));
+}

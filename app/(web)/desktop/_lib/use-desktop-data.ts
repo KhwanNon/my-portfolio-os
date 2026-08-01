@@ -11,5 +11,5 @@ import { desktopData, type DesktopData } from "../_data/file-system-data";
  * this is a map lookup on every render after that.
  */
 export function useDesktopData(): DesktopData {
-  return desktopData(useLocale().locale);
+  return desktopData(useLocale());
 }

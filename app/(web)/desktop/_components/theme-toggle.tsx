@@ -1,9 +1,10 @@
 "use client";
 import { Moon, Sun, type LucideIcon } from "lucide-react";
-import { THEMES, useTheme, type ThemeId } from "@/app/shared/hooks/use-theme";
+import { THEMES, type Theme } from "@/app/shared/settings/settings";
+import { useSetting } from "@/app/shared/settings/use-setting";
 import { useStrings } from "@/app/shared/hooks/use-locale";
 
-const THEME_ICON: Record<ThemeId, LucideIcon> = {
+const THEME_ICON: Record<Theme, LucideIcon> = {
   daylight: Sun,
   dark: Moon,
 };
@@ -19,9 +20,14 @@ const THEME_ICON: Record<ThemeId, LucideIcon> = {
  * legible over whatever the workspace happens to be. It knows nothing about
  * where it sits; the surface placing it owns that, the way the craft card is
  * placed.
+ *
+ * It shows the scheme in force, never the preference behind it: on "System" the
+ * raised pill is whichever scheme the device is currently in, which is the true
+ * answer to "you are here". Pressing either one names it outright — going back
+ * to following the device is a decision, and decisions live in Preferences.
  */
 export function ThemeToggle() {
-  const { theme, changeTheme } = useTheme();
+  const { value: theme, set } = useSetting("theme");
   const S = useStrings();
 
   return (
@@ -41,7 +47,7 @@ export function ThemeToggle() {
           <SchemeButton
             key={id}
             label={S.theme.option(label)}
-            onClick={() => changeTheme(id)}
+            onClick={() => set(id)}
             pressed={theme === id}
           >
             <Icon size={16} strokeWidth={1.8} />

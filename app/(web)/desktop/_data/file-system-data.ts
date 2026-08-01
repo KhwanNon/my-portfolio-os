@@ -24,19 +24,17 @@ function profileTxt(L: Localize): FileNode {
         `> PROFILE.TXT — SYSTEM USER DATA
 > ─────────────────────────────────────────
 
-  Hello, my name is Khwan, a Mobile Developer with over
-  4 years of experience in Flutter development — currently
-  in a full-stack role owning the mobile product end-to-end.
+  My name is Khwan. I am a mobile developer with more than
+  four years in Flutter, currently in a full-stack role
+  where the mobile product is mine end to end.
 
-  I have a strong background in leading development teams,
-  structuring applications with Clean Architecture, and
-  managing environments efficiently.
+  I have led mobile teams, structured applications with
+  Clean Architecture, and kept build and release environments
+  in order across several products.
 
-  I am passionate about mobile development and always eager
-  to take on new challenges. Additionally, I can contribute
-  to front-end development in various languages and frameworks,
-  even those I haven't previously worked with, as I quickly
-  adapt and learn due to shared concepts across technologies.
+  Mobile is where I do my best work, but I am not confined to
+  it — I pick up unfamiliar front-end stacks quickly, because
+  most of what matters carries over between them.
 
 ──────────────────────────────────────────────────────
   Developer   :  Khwanchai Nontawichit
@@ -51,17 +49,17 @@ function profileTxt(L: Localize): FileNode {
         `> PROFILE.TXT — ข้อมูลผู้ใช้ระบบ
 > ─────────────────────────────────────────
 
-  สวัสดีครับ ผมชื่อขวัญ เป็นนักพัฒนาแอปมือถือที่มีประสบการณ์
-  ทำงานกับ Flutter มากกว่า 4 ปี ปัจจุบันทำงานในบทบาท full-stack
-  ที่ดูแลโปรดักต์ฝั่งมือถือทั้งหมดตั้งแต่ต้นจนจบ
+  สวัสดีครับ ผมชื่อขวัญ เป็นนักพัฒนาแอปมือถือ ทำงานกับ Flutter
+  มากกว่า 4 ปี ปัจจุบันอยู่ในบทบาท full-stack ที่ดูแลโปรดักต์
+  ฝั่งมือถือทั้งหมดด้วยตัวเอง
 
-  ผมมีพื้นฐานที่แน่นในการนำทีมพัฒนา การวางโครงสร้างแอปด้วย
-  Clean Architecture และการจัดการ environment อย่างมีระบบ
+  ผมเคยนำทีมมือถือ วางโครงสร้างแอปด้วย Clean Architecture
+  และดูแล environment ของการบิลด์และการปล่อยเวอร์ชัน
+  ให้เป็นระเบียบมาแล้วหลายโปรดักต์
 
-  ผมชอบงานพัฒนาแอปมือถือและพร้อมรับโจทย์ใหม่ ๆ เสมอ นอกจากนี้
-  ยังช่วยงานฝั่ง front-end ได้ในหลายภาษาและหลายเฟรมเวิร์ก
-  รวมถึงตัวที่ยังไม่เคยใช้มาก่อน เพราะแนวคิดเบื้องหลังเทคโนโลยี
-  เหล่านี้มีร่วมกันอยู่มาก ทำให้ปรับตัวและเรียนรู้ได้เร็ว
+  งานที่ผมทำได้ดีที่สุดคืองานมือถือ แต่ก็ไม่ได้จำกัดอยู่แค่นั้น
+  ผมจับเฟรมเวิร์กฝั่งหน้าบ้านที่ไม่เคยใช้ได้เร็ว เพราะแก่นของมัน
+  ส่วนใหญ่ใช้ร่วมกันได้อยู่แล้ว
 
 ──────────────────────────────────────────────────────
   ผู้พัฒนา     :  ขวัญชัย นนทวิชิต

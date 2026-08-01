@@ -12,7 +12,12 @@ import {
   WindowManagerProvider,
   useWindowManager,
 } from "@/app/modules/desktop/context/window-manager-context";
-import { hasBooted } from "@/app/shared/state/boot-session";
+import {
+  bootSequenceWanted,
+  hasBooted,
+  markBooted,
+} from "@/app/shared/state/boot-session";
+import { useSetting } from "@/app/shared/settings/use-setting";
 import { useStrings } from "@/app/shared/hooks/use-locale";
 import { useDesktopData } from "./_lib/use-desktop-data";
 
@@ -131,12 +136,23 @@ export default function MainInterfaceScreen() {
   const router = useRouter();
   // Reaching the desktop means coming through the boot screen — on a refresh or
   // a direct link the flag is back to false, so the machine starts up again
-  // rather than the desktop simply being there. Rendering nothing in the
-  // meantime keeps a frame of desktop from flashing behind the redirect.
-  const booted = hasBooted();
+  // rather than the desktop simply being there. Unless the visitor has turned
+  // the sequence off, in which case there is nothing to come through and the
+  // desktop simply is there. Rendering nothing until that is settled keeps a
+  // frame of desktop from flashing behind the redirect.
+  const { value: startup } = useSetting("startup");
+  const { value: motion } = useSetting("motion");
+  const booted = hasBooted() || !bootSequenceWanted(startup, motion);
 
   useEffect(() => {
-    if (!booted) router.replace("/boot");
+    if (!booted) {
+      router.replace("/boot");
+      return;
+    }
+    // Pinned for the rest of the visit: turning the sequence back on in
+    // Preferences is a choice about the *next* arrival, and must not eject the
+    // desktop it was made from.
+    markBooted();
   }, [booted, router]);
 
   if (!booted) return null;

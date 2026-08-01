@@ -23,7 +23,7 @@ export const StatusDisplay: FC<StatusDisplayProps> = ({
       transition={{ repeat: Infinity, duration: 2.5 }}
       className="text-xs md:text-sm tracking-[0.4em] mb-6 text-os-text-faint"
     >
-      AUTH_REQ: CREATIVE_PROTOCOL_v11
+      AUTH_REQ: ADMIN @ PORTFOLIO
     </motion.p>
 
     <motion.h1

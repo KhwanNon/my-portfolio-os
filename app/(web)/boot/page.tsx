@@ -10,7 +10,7 @@ import { StatusDisplay } from "./_components/status-display";
 
 export default function BootScreen() {
   const router = useRouter();
-  const { currentStep, percent, isReady, stepText } = useBootSequence();
+  const { currentStep, percent, isReady, stepText, playing } = useBootSequence();
 
   // The sequence runs itself and hands over when it is done. Nothing to press
   // and nothing to skip: a boot that asks for input isn't booting, it's a door.
@@ -36,9 +36,13 @@ export default function BootScreen() {
             rather than as characters. */}
       <div className="absolute inset-0 -z-30 bg-ambient-aura pointer-events-none" />
       <div className="absolute inset-0 -z-20 bg-desktop-veil pointer-events-none" />
-      <MatrixRain opacity={0.09} />
-
-      <div className="absolute inset-0 pointer-events-none z-60 bg-scanlines opacity-20" />
+      {/* The two layers that are motion and nothing else. A sequence that isn't
+          playing is gone within the frame — this is so that frame doesn't carry
+          a screenful of falling characters out with it. */}
+      {playing && <MatrixRain opacity={0.09} />}
+      {playing && (
+        <div className="absolute inset-0 pointer-events-none z-60 bg-scanlines opacity-20" />
+      )}
 
       <StatusDisplay
         stepText={stepText}

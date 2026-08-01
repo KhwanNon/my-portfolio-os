@@ -329,6 +329,28 @@ body {
   font-family: var(--font-os-mono);
 }
 
+/*
+ * Reduced motion, for the whole document in one rule. The attribute carries the
+ * `motion` preference — the machine's own answer unless the visitor overrode it
+ * — and is written before the first paint, so someone who asked for less never
+ * sees the opening frame of what they turned off. See
+ * app/shared/settings/settings.ts.
+ *
+ * Durations are flattened rather than dropped: an animation that still runs, for
+ * no time at all, still fires the events anything waiting on it is waiting for.
+ * Springs are JavaScript and not reached from here — those are switched off
+ * where they live, in app/(web)/layout.tsx.
+ */
+[data-motion="reduced"],
+[data-motion="reduced"] *,
+[data-motion="reduced"] *::before,
+[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
 /* ─── Boot sequence ─────────────────────────────────────────────────────────── */
 
 /*

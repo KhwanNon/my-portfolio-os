@@ -44,7 +44,7 @@ type Action =
 const DEFAULT_WINDOW_SIZES: Record<string, { width: number; height: number }> =
   {
     "system-command": { width: 640, height: 420 },
-    preferences: { width: 540, height: 400 },
+    preferences: { width: 580, height: 440 },
     "recycle-bin": { width: 520, height: 400 },
     "c-drive": { width: 680, height: 460 },
     "profile-txt": { width: 620, height: 440 },

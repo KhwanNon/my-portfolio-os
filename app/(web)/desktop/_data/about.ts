@@ -19,8 +19,8 @@ export function aboutFolder(L: Localize): FileNode {
       children: [
         uiNode({ id: "about-me", name: "me.ui" }, "PersonalBioUI", {
           bio: L(
-            "Hello! I'm Khwanchai Nontawichit (Khwan) — a Mobile Developer from Thailand with 4+ years of professional Flutter experience, currently in a full-stack role where I own the mobile product end-to-end and also work across Go backends, database design, and web. I specialize in Clean Architecture and love building apps that are fast, maintainable, and a joy to use. I lead teams, mentor juniors, and care deeply about code quality and shipping reliable products.",
-            "สวัสดีครับ ผมขวัญชัย นนทวิชิต (ขวัญ) เป็นนักพัฒนาแอปมือถือจากประเทศไทย มีประสบการณ์ทำงานกับ Flutter แบบมืออาชีพมากกว่า 4 ปี ปัจจุบันทำงานในบทบาท full-stack ที่ดูแลโปรดักต์ฝั่งมือถือทั้งหมดตั้งแต่ต้นจนจบ พร้อมกับทำ backend ด้วย Go ออกแบบฐานข้อมูล และงานเว็บ ผมถนัด Clean Architecture และชอบสร้างแอปที่ทำงานเร็ว ดูแลต่อได้ง่าย และใช้แล้วรู้สึกดี เคยนำทีม สอนงานน้อง ๆ และให้ความสำคัญกับคุณภาพโค้ดและการส่งมอบงานที่เชื่อถือได้",
+            "I'm Khwanchai Nontawichit — Khwan — a mobile developer from Thailand with 4+ years of professional Flutter work behind me. I'm in a full-stack role now: the mobile product is mine end to end, and I also write Go services, design the database, and take on web work. I build on Clean Architecture, I've led a mobile team and mentored the juniors on it, and I would rather ship something that holds up than something that only demos well.",
+            "สวัสดีครับ ผมขวัญชัย นนทวิชิต ชื่อเล่นขวัญ เป็นนักพัฒนาแอปมือถือจากประเทศไทย ทำงานกับ Flutter แบบมืออาชีพมา 4 ปีกว่า ตอนนี้อยู่ในบทบาท full-stack ดูแลโปรดักต์ฝั่งมือถือทั้งหมดด้วยตัวเอง ควบคู่กับเขียนเซอร์วิสด้วย Go ออกแบบฐานข้อมูล และรับงานฝั่งเว็บ ผมวางโครงสร้างงานด้วย Clean Architecture เคยนำทีมมือถือและสอนงานน้องในทีม และเลือกส่งงานที่อยู่ได้จริงมากกว่างานที่ดูดีแค่ตอนเดโม",
           ),
           facts: [
             { label: L("Name", "ชื่อ"), value: OWNER.name },
@@ -48,24 +48,24 @@ export function aboutFolder(L: Localize): FileNode {
               name: L("Coding", "เขียนโค้ด"),
               emoji: "💻",
               description: L(
-                "Side projects, exploring new frameworks, contributing to open source.",
-                "ทำโปรเจกต์ส่วนตัว ลองเฟรมเวิร์กใหม่ ๆ และร่วมพัฒนาโอเพนซอร์ส",
+                "Side projects, new frameworks, the odd open-source contribution.",
+                "ทำโปรเจกต์ส่วนตัว ลองเฟรมเวิร์กใหม่ ๆ และแวะช่วยงานโอเพนซอร์สบ้าง",
               ),
             },
             {
               name: L("Gaming", "เล่นเกม"),
               emoji: "🎮",
               description: L(
-                "Strategy and RPG games. Appreciates good UX even in games.",
-                "ชอบเกมวางแผนและ RPG และมองหา UX ที่ดีแม้กระทั่งในเกม",
+                "Strategy and RPGs. Still reading the UX while I play.",
+                "ชอบเกมวางแผนกับ RPG และยังอดดู UX ระหว่างเล่นไม่ได้",
               ),
             },
             {
               name: L("Coffee", "กาแฟ"),
               emoji: "☕",
               description: L(
-                "Serious about coffee. Prefers coding with a good pour-over.",
-                "จริงจังกับกาแฟ ชอบเขียนโค้ดคู่กับดริปสักแก้ว",
+                "Serious about it. A pour-over on the desk most mornings.",
+                "จริงจังกับกาแฟ เกือบทุกเช้าจะมีดริปวางอยู่บนโต๊ะ",
               ),
             },
             {
@@ -88,8 +88,8 @@ export function aboutFolder(L: Localize): FileNode {
               name: L("Traveling", "เดินทาง"),
               emoji: "✈️",
               description: L(
-                "Exploring new cities and cultures when offline.",
-                "ออกไปดูเมืองใหม่และวัฒนธรรมใหม่ในวันที่ไม่ได้อยู่หน้าจอ",
+                "New cities and cultures, on the days I'm away from a screen.",
+                "ออกไปดูเมืองใหม่ ๆ ในวันที่ไม่ได้อยู่หน้าจอ",
               ),
             },
           ],
@@ -110,7 +110,7 @@ export function aboutFolder(L: Localize): FileNode {
   Machine    :  MacBook Pro / Windows PC (dual setup)
   Display    :  27" Monitor + Laptop screen
   Input      :  Mechanical keyboard · Mouse
-  Audio      :  Headphones for focus sessions
+  Audio      :  Headphones, when the room needs to go quiet
 
   EDITOR & TOOLS
   ──────────────────────────────────────────────────────
@@ -136,7 +136,7 @@ export function aboutFolder(L: Localize): FileNode {
   เครื่อง     :  MacBook Pro / Windows PC (ใช้คู่กัน)
   จอภาพ      :  จอ 27 นิ้ว + จอโน้ตบุ๊ก
   อินพุต     :  คีย์บอร์ดแมคคานิคอล · เมาส์
-  เสียง      :  หูฟังสำหรับช่วงที่ต้องโฟกัส
+  เสียง      :  หูฟัง สำหรับตอนที่ต้องการความเงียบ
 
   เอดิเตอร์และเครื่องมือ
   ──────────────────────────────────────────────────────

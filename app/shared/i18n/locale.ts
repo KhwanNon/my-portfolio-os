@@ -21,10 +21,6 @@ export const LOCALES: { id: Locale; label: string; endonym: string }[] = [
   { id: "th", label: "Thai", endonym: "ไทย" },
 ];
 
-export function isLocale(value: unknown): value is Locale {
-  return value === "en" || value === "th";
-}
-
 /**
  * Picks between two authored versions of the same thing. Generic on purpose:
  * a heading is a string, a list of highlights is an array, and prose reads far

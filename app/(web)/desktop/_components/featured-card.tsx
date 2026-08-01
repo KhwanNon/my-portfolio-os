@@ -39,7 +39,7 @@ export function FeaturedCard() {
       }}
     >
       <div className="flex items-center gap-1.5">
-        <FeaturedStar size={12} />
+        <FeaturedStar size={12} decorative />
         {/* Neutral, not yellow: the star is the colour on this card, and a
             label painted to match it would make two marks out of one. */}
         <span

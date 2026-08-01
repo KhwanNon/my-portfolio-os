@@ -23,7 +23,7 @@ export function skillsFolder(L: Localize): FileNode {
           items: [
             {
               name: "Dart",
-              note: L("production daily · since 2021", "ใช้ทุกวัน · ตั้งแต่ 2564"),
+              note: L("production daily · since 2021", "ใช้ทุกวัน · ตั้งแต่ 2021"),
             },
             {
               name: "Go",
@@ -31,11 +31,11 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "TypeScript",
-              note: L("production · since 2021", "ใช้งานจริง · ตั้งแต่ 2564"),
+              note: L("production · since 2021", "ใช้งานจริง · ตั้งแต่ 2021"),
             },
             {
               name: "JavaScript",
-              note: L("production · since 2021", "ใช้งานจริง · ตั้งแต่ 2564"),
+              note: L("production · since 2021", "ใช้งานจริง · ตั้งแต่ 2021"),
             },
             {
               name: "SQL",
@@ -50,11 +50,11 @@ export function skillsFolder(L: Localize): FileNode {
           items: [
             {
               name: "Flutter",
-              note: L("production daily · since 2021", "ใช้ทุกวัน · ตั้งแต่ 2564"),
+              note: L("production daily · since 2021", "ใช้ทุกวัน · ตั้งแต่ 2021"),
             },
             {
               name: "React Native",
-              note: L("production · 2021–2023", "ใช้งานจริง · 2564–2566"),
+              note: L("production · 2021–2023", "ใช้งานจริง · 2021–2023"),
             },
             {
               name: "Vue",
@@ -122,8 +122,8 @@ export function skillsFolder(L: Localize): FileNode {
             {
               name: L("Problem Solving", "การแก้ปัญหา"),
               description: L(
-                "Methodical debugger and root-cause analyst — comfortable with both logic and architecture problems.",
-                "ไล่บั๊กอย่างเป็นระบบและหาสาเหตุที่แท้จริง ถนัดทั้งปัญหาเชิงตรรกะและปัญหาเชิงสถาปัตยกรรม",
+                "Find the root cause before touching a fix — as true of an architecture problem as of a one-line bug.",
+                "หาสาเหตุที่แท้จริงให้เจอก่อนลงมือแก้ ใช้แบบเดียวกันทั้งกับบั๊กบรรทัดเดียวและปัญหาเชิงสถาปัตยกรรม",
               ),
             },
             {
@@ -136,22 +136,22 @@ export function skillsFolder(L: Localize): FileNode {
             {
               name: L("Communication", "การสื่อสาร"),
               description: L(
-                "Clear async writer. Can translate technical constraints into plain language for stakeholders.",
-                "เขียนสื่อสารแบบ async ได้ชัดเจน แปลงข้อจำกัดทางเทคนิคให้เป็นภาษาที่ผู้เกี่ยวข้องเข้าใจได้",
+                "Write clearly when the reply comes hours later. Can put a technical constraint in words a customer can act on.",
+                "เขียนสื่อสารได้ชัดเจนแม้ต้องรอคำตอบข้ามหลายชั่วโมง และอธิบายข้อจำกัดทางเทคนิคเป็นภาษาที่ลูกค้าเอาไปตัดสินใจต่อได้",
               ),
             },
             {
               name: L("Ownership", "ความรับผิดชอบต่องาน"),
               description: L(
-                "Ships features end-to-end — from requirements to deployment, monitoring, and post-release support.",
-                "ดูแลฟีเจอร์ตั้งแต่ต้นจนจบ ตั้งแต่เก็บ requirement ไปจนถึงการดีพลอย ติดตามผล และซัพพอร์ตหลังปล่อยจริง",
+                "Take a feature from requirement to release, and stay with it after it ships.",
+                "ดูแลฟีเจอร์ตั้งแต่รับ requirement จนปล่อยขึ้นใช้งาน และอยู่ดูแลต่อหลังจากนั้น",
               ),
             },
             {
               name: L("Adaptability", "การปรับตัว"),
               description: L(
-                "Comfortable switching between tight deadlines and exploratory side projects without losing quality.",
-                "สลับระหว่างงานที่เดดไลน์กระชั้นกับโปรเจกต์ทดลองส่วนตัวได้โดยคุณภาพงานไม่ตก",
+                "Move between a tight deadline and an open-ended side project without changing how carefully I work.",
+                "สลับไปมาระหว่างงานที่เดดไลน์กระชั้นกับโปรเจกต์ปลายเปิดได้ โดยไม่ลดความละเอียดในการทำงานลง",
               ),
             },
           ],
@@ -174,9 +174,9 @@ export function skillsFolder(L: Localize): FileNode {
   Listening  :  ████████████  Advanced
 
 ──────────────────────────────────────────────────────
-  Can read and write technical documentation fluently.
-  Comfortable with English-language code reviews,
-  Slack communication, and async team collaboration.
+  Read and write technical documentation fluently.
+  Review code, work in Slack, and hold a discussion
+  in English across time zones without friction.
 ──────────────────────────────────────────────────────
 
 > EOF`,
@@ -191,8 +191,8 @@ export function skillsFolder(L: Localize): FileNode {
 
 ──────────────────────────────────────────────────────
   อ่านและเขียนเอกสารทางเทคนิคได้คล่อง
-  รีวิวโค้ดเป็นภาษาอังกฤษ คุยงานผ่าน Slack
-  และทำงานร่วมกับทีมแบบ async ได้สบาย
+  รีวิวโค้ด คุยงานผ่าน Slack และคุยกับทีม
+  ที่อยู่คนละโซนเวลาเป็นภาษาอังกฤษได้ราบรื่น
 ──────────────────────────────────────────────────────
 
 > จบไฟล์`,
