@@ -1,6 +1,7 @@
 "use client";
 import { Moon, Sun, type LucideIcon } from "lucide-react";
 import { THEMES, useTheme, type ThemeId } from "@/app/shared/hooks/use-theme";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 
 const THEME_ICON: Record<ThemeId, LucideIcon> = {
   daylight: Sun,
@@ -21,11 +22,12 @@ const THEME_ICON: Record<ThemeId, LucideIcon> = {
  */
 export function ThemeToggle() {
   const { theme, changeTheme } = useTheme();
+  const S = useStrings();
 
   return (
     <div
       role="group"
-      aria-label="Colour scheme"
+      aria-label={S.theme.group}
       className="flex shrink-0 items-center gap-0.5 rounded-full p-0.5"
       style={{
         background: "var(--os-surface-1)",
@@ -38,7 +40,7 @@ export function ThemeToggle() {
         return (
           <SchemeButton
             key={id}
-            label={`${label} theme`}
+            label={S.theme.option(label)}
             onClick={() => changeTheme(id)}
             pressed={theme === id}
           >

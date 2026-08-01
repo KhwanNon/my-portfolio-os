@@ -5,6 +5,8 @@
 // grid card and its dense row.
 import { MoreVertical } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
+import type { Strings } from "@/app/shared/i18n/strings";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 import { useFileInteraction } from "../_lib/use-file-interaction";
 import { leadsToFeatured } from "../_lib/featured";
 import { IconTile } from "./file-graphic";
@@ -28,23 +30,12 @@ interface FileIconProps {
   onOpen?: (node: FileNode) => void;
 }
 
-const KIND_LABEL: Record<string, string> = {
-  folder: "Folder",
-  program: "App",
-  txt: "Document",
-  pdf: "PDF",
-  slide: "Slides",
-  link: "Link",
-  ui: "View",
-};
-
 /** What a node is worth saying in one line: how much it holds, or what it is. */
-function summarize(node: FileNode): string {
+function summarize(node: FileNode, S: Strings): string {
   if (node.data?.kind === "folder") {
-    const count = node.data.children.length;
-    return `${count} item${count === 1 ? "" : "s"}`;
+    return S.fileKind.itemCount(node.data.children.length);
   }
-  return KIND_LABEL[node.type] ?? "File";
+  return S.fileKind.byType[node.type] ?? S.fileKind.fallback;
 }
 
 export const FileIcon = ({
@@ -56,6 +47,7 @@ export const FileIcon = ({
   const { selected, interaction, openMenuAt } = useFileInteraction(fileNode, {
     onOpen,
   });
+  const S = useStrings();
   // Stays put when the row is selected: a mark that vanishes the moment you
   // click the thing it marks is a mark you can't trust.
   const featured = leadsToFeatured(fileNode);
@@ -114,7 +106,7 @@ export const FileIcon = ({
           className="shrink-0 text-[11px]"
           style={{ color: "var(--os-text-faint)" }}
         >
-          {summarize(fileNode)}
+          {summarize(fileNode, S)}
         </span>
       </div>
     );
@@ -148,7 +140,7 @@ export const FileIcon = ({
           className="mt-0.5 truncate text-[11px]"
           style={{ color: "var(--os-text-faint)" }}
         >
-          {caption ?? summarize(fileNode)}
+          {caption ?? summarize(fileNode, S)}
         </p>
       </div>
 
@@ -159,8 +151,8 @@ export const FileIcon = ({
           const box = e.currentTarget.getBoundingClientRect();
           openMenuAt({ x: box.right, y: box.bottom + 4 });
         }}
-        title={`More actions for ${fileNode.name}`}
-        aria-label={`More actions for ${fileNode.name}`}
+        title={S.menu.moreActions(fileNode.name)}
+        aria-label={S.menu.moreActions(fileNode.name)}
         className="focus-ring grid h-7 w-7 shrink-0 cursor-pointer place-items-center self-start rounded-full transition-colors duration-150 hover:bg-os-surface-1"
         style={{ color: "var(--os-text-faint)" }}
       >

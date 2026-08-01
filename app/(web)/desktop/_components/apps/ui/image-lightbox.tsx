@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 
 /**
  * Above every window and both bars, and below the shell's own overlays — the
@@ -32,6 +33,7 @@ export function ImageLightbox({
   onIndexChange,
   label = "",
 }: ImageLightboxProps) {
+  const S = useStrings();
   const open = index !== null;
 
   // Wraps at both ends: with a counter on screen there is no getting lost, and
@@ -71,7 +73,9 @@ export function ImageLightbox({
         <motion.div
           role="dialog"
           aria-modal="true"
-          aria-label={label ? `${label} screenshots` : "Screenshot viewer"}
+          aria-label={
+            label ? S.lightbox.labelled(label) : S.lightbox.unlabelled
+          }
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -113,7 +117,7 @@ export function ImageLightbox({
             </div>
           </motion.div>
 
-          <OverlayButton label="Close viewer" onClick={onClose} side="close">
+          <OverlayButton label={S.lightbox.close} onClick={onClose} side="close">
             <X size={18} strokeWidth={1.8} />
           </OverlayButton>
 
@@ -122,14 +126,14 @@ export function ImageLightbox({
           {images.length > 1 && (
             <>
               <OverlayButton
-                label="Previous screenshot"
+                label={S.lightbox.previous}
                 onClick={() => step(-1)}
                 side="left"
               >
                 <ChevronLeft size={22} strokeWidth={1.8} />
               </OverlayButton>
               <OverlayButton
-                label="Next screenshot"
+                label={S.lightbox.next}
                 onClick={() => step(1)}
                 side="right"
               >

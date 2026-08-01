@@ -3,6 +3,7 @@
 // work the rows. Drawn once here so the panel under the desktop field and the
 // ⌘K panel are the same object seen in two places.
 import { useEffect, useRef } from "react";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 import type { SearchResult } from "../_lib/use-file-search";
 import { FileGraphic } from "./file-graphic";
 
@@ -28,6 +29,7 @@ export function SearchResults({
   id,
 }: Props) {
   const listRef = useRef<HTMLDivElement>(null);
+  const S = useStrings();
 
   // Arrow keys move a highlight that may be past the fold; the list follows it.
   useEffect(() => {
@@ -51,7 +53,7 @@ export function SearchResults({
             className="py-10 text-center text-[13px]"
             style={{ color: "var(--os-text-faint)" }}
           >
-            No results
+            {S.search.empty}
           </div>
         ) : (
           <div className="p-2">
@@ -111,10 +113,8 @@ export function SearchResults({
           color: "var(--os-text-faint)",
         }}
       >
-        <span>↑ ↓ navigate · ⏎ open</span>
-        <span>
-          {results.length} result{results.length === 1 ? "" : "s"}
-        </span>
+        <span>{S.search.hint}</span>
+        <span>{S.search.count(results.length)}</span>
       </div>
     </>
   );

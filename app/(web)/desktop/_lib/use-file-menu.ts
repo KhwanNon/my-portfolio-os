@@ -5,8 +5,13 @@ import {
   useWindowManager,
   type ContextMenuItem,
 } from "@/app/modules/desktop/context/window-manager-context";
-import { desktopFileSystem } from "../_data/file-system-data";
-import { makePropertiesNode, absolutePathOf, pathSegmentsOf } from "./properties-node";
+import { useStrings } from "@/app/shared/hooks/use-locale";
+import { useDesktopData } from "./use-desktop-data";
+import {
+  makePropertiesNode,
+  absolutePathOf,
+  pathSegmentsOf,
+} from "./properties-node";
 
 const TERMINAL_ID = "system-command";
 
@@ -19,6 +24,8 @@ const TERMINAL_ID = "system-command";
 export function useFileMenu() {
   const { openFile, showContextMenu, showToast, requestTerminalCd } =
     useWindowManager();
+  const { fileSystem } = useDesktopData();
+  const S = useStrings();
 
   return useCallback(
     (
@@ -26,20 +33,20 @@ export function useFileMenu() {
       at: { x: number; y: number },
       open: (node: FileNode) => void = openFile,
     ) => {
-      const absPath = absolutePathOf(node);
-      const segments = pathSegmentsOf(node);
+      const absPath = absolutePathOf(node, fileSystem);
+      const segments = pathSegmentsOf(node, fileSystem);
       const isFolder = node.type === "folder";
 
       const items: ContextMenuItem[] = [
         {
-          label: node.type === "link" ? "Open Link" : "Open",
+          label: node.type === "link" ? S.menu.openLink : S.menu.open,
           onSelect: () => open(node),
         },
         {
-          label: "Open in Terminal",
+          label: S.menu.openInTerminal,
           disabled: absPath === null,
           onSelect: () => {
-            const terminal = desktopFileSystem.find((n) => n.id === TERMINAL_ID);
+            const terminal = fileSystem.find((n) => n.id === TERMINAL_ID);
             if (!terminal || absPath === null) return;
             // For folders cd into them; for files cd into their parent.
             requestTerminalCd(isFolder ? segments : segments.slice(0, -1));
@@ -47,29 +54,29 @@ export function useFileMenu() {
           },
         },
         {
-          label: "Copy Path",
+          label: S.menu.copyPath,
           disabled: absPath === null,
           onSelect: () => {
             if (absPath === null) return;
             if (!navigator.clipboard?.writeText) {
-              showToast("Clipboard unavailable", "error");
+              showToast(S.toast.clipboardUnavailable, "error");
               return;
             }
             navigator.clipboard.writeText(absPath).then(
-              () => showToast(`Copied: ${absPath}`, "success"),
-              () => showToast("Copy failed", "error"),
+              () => showToast(S.toast.copied(absPath), "success"),
+              () => showToast(S.toast.copyFailed, "error"),
             );
           },
         },
         { separator: true },
         {
-          label: "Properties",
-          onSelect: () => openFile(makePropertiesNode(node)),
+          label: S.menu.properties,
+          onSelect: () => openFile(makePropertiesNode(node, fileSystem, S)),
         },
       ];
 
       showContextMenu(at.x, at.y, items);
     },
-    [openFile, showContextMenu, showToast, requestTerminalCd],
+    [openFile, showContextMenu, showToast, requestTerminalCd, fileSystem, S],
   );
 }

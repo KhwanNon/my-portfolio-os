@@ -1,4 +1,5 @@
 "use client";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 import { SectionTitle, Card, Wrapper } from "./primitives";
 
 // PersonalBioUI — Props: { bio, facts?: { label, value }[] }
@@ -10,9 +11,11 @@ interface PersonalBioUIProps {
 }
 
 export function PersonalBioUI({ bio = "", facts = [] }: PersonalBioUIProps) {
+  const S = useStrings();
+
   return (
     <Wrapper>
-      <SectionTitle>About Me</SectionTitle>
+      <SectionTitle>{S.section.about}</SectionTitle>
       {bio && (
         <Card>
           <p className="leading-relaxed opacity-85">{bio}</p>
@@ -44,9 +47,11 @@ interface HobbiesUIProps {
 }
 
 export function HobbiesUI({ items = [] }: HobbiesUIProps) {
+  const S = useStrings();
+
   return (
     <Wrapper>
-      <SectionTitle>Hobbies &amp; Interests</SectionTitle>
+      <SectionTitle>{S.section.hobbies}</SectionTitle>
       <div className="grid grid-cols-2 gap-2">
         {items.map((item) => (
           <Card key={item.name}>
@@ -72,9 +77,11 @@ interface ContactUIProps {
 }
 
 export function ContactUI({ links = [] }: ContactUIProps) {
+  const S = useStrings();
+
   return (
     <Wrapper>
-      <SectionTitle>Contact</SectionTitle>
+      <SectionTitle>{S.section.contact}</SectionTitle>
       <div className="space-y-2">
         {links.map((c) => (
           <a

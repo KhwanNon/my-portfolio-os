@@ -5,6 +5,7 @@ import { Copy, Minus, Square, X } from "lucide-react";
 import type { WindowInstance } from "@/app/modules/desktop/context/window-manager-context";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { workspaceBox } from "@/app/modules/desktop/lib/workspace";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 import { useIsSmallViewport } from "../../_lib/use-viewport";
 import { FileGraphic } from "../file-graphic";
 import { SPRING_EXPRESSIVE } from "@/app/shared/constants/motion";
@@ -81,6 +82,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     moveWindow,
     resizeWindow,
   } = useWindowManager();
+  const S = useStrings();
 
   // Small viewport → treat every window as maximised. Drag/resize disabled.
   const isMobile = useIsSmallViewport();
@@ -273,7 +275,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
         {/* Window Controls */}
         <div className="flex shrink-0 items-center gap-0.5">
           <TitleButton
-            label="Minimize"
+            label={S.window.minimize}
             onClick={() => minimizeWindow(win.id)}
           >
             <Minus size={15} strokeWidth={2} />
@@ -281,7 +283,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
           {/* Maximize — hidden on mobile (auto-maximised already) */}
           {!isMobile && (
             <TitleButton
-              label={win.isMaximized ? "Restore" : "Maximize"}
+              label={win.isMaximized ? S.window.restore : S.window.maximize}
               onClick={() => maximizeWindow(win.id)}
             >
               {win.isMaximized ? (
@@ -291,7 +293,11 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
               )}
             </TitleButton>
           )}
-          <TitleButton label="Close" danger onClick={() => closeWindow(win.id)}>
+          <TitleButton
+            label={S.window.close}
+            danger
+            onClick={() => closeWindow(win.id)}
+          >
             <X size={16} strokeWidth={2} />
           </TitleButton>
         </div>
@@ -316,7 +322,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
             background:
               "linear-gradient(135deg, transparent 0%, transparent 50%, var(--os-border) 50%, var(--os-border) 60%, transparent 60%, transparent 70%, var(--os-border) 70%, var(--os-border) 80%, transparent 80%)",
           }}
-          title="Resize"
+          title={S.window.resize}
         />
       )}
     </motion.div>

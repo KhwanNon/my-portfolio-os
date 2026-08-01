@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Roboto, Roboto_Mono } from "next/font/google";
+import { Noto_Sans_Thai, Roboto, Roboto_Mono } from "next/font/google";
 import { STORAGE_KEYS } from "@/app/shared/constants/storage";
 import "./globals.css";
 
@@ -13,13 +13,16 @@ export const viewport: Viewport = {
 };
 
 /**
- * Re-applies the saved theme before first paint. Daylight is the default, so
- * only the dark scheme needs an attribute — a returning visitor never sees a
- * flash of white before their theme lands.
+ * Re-applies the saved theme and language before first paint. English and
+ * Daylight are the defaults, so only the other value of each needs writing — a
+ * returning visitor never sees a flash of white, or of English, before their
+ * own settings land.
  */
-const THEME_BOOTSTRAP = `try{var t=localStorage.getItem(${JSON.stringify(
+const SETTINGS_BOOTSTRAP = `try{var s=localStorage,d=document.documentElement,t=s.getItem(${JSON.stringify(
   STORAGE_KEYS.theme,
-)});if(t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}`;
+)});if(t==="dark")d.setAttribute("data-theme",t);var l=s.getItem(${JSON.stringify(
+  STORAGE_KEYS.locale,
+)});if(l==="th")d.lang=l}catch(e){}`;
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -30,6 +33,18 @@ const roboto = Roboto({
 const robotoMono = Roboto_Mono({
   variable: "--font-roboto-mono",
   subsets: ["latin"],
+});
+
+/**
+ * Thai has no glyphs in Roboto, so it is loaded alongside rather than instead:
+ * both stacks in `globals.css` end in this face, and the browser falls through
+ * to it per glyph. Latin keeps Roboto's metrics whichever language is set, and
+ * nothing about the type has to know what the language is.
+ */
+const notoSansThai = Noto_Sans_Thai({
+  variable: "--font-noto-thai",
+  subsets: ["thai"],
+  weight: ["400", "500", "700", "900"],
 });
 
 const TITLE = "Portfolio OS — Khwanchai Nontawichit";
@@ -77,13 +92,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // The bootstrap script below writes `data-theme` before React hydrates.
+    // The bootstrap script below writes `data-theme` and `lang` before React
+    // hydrates.
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
+        <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOTSTRAP }} />
       </head>
       <body
-        className={`${roboto.variable} ${robotoMono.variable} antialiased`}
+        className={`${roboto.variable} ${robotoMono.variable} ${notoSansThai.variable} antialiased`}
       >
         {children}
       </body>

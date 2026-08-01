@@ -288,8 +288,17 @@
   --color-os-error: var(--os-error);
   --color-os-tertiary: var(--os-tertiary);
   --color-os-featured: var(--os-featured);
-  --font-os-sans: var(--font-roboto), system-ui, sans-serif;
-  --font-os-mono: var(--font-roboto-mono), ui-monospace, monospace;
+  /*
+   * Both voices end in the Thai face. Roboto carries no Thai glyphs, so the
+   * browser falls through to Noto Sans Thai for those characters and for those
+   * only — Latin keeps its metrics whichever language is set, and the mono
+   * voice keeps its monospaced Latin while Thai inside a `.txt` file still
+   * renders as type rather than as boxes.
+   */
+  --font-os-sans: var(--font-roboto), var(--font-noto-thai), system-ui,
+    sans-serif;
+  --font-os-mono: var(--font-roboto-mono), var(--font-noto-thai), ui-monospace,
+    monospace;
 }
 
 /*

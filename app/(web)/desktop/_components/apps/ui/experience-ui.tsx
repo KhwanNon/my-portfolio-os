@@ -1,4 +1,5 @@
 "use client";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 import { TechIcon } from "./tech-icon";
 
@@ -25,9 +26,11 @@ export function ExperienceUI({
   highlights = [],
   stack = [],
 }: ExperienceUIProps) {
+  const S = useStrings();
+
   return (
     <Wrapper>
-      <SectionTitle>Experience</SectionTitle>
+      <SectionTitle>{S.section.experience}</SectionTitle>
       <Card>
         <div className="flex items-start justify-between mb-3">
           <div>

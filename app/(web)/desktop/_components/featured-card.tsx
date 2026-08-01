@@ -1,6 +1,7 @@
 "use client";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
-import { FEATURED_PITCH, projectsFolder } from "../_data/projects";
+import { useStrings } from "@/app/shared/hooks/use-locale";
+import { useDesktopData } from "../_lib/use-desktop-data";
 import { findFeatured } from "../_lib/featured";
 import { FeaturedStar } from "./featured-star";
 
@@ -20,7 +21,9 @@ import { FeaturedStar } from "./featured-star";
  */
 export function FeaturedCard() {
   const { openFile } = useWindowManager();
-  const project = findFeatured(projectsFolder);
+  const { projects, featuredPitch } = useDesktopData();
+  const S = useStrings();
+  const project = findFeatured(projects);
   if (!project) return null;
 
   const title = project.name.replace(/\.ui$/, "");
@@ -28,7 +31,7 @@ export function FeaturedCard() {
   return (
     <button
       onClick={() => openFile(project)}
-      title={`Open ${project.name}`}
+      title={S.project.openFile(project.name)}
       className="focus-ring w-full cursor-pointer rounded-lg p-3.5 text-left transition-colors duration-200 hover:bg-os-surface-3"
       style={{
         background: "var(--os-surface-1)",
@@ -43,7 +46,7 @@ export function FeaturedCard() {
           className="text-[10px] font-semibold uppercase tracking-[0.16em]"
           style={{ color: "var(--os-text-dim)" }}
         >
-          Recommended
+          {S.project.recommended}
         </span>
       </div>
       <p
@@ -56,7 +59,7 @@ export function FeaturedCard() {
         className="mt-1 text-[12px] leading-snug"
         style={{ color: "var(--os-text-dim)" }}
       >
-        {FEATURED_PITCH}
+        {featuredPitch}
       </p>
     </button>
   );

@@ -1,4 +1,5 @@
 import type { FileNode } from "@/app/shared/types/file-system";
+import type { Localize } from "@/app/shared/i18n/locale";
 import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
 
@@ -14,27 +15,32 @@ import { uiNode } from "./ui-node";
  * Named without an extension, unlike the `.ui` files it used to sit beside. The
  * suffix is how this file system says "a thing to read"; a slot in the dock is
  * a thing to launch, and it is titled the way the other launchers are.
+ *
+ * Only the row labels take a translation. An address and a handle are what they
+ * are in any language, and a translated one would simply be wrong.
  */
-export const contactApp: FileNode = uiNode(
-  { id: "contact", name: "Contact", icon: ICONS.contact },
-  "ContactUI",
-  {
-    links: [
-      {
-        label: "Email",
-        value: "khwan.nontawichit@gmail.com",
-        href: "mailto:khwan.nontawichit@gmail.com",
-      },
-      {
-        label: "GitHub",
-        value: "github.com/KhwanNon",
-        href: "https://github.com/KhwanNon",
-      },
-      {
-        label: "Location",
-        value: "Bangkok, Thailand",
-        href: "https://maps.google.com/?q=Bangkok,Thailand",
-      },
-    ],
-  },
-);
+export function contactApp(L: Localize): FileNode {
+  return uiNode(
+    { id: "contact", name: "Contact", icon: ICONS.contact },
+    "ContactUI",
+    {
+      links: [
+        {
+          label: L("Email", "อีเมล"),
+          value: "khwan.nontawichit@gmail.com",
+          href: "mailto:khwan.nontawichit@gmail.com",
+        },
+        {
+          label: L("GitHub", "GitHub"),
+          value: "github.com/KhwanNon",
+          href: "https://github.com/KhwanNon",
+        },
+        {
+          label: L("Location", "ที่อยู่"),
+          value: L("Bangkok, Thailand", "กรุงเทพมหานคร ประเทศไทย"),
+          href: "https://maps.google.com/?q=Bangkok,Thailand",
+        },
+      ],
+    },
+  );
+}

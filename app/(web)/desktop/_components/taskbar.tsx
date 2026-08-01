@@ -10,24 +10,27 @@ import {
   useWindowManager,
   type WindowInstance,
 } from "@/app/modules/desktop/context/window-manager-context";
-import { dockItems } from "../_data/file-system-data";
+import { useStrings } from "@/app/shared/hooks/use-locale";
+import { useDesktopData } from "../_lib/use-desktop-data";
 import { useFileMenu } from "../_lib/use-file-menu";
 import { IconTile } from "./file-graphic";
 import { SystemStatus } from "./system-status";
 
 export function Taskbar() {
   const { windows } = useWindowManager();
+  const { dock } = useDesktopData();
+  const S = useStrings();
 
   // The fixed slots, plus anything open that has no slot of its own — a window
   // with nowhere in the dock to go is a window you cannot get back to once it
   // is minimised.
   const guests = windows
     .map((w) => w.fileNode)
-    .filter((node) => !dockItems.some((item) => item.id === node.id));
+    .filter((node) => !dock.some((item) => item.id === node.id));
 
   return (
     <motion.nav
-      aria-label="Dock"
+      aria-label={S.dock.label}
       initial={{ y: 60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.4, duration: 0.45, ease: "easeOut" }}
@@ -48,7 +51,7 @@ export function Taskbar() {
       {/* The only part that may outgrow the bar: every guest window adds a
           slot, so this strip is what scrolls and the readouts never move. */}
       <div className="custom-scrollbar flex min-w-0 items-center gap-2.5 overflow-x-auto">
-        {[...dockItems, ...guests].map((node) => (
+        {[...dock, ...guests].map((node) => (
           <DockSlot
             key={node.id}
             node={node}
@@ -85,6 +88,7 @@ function DockSlot({
   window?: WindowInstance;
 }) {
   const { openFile, restoreWindow, focusWindow } = useWindowManager();
+  const S = useStrings();
   const openMenu = useFileMenu();
   const slot = useRef<HTMLButtonElement>(null);
 
@@ -111,7 +115,11 @@ function DockSlot({
   };
   const hide = () => setAnchor(null);
 
-  const state = !win ? "" : win.isMinimized ? ", minimised" : ", running";
+  const state = !win
+    ? ""
+    : win.isMinimized
+      ? S.dock.minimized
+      : S.dock.running;
 
   return (
     <button

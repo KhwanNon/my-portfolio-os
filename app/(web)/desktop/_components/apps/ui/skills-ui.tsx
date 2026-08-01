@@ -1,4 +1,5 @@
 "use client";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 import { TechIcon } from "./tech-icon";
 
@@ -12,10 +13,12 @@ interface SkillsUIProps {
   layout?: "list" | "badges";
 }
 
-export function SkillsUI({ title = "Skills", items = [], layout = "list" }: SkillsUIProps) {
+export function SkillsUI({ title, items = [], layout = "list" }: SkillsUIProps) {
+  const S = useStrings();
+
   return (
     <Wrapper>
-      <SectionTitle>{title}</SectionTitle>
+      <SectionTitle>{title ?? S.section.skills}</SectionTitle>
       {layout === "list"
         ? items.map((s) => (
             <div
@@ -54,9 +57,11 @@ interface SoftSkillsUIProps {
 }
 
 export function SoftSkillsUI({ skills = [] }: SoftSkillsUIProps) {
+  const S = useStrings();
+
   return (
     <Wrapper>
-      <SectionTitle>Soft Skills</SectionTitle>
+      <SectionTitle>{S.section.softSkills}</SectionTitle>
       <div className="space-y-2">
         {skills.map((s) => (
           <Card key={s.name}>

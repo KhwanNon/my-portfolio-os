@@ -2,9 +2,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { SlideFileData } from "@/app/shared/types/file-system";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 
 export function SlideRenderer({ data }: { data: SlideFileData }) {
   const [current, setCurrent] = useState(0);
+  const S = useStrings();
   const total = data.images.length;
 
   if (total === 0) {
@@ -13,7 +15,7 @@ export function SlideRenderer({ data }: { data: SlideFileData }) {
         className="h-full flex items-center justify-center text-xs opacity-50"
         style={{ color: "var(--os-text-dim)" }}
       >
-        No slides found
+        {S.slide.empty}
       </div>
     );
   }
@@ -50,7 +52,7 @@ export function SlideRenderer({ data }: { data: SlideFileData }) {
           onClick={() => setCurrent((p) => Math.max(0, p - 1))}
           disabled={current === 0}
         >
-          ◀ Prev
+          {S.slide.previous}
         </button>
 
         <div className="text-center">
@@ -68,7 +70,7 @@ export function SlideRenderer({ data }: { data: SlideFileData }) {
           onClick={() => setCurrent((p) => Math.min(total - 1, p + 1))}
           disabled={current === total - 1}
         >
-          Next ▶
+          {S.slide.next}
         </button>
       </div>
     </div>

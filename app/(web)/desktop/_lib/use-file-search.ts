@@ -3,8 +3,8 @@
 // and the ⌘K panel — and both ask this hook, so a result found in one is the
 // same result, found the same way, in the other.
 import { useCallback, useMemo, useState } from "react";
-import { desktopFileSystem } from "../_data/file-system-data";
 import type { FileNode } from "@/app/shared/types/file-system";
+import { useDesktopData } from "./use-desktop-data";
 
 /** A hit, carrying the path it was found at so the row can show where it lives. */
 export interface SearchResult {
@@ -35,17 +35,38 @@ function collectAll(root: FileNode[]): Entry[] {
   return out;
 }
 
-/** Every node in the tree, computed once for the life of the module. */
-const ALL_ENTRIES = collectAll(desktopFileSystem);
+interface Index {
+  entries: Entry[];
+  /**
+   * With nothing typed, the field is a launcher rather than a search: the
+   * top-level programs, which is what someone opening a search on a desktop is
+   * most often reaching for.
+   */
+  suggestions: SearchResult[];
+}
 
 /**
- * With nothing typed, the field is a launcher rather than a search: the
- * top-level programs, which is what someone opening a search on a desktop is
- * most often reaching for.
+ * One index per drive, built the first time that drive is searched.
+ *
+ * Keyed on the tree itself rather than on the language: `desktopData` hands out
+ * the same array for a given language every time, so the entry survives as long
+ * as the drive it describes does, and a language nobody visits is never walked.
  */
-const SUGGESTIONS: SearchResult[] = desktopFileSystem
-  .filter((n) => n.type === "program")
-  .map((node) => ({ node, absolutePath: `~/${node.name}` }));
+const indexes = new WeakMap<FileNode[], Index>();
+
+function indexOf(root: FileNode[]): Index {
+  const cached = indexes.get(root);
+  if (cached) return cached;
+
+  const fresh: Index = {
+    entries: collectAll(root),
+    suggestions: root
+      .filter((n) => n.type === "program")
+      .map((node) => ({ node, absolutePath: `~/${node.name}` })),
+  };
+  indexes.set(root, fresh);
+  return fresh;
+}
 
 interface Options {
   /** Chosen with ⏎ or a click. */
@@ -62,20 +83,22 @@ interface Options {
 export function useFileSearch({ onSubmit, onEscape }: Options) {
   const [query, setQueryState] = useState("");
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const { fileSystem } = useDesktopData();
 
   const results = useMemo<SearchResult[]>(() => {
+    const { entries, suggestions } = indexOf(fileSystem);
     const q = query.trim().toLowerCase();
-    if (!q) return SUGGESTIONS;
+    if (!q) return suggestions;
 
     const matches: SearchResult[] = [];
-    for (const { node, pathParts } of ALL_ENTRIES) {
+    for (const { node, pathParts } of entries) {
       if (node.name.toLowerCase().includes(q)) {
         matches.push({ node, absolutePath: `~/${pathParts.join("/")}` });
         if (matches.length >= MAX_RESULTS) break;
       }
     }
     return matches;
-  }, [query]);
+  }, [query, fileSystem]);
 
   /** Typing always returns the highlight to the top of the new list. */
   const setQuery = useCallback((next: string) => {

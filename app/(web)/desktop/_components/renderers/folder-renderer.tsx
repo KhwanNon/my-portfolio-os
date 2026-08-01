@@ -3,8 +3,9 @@ import { useMemo, useState } from "react";
 import { ArrowLeft, Home, LayoutGrid, List } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 import { FileIcon } from "../file-icon";
-import { desktopFileSystem } from "../../_data/file-system-data";
+import { useDesktopData } from "../../_lib/use-desktop-data";
 import {
   findPath,
   walkPath,
@@ -19,8 +20,8 @@ interface FolderRendererProps {
 type ViewMode = "grid" | "list";
 
 /** What a folder window shows for a given path, or null where nothing lives. */
-function childrenAt(path: Path): FileNode[] | null {
-  const walked = walkPath(desktopFileSystem, path);
+function childrenAt(tree: FileNode[], path: Path): FileNode[] | null {
+  const walked = walkPath(tree, path);
   if (!walked) return null;
   if (walked.kind === "root") return walked.children;
 
@@ -32,11 +33,13 @@ function childrenAt(path: Path): FileNode[] | null {
 
 export function FolderRenderer({ fileNode }: FolderRendererProps) {
   const { openFile } = useWindowManager();
+  const { fileSystem } = useDesktopData();
+  const S = useStrings();
 
   // Resolve the folder's absolute path on mount; fall back to root if missing.
   const initialPath = useMemo<Path>(
-    () => findPath(desktopFileSystem, fileNode.id) ?? [],
-    [fileNode.id],
+    () => findPath(fileSystem, fileNode.id) ?? [],
+    [fileSystem, fileNode.id],
   );
 
   const [path, setPath] = useState<Path>(initialPath);
@@ -45,12 +48,12 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
   // artwork to browse, and the dense rows put the whole shelf on screen at once.
   const [view, setView] = useState<ViewMode>("list");
 
-  const children = childrenAt(path);
+  const children = childrenAt(fileSystem, path);
 
   const navigate = (next: Path) => {
     if (pathEquals(next, path)) return;
     setBack((b) => [...b, path]);
-    setPath(canonicalizePath(desktopFileSystem, next));
+    setPath(canonicalizePath(fileSystem, next));
   };
 
   const goBack = () => {
@@ -64,7 +67,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
     // idx -1 = root, 0..n-1 = path[idx]
     const target = idx < 0 ? [] : path.slice(0, idx + 1);
     if (pathEquals(target, path)) return;
-    const canonical = canonicalizePath(desktopFileSystem, target);
+    const canonical = canonicalizePath(fileSystem, target);
     // Breadcrumbs always go up. Drop back-stack entries that sit inside the
     // subtree we're leaving — otherwise "back" would jump forward into the
     // deeper folder we just navigated up from.
@@ -98,12 +101,16 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
           borderBottom: "1px solid var(--os-border)",
         }}
       >
-        <IconButton label="Back" onClick={goBack} disabled={back.length === 0}>
+        <IconButton
+          label={S.folder.back}
+          onClick={goBack}
+          disabled={back.length === 0}
+        >
           <ArrowLeft size={17} strokeWidth={1.8} />
         </IconButton>
 
         <nav
-          aria-label="Breadcrumb"
+          aria-label={S.folder.breadcrumb}
           className="custom-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto text-[13px]"
         >
           <Crumb active={path.length === 0} onClick={() => navigateToCrumb(-1)}>
@@ -128,14 +135,14 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
           style={{ background: "var(--os-surface-3)" }}
         >
           <ViewButton
-            label="Grid view"
+            label={S.folder.gridView}
             active={view === "grid"}
             onClick={() => setView("grid")}
           >
             <LayoutGrid size={15} strokeWidth={1.8} />
           </ViewButton>
           <ViewButton
-            label="List view"
+            label={S.folder.listView}
             active={view === "list"}
             onClick={() => setView("list")}
           >
@@ -147,9 +154,9 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
       {/* Contents */}
       <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto p-5">
         {children === null ? (
-          <CenterMessage text="Path not found" />
+          <CenterMessage text={S.folder.notFound} />
         ) : children.length === 0 ? (
-          <CenterMessage text="This folder is empty" />
+          <CenterMessage text={S.folder.empty} />
         ) : view === "grid" ? (
           <div className="file-grid">
             {children.map((child) => (

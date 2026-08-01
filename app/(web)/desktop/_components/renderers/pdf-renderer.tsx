@@ -1,7 +1,10 @@
 "use client";
 import type { PdfFileData } from "@/app/shared/types/file-system";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 
 export function PdfRenderer({ data }: { data: PdfFileData }) {
+  const S = useStrings();
+
   return (
     <div
       className="h-full w-full flex flex-col"
@@ -26,7 +29,7 @@ export function PdfRenderer({ data }: { data: PdfFileData }) {
             color: "var(--os-text)",
           }}
         >
-          Download
+          {S.pdf.download}
         </a>
       </div>
 

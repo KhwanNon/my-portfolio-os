@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
-import { desktopFileSystem } from "../../_data/file-system-data";
+import { useDesktopData } from "../../_lib/use-desktop-data";
 import {
   resolvePath,
   walkPath,
@@ -42,6 +42,15 @@ import {
 
 export function SystemCommandApp() {
   const { openFile, closeWindow, terminalCdRequest } = useWindowManager();
+  /*
+   * The drive in the language the shell is set to, so `cat` prints a file in
+   * the language the rest of the desktop is reading it in.
+   *
+   * The shell's own voice does not follow: prompts, commands, help and errors
+   * stay English, the way `ls` is English. Names and paths are English too, so
+   * a `cd` typed in one language is still the same `cd` in the other.
+   */
+  const { fileSystem } = useDesktopData();
 
   const [cwd, setCwd] = useState<Path>([]);
   const [history, setHistory] = useState<HistoryLine[]>(BOOT_LINES);
@@ -61,7 +70,7 @@ export function SystemCommandApp() {
     inputRef.current?.focus();
   }, []);
 
-  const displayPath = getDisplayPath(desktopFileSystem, cwd);
+  const displayPath = getDisplayPath(fileSystem, cwd);
   const prompt = `admin@portfolio:${displayPath} %`;
 
   // ── Output helpers ─────────────────────────────────────────────────────────
@@ -98,7 +107,7 @@ export function SystemCommandApp() {
     lastCdTokenRef.current = terminalCdRequest.token;
 
     const target = terminalCdRequest.path;
-    const walked = walkPath(desktopFileSystem, target);
+    const walked = walkPath(fileSystem, target);
     if (!walked) return;
     if (
       walked.kind === "node" &&
@@ -106,13 +115,13 @@ export function SystemCommandApp() {
     ) {
       return;
     }
-    const canonical = canonicalizePath(desktopFileSystem, target);
+    const canonical = canonicalizePath(fileSystem, target);
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCwd(canonical);
     const label =
       canonical.length === 0 ? "~" : `~/${canonical.join("/")}`;
     push([{ type: "system", text: `> cd ${label}` }]);
-  }, [terminalCdRequest, push]);
+  }, [terminalCdRequest, push, fileSystem]);
 
   // ── Filesystem commands ────────────────────────────────────────────────────
 
@@ -126,10 +135,10 @@ export function SystemCommandApp() {
       const { flags, rest } = splitFlags(args);
       const arg = rest[0] ?? "";
       const targetPath = arg ? resolvePath(cwd, arg) : cwd;
-      const children = childrenAt(desktopFileSystem, targetPath);
+      const children = childrenAt(fileSystem, targetPath);
 
       if (children === null) {
-        const walked = walkPath(desktopFileSystem, targetPath);
+        const walked = walkPath(fileSystem, targetPath);
         if (walked?.kind === "node" && walked.node.type !== "folder") {
           err(`not a directory: ${arg}`);
         } else {
@@ -138,7 +147,7 @@ export function SystemCommandApp() {
         return;
       }
 
-      const label = getDisplayPath(desktopFileSystem, targetPath);
+      const label = getDisplayPath(fileSystem, targetPath);
       out("");
       out(`  ${label}`);
       out("  ─────────────────────────────────────────");
@@ -167,14 +176,14 @@ export function SystemCommandApp() {
       }
       out("");
     },
-    [cwd, out, err],
+    [cwd, out, err, fileSystem],
   );
 
   const cmdCd = useCallback(
     (args: string[]) => {
       const arg = args[0] ?? "";
       const target = resolvePath(cwd, arg);
-      const walked = walkPath(desktopFileSystem, target);
+      const walked = walkPath(fileSystem, target);
       if (!walked) {
         err(`no such directory: ${arg || "(empty)"}`);
         return;
@@ -186,9 +195,9 @@ export function SystemCommandApp() {
         err(`not a directory: ${arg}`);
         return;
       }
-      setCwd(canonicalizePath(desktopFileSystem, target));
+      setCwd(canonicalizePath(fileSystem, target));
     },
-    [cwd, err],
+    [cwd, err, fileSystem],
   );
 
   const cmdCat = useCallback(
@@ -196,7 +205,7 @@ export function SystemCommandApp() {
       const arg = args[0];
       if (!arg) { err("usage: cat <path>"); return; }
       const target = resolvePath(cwd, arg);
-      const walked = walkPath(desktopFileSystem, target);
+      const walked = walkPath(fileSystem, target);
       if (!walked || walked.kind === "root") {
         err(`no such file: ${arg}`);
         return;
@@ -209,7 +218,7 @@ export function SystemCommandApp() {
       for (const line of walked.node.data.content.split("\n")) out(`  ${line}`);
       out("");
     },
-    [cwd, out, err],
+    [cwd, out, err, fileSystem],
   );
 
   const cmdOpen = useCallback(
@@ -217,7 +226,7 @@ export function SystemCommandApp() {
       const arg = args[0];
       if (!arg) { err("usage: open <path>"); return; }
       const target = resolvePath(cwd, arg);
-      const walked = walkPath(desktopFileSystem, target);
+      const walked = walkPath(fileSystem, target);
       if (!walked || walked.kind === "root") {
         err(`no such file: ${arg}`);
         return;
@@ -226,24 +235,24 @@ export function SystemCommandApp() {
       ok(`Opening "${walked.node.name}"...`);
       out("");
     },
-    [cwd, openFile, ok, err, out],
+    [cwd, openFile, ok, err, out, fileSystem],
   );
 
   const cmdTree = useCallback(
     (args: string[]) => {
       const arg = args[0] ?? "";
       const targetPath = arg ? resolvePath(cwd, arg) : cwd;
-      const children = childrenAt(desktopFileSystem, targetPath);
+      const children = childrenAt(fileSystem, targetPath);
       if (children === null) {
         err(`no such directory: ${arg}`);
         return;
       }
-      const label = getDisplayPath(desktopFileSystem, targetPath);
+      const label = getDisplayPath(fileSystem, targetPath);
       out("");
       for (const line of buildTree(label, children, 3)) out(`  ${line}`);
       out("");
     },
-    [cwd, out, err],
+    [cwd, out, err, fileSystem],
   );
 
   const cmdFind = useCallback(
@@ -252,12 +261,12 @@ export function SystemCommandApp() {
       if (!needle) { err("usage: find <name> [path]"); return; }
       const startArg = args[1] ?? "";
       const startPath = startArg ? resolvePath(cwd, startArg) : cwd;
-      const children = childrenAt(desktopFileSystem, startPath);
+      const children = childrenAt(fileSystem, startPath);
       if (children === null) {
         err(`no such directory: ${startArg}`);
         return;
       }
-      const canonical = canonicalizePath(desktopFileSystem, startPath);
+      const canonical = canonicalizePath(fileSystem, startPath);
       const matches = findByName(canonical, children, needle);
       out("");
       if (matches.length === 0) {
@@ -267,7 +276,7 @@ export function SystemCommandApp() {
       }
       out("");
     },
-    [cwd, out, err],
+    [cwd, out, err, fileSystem],
   );
 
   const cmdFile = useCallback(
@@ -275,7 +284,7 @@ export function SystemCommandApp() {
       const arg = args[0];
       if (!arg) { err("usage: file <path>"); return; }
       const target = resolvePath(cwd, arg);
-      const walked = walkPath(desktopFileSystem, target);
+      const walked = walkPath(fileSystem, target);
       if (!walked) { err(`no such file: ${arg}`); return; }
 
       if (walked.kind === "root") {
@@ -286,7 +295,7 @@ export function SystemCommandApp() {
       }
       out("");
     },
-    [cwd, out, err],
+    [cwd, out, err, fileSystem],
   );
 
   const cmdHead = useCallback(
@@ -295,7 +304,7 @@ export function SystemCommandApp() {
       const arg = rest[0];
       if (!arg) { err("usage: head [-n N] <path>"); return; }
       const target = resolvePath(cwd, arg);
-      const walked = walkPath(desktopFileSystem, target);
+      const walked = walkPath(fileSystem, target);
       if (!walked || walked.kind === "root") { err(`no such file: ${arg}`); return; }
       if (walked.node.type !== "txt" || walked.node.data?.kind !== "txt") {
         err(`not a text file: ${arg}`);
@@ -306,7 +315,7 @@ export function SystemCommandApp() {
       for (const line of lines) out(`  ${line}`);
       out("");
     },
-    [cwd, out, err],
+    [cwd, out, err, fileSystem],
   );
 
   const cmdTail = useCallback(
@@ -315,7 +324,7 @@ export function SystemCommandApp() {
       const arg = rest[0];
       if (!arg) { err("usage: tail [-n N] <path>"); return; }
       const target = resolvePath(cwd, arg);
-      const walked = walkPath(desktopFileSystem, target);
+      const walked = walkPath(fileSystem, target);
       if (!walked || walked.kind === "root") { err(`no such file: ${arg}`); return; }
       if (walked.node.type !== "txt" || walked.node.data?.kind !== "txt") {
         err(`not a text file: ${arg}`);
@@ -327,7 +336,7 @@ export function SystemCommandApp() {
       for (const line of lines) out(`  ${line}`);
       out("");
     },
-    [cwd, out, err],
+    [cwd, out, err, fileSystem],
   );
 
   // ── System / utility commands ──────────────────────────────────────────────
@@ -542,7 +551,7 @@ export function SystemCommandApp() {
     }
 
     // Otherwise, path completion against the current directory.
-    const ctx = getCompletionContext(desktopFileSystem, cwd, input);
+    const ctx = getCompletionContext(fileSystem, cwd, input);
     if (!ctx) return;
 
     const matches = matchPartial(ctx.directoryChildren, ctx.partial);

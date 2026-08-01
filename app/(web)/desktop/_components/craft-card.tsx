@@ -1,6 +1,7 @@
 "use client";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
-import { CRAFT_LINES, khwanCraftFile } from "../_data/craft";
+import { useStrings } from "@/app/shared/hooks/use-locale";
+import { useDesktopData } from "../_lib/use-desktop-data";
 import { MountainGlyph } from "./mountain-glyph";
 import { SparkGlyph } from "./spark-glyph";
 
@@ -15,11 +16,13 @@ import { SparkGlyph } from "./spark-glyph";
  */
 export function CraftCard() {
   const { openFile } = useWindowManager();
+  const { craftFile, craftLines } = useDesktopData();
+  const S = useStrings();
 
   return (
     <button
-      onClick={() => openFile(khwanCraftFile)}
-      title="Open khwan-craft.md"
+      onClick={() => openFile(craftFile)}
+      title={S.project.openFile(craftFile.name)}
       className="focus-ring group relative w-full cursor-pointer overflow-hidden rounded-lg p-3.5 text-left transition-colors duration-200 hover:bg-os-surface-3"
       style={{
         background: "var(--os-surface-1)",
@@ -48,7 +51,7 @@ export function CraftCard() {
         className="relative mt-2 space-y-0.5 text-[12px] leading-snug"
         style={{ color: "var(--os-text-dim)" }}
       >
-        {CRAFT_LINES.map((line) => (
+        {craftLines.map((line) => (
           <li key={line}>{line}</li>
         ))}
       </ul>

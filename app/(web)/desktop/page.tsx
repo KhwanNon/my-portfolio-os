@@ -13,7 +13,8 @@ import {
   useWindowManager,
 } from "@/app/modules/desktop/context/window-manager-context";
 import { hasBooted } from "@/app/shared/state/boot-session";
-import { aboutOsNode, desktopFileSystem } from "./_data/file-system-data";
+import { useStrings } from "@/app/shared/hooks/use-locale";
+import { useDesktopData } from "./_lib/use-desktop-data";
 
 const TERMINAL_ID = "system-command";
 
@@ -27,23 +28,25 @@ function Desktop() {
     showToast,
     openFile,
   } = useWindowManager();
+  const { fileSystem, aboutOsNode } = useDesktopData();
+  const S = useStrings();
 
   const handleDesktopContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     showContextMenu(e.clientX, e.clientY, [
       {
-        label: "Open System Command",
+        label: S.menu.openTerminal,
         onSelect: () => {
-          const term = desktopFileSystem.find((n) => n.id === TERMINAL_ID);
+          const term = fileSystem.find((n) => n.id === TERMINAL_ID);
           if (term) openFile(term);
         },
       },
       {
-        label: "Refresh",
-        onSelect: () => showToast("Desktop refreshed ✓", "success"),
+        label: S.menu.refresh,
+        onSelect: () => showToast(S.toast.refreshed, "success"),
       },
       { separator: true },
-      { label: "About Portfolio OS", onSelect: () => openFile(aboutOsNode) },
+      { label: S.menu.aboutOs, onSelect: () => openFile(aboutOsNode) },
     ]);
   };
 

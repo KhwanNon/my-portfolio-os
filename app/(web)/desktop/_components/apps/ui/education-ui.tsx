@@ -1,4 +1,5 @@
 "use client";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 import { SectionTitle, Badge, Card, Wrapper } from "./primitives";
 
 // EducationUI — all education entries in one window, newest first.
@@ -18,9 +19,11 @@ interface EducationUIProps {
 }
 
 export function EducationUI({ entries = [] }: EducationUIProps) {
+  const S = useStrings();
+
   return (
     <Wrapper>
-      <SectionTitle>Education</SectionTitle>
+      <SectionTitle>{S.section.education}</SectionTitle>
       {entries.map((entry) => (
         <Card key={entry.type}>
           <div className="flex items-start justify-between mb-3">
@@ -31,7 +34,9 @@ export function EducationUI({ entries = [] }: EducationUIProps) {
             </div>
             <div className="text-right shrink-0 ml-4">
               <div>{entry.period}</div>
-              {entry.gpa && <div className="opacity-50 mt-0.5">GPA: {entry.gpa}</div>}
+              {entry.gpa && <div className="opacity-50 mt-0.5">
+                  {S.education.gpa} {entry.gpa}
+                </div>}
             </div>
           </div>
           {entry.description && (

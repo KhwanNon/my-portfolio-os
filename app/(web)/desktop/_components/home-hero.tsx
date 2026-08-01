@@ -16,14 +16,11 @@ import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { BrandLogo } from "@/app/shared/components/brand-logo";
 import { SPRING_EXPRESSIVE } from "@/app/shared/constants/motion";
-import { homeShortcuts } from "../_data/file-system-data";
-import { OWNER } from "../_data/identity";
+import { useStrings } from "@/app/shared/hooks/use-locale";
+import { useDesktopData } from "../_lib/use-desktop-data";
 import { useFileSearch, type SearchResult } from "../_lib/use-file-search";
 import { FileGraphic } from "./file-graphic";
 import { SearchResults } from "./search-results";
-
-/** What the field asks for — the one search this shell has. */
-const SEARCH_PLACEHOLDER = "Search files, folders, apps…";
 
 /**
  * Weight tapers down the column — mark, name, sentence — and then the field
@@ -33,6 +30,8 @@ const SEARCH_PLACEHOLDER = "Search files, folders, apps…";
  * from the accent.
  */
 export function HomeHero() {
+  const { homeShortcuts, owner } = useDesktopData();
+
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col items-center text-center">
       <BrandLogo size={64} priority />
@@ -41,14 +40,14 @@ export function HomeHero() {
         className="mt-5 text-[clamp(28px,5vw,42px)] font-semibold leading-[1.12] tracking-tight"
         style={{ color: "var(--os-text)" }}
       >
-        {OWNER.name}
+        {owner.name}
       </h1>
 
       <p
         className="mt-3 text-balance text-[15px] leading-relaxed"
         style={{ color: "var(--os-text-dim)" }}
       >
-        {OWNER.tagline}
+        {owner.tagline}
       </p>
 
       <SearchField />
@@ -116,6 +115,7 @@ function usePanelHeight(anchor: React.RefObject<HTMLElement | null>, open: boole
  */
 function SearchField() {
   const { openFile } = useWindowManager();
+  const S = useStrings();
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -184,10 +184,10 @@ function SearchField() {
           // A row keeps focus on the field while it is pressed, so a blur here
           // only ever means the pointer went somewhere else entirely.
           onBlur={() => setOpen(false)}
-          placeholder={SEARCH_PLACEHOLDER}
+          placeholder={S.search.placeholder}
           spellCheck={false}
           autoComplete="off"
-          aria-label="Search"
+          aria-label={S.search.label}
           role="combobox"
           aria-expanded={open}
           aria-controls={RESULTS_ID}

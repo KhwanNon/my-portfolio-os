@@ -1,25 +1,23 @@
 import type { FileNode } from "@/app/shared/types/file-system";
+import type { Strings } from "@/app/shared/i18n/strings";
 import { findPath } from "./path-resolver";
 import { fakeDate, fakeSize, humanSize } from "./terminal-utils";
-import { desktopFileSystem } from "../_data/file-system-data";
-
-const KIND_LABELS: Record<string, string> = {
-  folder:  "Directory",
-  txt:     "Text Document",
-  pdf:     "PDF Document",
-  ui:      "UI View",
-  slide:   "Slideshow",
-  link:    "Web Link",
-  program: "Program",
-};
 
 /**
  * Build a synthetic FileNode that renders the Properties panel for `target`.
  * The same target id always produces the same props node id, so reopening
  * the panel focuses the existing window instead of stacking duplicates.
+ *
+ * The tree is passed in rather than imported: it is the *localized* drive the
+ * caller is already looking at, and this file has no business deciding which
+ * language that is.
  */
-export function makePropertiesNode(target: FileNode): FileNode {
-  const path = findPath(desktopFileSystem, target.id) ?? [];
+export function makePropertiesNode(
+  target: FileNode,
+  tree: FileNode[],
+  S: Strings,
+): FileNode {
+  const path = findPath(tree, target.id) ?? [];
   const absolutePath = path.length === 0 ? "~" : `~/${path.join("/")}`;
 
   const itemCount =
@@ -29,7 +27,7 @@ export function makePropertiesNode(target: FileNode): FileNode {
 
   return {
     id: `props-${target.id}`,
-    name: `Properties — ${target.name}`,
+    name: S.properties.title(target.name),
     type: "ui",
     icon: target.icon,
     data: {
@@ -38,7 +36,7 @@ export function makePropertiesNode(target: FileNode): FileNode {
       props: {
         targetName: target.name,
         targetType: target.type,
-        targetKind: KIND_LABELS[target.type] ?? target.type,
+        targetKind: S.properties.kind[target.type] ?? target.type,
         icon: target.icon,
         absolutePath,
         sizeText: humanSize(fakeSize(target)),
@@ -49,14 +47,22 @@ export function makePropertiesNode(target: FileNode): FileNode {
   };
 }
 
-/** Absolute display path for a node (`~`-rooted), or null if not in the tree. */
-export function absolutePathOf(target: FileNode): string | null {
-  const path = findPath(desktopFileSystem, target.id);
+/**
+ * Absolute display path for a node (`~`-rooted), or null if not in the tree.
+ *
+ * A path never changes with the language — names here are filenames, not copy —
+ * so any language's tree gives the same answer.
+ */
+export function absolutePathOf(
+  target: FileNode,
+  tree: FileNode[],
+): string | null {
+  const path = findPath(tree, target.id);
   if (path === null) return null;
   return path.length === 0 ? "~" : `~/${path.join("/")}`;
 }
 
 /** Absolute path as a string[]. Empty array = root. */
-export function pathSegmentsOf(target: FileNode): string[] {
-  return findPath(desktopFileSystem, target.id) ?? [];
+export function pathSegmentsOf(target: FileNode, tree: FileNode[]): string[] {
+  return findPath(tree, target.id) ?? [];
 }

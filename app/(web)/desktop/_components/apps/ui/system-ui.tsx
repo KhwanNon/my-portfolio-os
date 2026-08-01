@@ -1,5 +1,6 @@
 "use client";
 import { BrandLogo } from "@/app/shared/components/brand-logo";
+import { useStrings } from "@/app/shared/hooks/use-locale";
 import { FileGraphic } from "../../file-graphic";
 import { Card, Wrapper, Row } from "./primitives";
 
@@ -25,6 +26,8 @@ export function PropertiesUI({
   dateText = "",
   itemCount,
 }: PropertiesUIProps) {
+  const S = useStrings();
+
   return (
     <Wrapper>
       <div className="flex items-center gap-3 mb-3">
@@ -41,20 +44,28 @@ export function PropertiesUI({
       </div>
 
       <Card>
-        <Row label="Path" value={absolutePath} />
-        <Row label="Type" value={targetKind} />
-        <Row label="Size" value={sizeText} />
-        <Row label="Modified" value={dateText} />
+        <Row label={S.properties.path} value={absolutePath} />
+        <Row label={S.properties.type} value={targetKind} />
+        <Row label={S.properties.size} value={sizeText} />
+        <Row label={S.properties.modified} value={dateText} />
         {typeof itemCount === "number" && (
-          <Row label="Items" value={`${itemCount} entr${itemCount === 1 ? "y" : "ies"}`} />
+          <Row
+            label={S.properties.items}
+            value={S.properties.itemCount(itemCount)}
+          />
         )}
-        <Row label="Permissions" value="r-x  (read-only portfolio)" />
+        <Row
+          label={S.properties.permissions}
+          value={S.properties.permissionsValue}
+        />
       </Card>
     </Wrapper>
   );
 }
 
 export function AboutOSUI() {
+  const S = useStrings();
+
   return (
     <Wrapper>
       {/* The one place the OS names itself, so it wears its own logo here the
@@ -65,37 +76,43 @@ export function AboutOSUI() {
         <div>
           <div className="font-bold text-sm">Portfolio OS</div>
           <div className="opacity-60 mt-0.5 text-[11px] font-os-mono">
-            Version 2.4.0 · Build 2024.Alpha
+            {S.aboutOs.version}
           </div>
         </div>
       </div>
 
       <Card>
-        <Row label="Engine"    value="Next.js 16 · React 19" />
-        <Row label="Shell"     value="sys-cmd v1.0" />
-        <Row label="Stack"     value="TypeScript · Tailwind · Framer Motion" />
-        <Row label="Architect" value="Khwanchai Nontawichit (Khwan)" />
-        <Row label="License"   value="MIT — fork it, learn from it" />
+        {S.aboutOs.rows.map(([label, value]) => (
+          <Row key={label} label={label} value={value} />
+        ))}
       </Card>
 
       <Card>
         <p className="opacity-75 leading-relaxed text-[11px]">
-          A portfolio rendered as a desktop operating system. Window manager,
-          virtual filesystem, working terminal with path completion,
-          right-click menus, toasts — all the OS pleasantries you&apos;d expect,
-          minus the BSODs.
+          {S.aboutOs.blurb}
         </p>
       </Card>
 
       <Card>
         <div className="opacity-60 text-[11px] font-medium mb-2">
-          Try it
+          {S.aboutOs.tryIt}
         </div>
         <ul className="space-y-1 text-[11px] opacity-80">
-          <li>▸ Right-click any icon for Open / Copy Path / Properties.</li>
-          <li>▸ Drag a window&apos;s bottom-right corner to resize.</li>
-          <li>▸ Double-click the title bar to maximise.</li>
-          <li>▸ In the terminal, try <code>tree</code>, <code>find resume</code>, <code>cowsay hi</code>.</li>
+          {S.aboutOs.tips.map((tip) => (
+            <li key={tip}>▸ {tip}</li>
+          ))}
+          {/* Its own line rather than one more entry in `tips`: the command
+              names are typed exactly as written and stay in `code`, so the
+              sentence around them is the only part that translates. */}
+          <li>
+            ▸ {S.aboutOs.terminalTip.lead}
+            <code>tree</code>
+            {S.aboutOs.terminalTip.join}
+            <code>find resume</code>
+            {S.aboutOs.terminalTip.join}
+            <code>cowsay hi</code>
+            {S.aboutOs.terminalTip.tail}
+          </li>
         </ul>
       </Card>
     </Wrapper>

@@ -12,7 +12,8 @@ import {
   Wifi,
   WifiOff,
 } from "lucide-react";
-import { OWNER } from "../_data/identity";
+import { useStrings } from "@/app/shared/hooks/use-locale";
+import { TIME_ZONE } from "../_data/identity";
 import { useSystemStatus } from "../_lib/use-system-status";
 
 /**
@@ -44,12 +45,13 @@ export function SystemStatus() {
 /** Network and charge — the two things the machine knows that you did not ask. */
 function SystemTray() {
   const { online, battery } = useSystemStatus();
+  const S = useStrings();
   const flat = battery !== null && battery.level <= 15 && !battery.charging;
 
   return (
     <div className="flex shrink-0 items-center gap-2.5">
       <span
-        title={online ? "Online" : "Offline"}
+        title={online ? S.status.online : S.status.offline}
         style={online ? undefined : { color: "var(--os-error)" }}
       >
         {online ? (
@@ -62,7 +64,7 @@ function SystemTray() {
       {battery && (
         <span
           className="flex items-center gap-1"
-          title={`Battery ${battery.level}%${battery.charging ? ", charging" : ""}`}
+          title={S.status.battery(battery.level, battery.charging)}
           style={flat ? { color: "var(--os-error)" } : undefined}
         >
           <BatteryGlyph level={battery.level} charging={battery.charging} />
@@ -104,7 +106,7 @@ function BatteryGlyph({
  * at every size now.
  */
 function Clock() {
-  const { date, weekday, time } = useClock();
+  const { date, weekday, time } = useClock(useStrings().status.dateLocale);
 
   return (
     <div
@@ -129,34 +131,38 @@ function Clock() {
  * Ticks every second but only re-renders on a change it can show, which is the
  * minute — the alternative is re-rendering sixty times an hour for nothing.
  *
- * It reads Bangkok, not the visitor's own zone; see `OWNER.timeZone`. Renders
- * empty on the server and fills in on the first tick: the time is by definition
+ * It reads Bangkok, not the visitor's own zone; see `TIME_ZONE`. Renders empty
+ * on the server and fills in on the first tick: the time is by definition
  * different by the time the page is read, so there is nothing to hydrate and no
  * mismatch to warn about.
+ *
+ * The words — the month, the half of the day, the weekday — come out in the
+ * language the shell is set to, because they are words. The place they are
+ * measured from does not move with it.
  */
-function useClock() {
+function useClock(dateLocale: string) {
   const [display, setDisplay] = useState({ date: "", weekday: "", time: "" });
 
   useEffect(() => {
     const update = () => {
       const now = new Date();
-      const zone = { timeZone: OWNER.timeZone } as const;
+      const zone = { timeZone: TIME_ZONE } as const;
       // Kept apart rather than formatted as one string: the row shows the date
       // and holds the weekday back for the tooltip, and only the caller knows
       // which of them it has room for.
       const next = {
-        date: now.toLocaleDateString("en-US", {
+        date: now.toLocaleDateString(dateLocale, {
           ...zone,
           month: "short",
           day: "numeric",
           year: "numeric",
         }),
-        weekday: now.toLocaleDateString("en-US", { ...zone, weekday: "short" }),
+        weekday: now.toLocaleDateString(dateLocale, { ...zone, weekday: "short" }),
         // `numeric` rather than `2-digit`: a 12-hour clock that says "02:30 PM"
         // is a 24-hour clock wearing a suffix. Nothing shifts as the hour drops
         // a digit — the date line under it is the wider of the two and is what
         // sets the block's width.
-        time: now.toLocaleTimeString("en-US", {
+        time: now.toLocaleTimeString(dateLocale, {
           ...zone,
           hour12: true,
           hour: "numeric",
@@ -174,7 +180,7 @@ function useClock() {
     update();
     const id = setInterval(update, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [dateLocale]);
 
   return display;
 }
