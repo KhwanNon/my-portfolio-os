@@ -14,6 +14,7 @@ import {
   siGit,
   siGithub,
   siGithubactions,
+  siGo,
   siGoogleplay,
   siGraphql,
   siJavascript,
@@ -46,6 +47,7 @@ const TECH_ICONS: Record<string, SimpleIcon> = {
   typescript: siTypescript,
   javascript: siJavascript,
   python: siPython,
+  go: siGo,
 
   // Frameworks & libraries
   flutter: siFlutter,

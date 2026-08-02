@@ -6,12 +6,17 @@ import { projectsFolder, featuredPitch } from "./projects";
 import { skillsFolder } from "./skills";
 import { experienceFolder } from "./experience";
 import { educationFile } from "./education";
-import { aboutFolder } from "./about";
-import { recycleBin } from "./recycle-bin";
 import { craftFile, craftLines } from "./craft";
 import { contactApp } from "./contact";
 import { owner, type Owner } from "./identity";
 
+/**
+ * The résumé's summary, in the first person and with room to breathe. With the
+ * About folder gone this is the only file that introduces a person rather than
+ * a body of work, so it says the same three things the PDF opens with — the
+ * span, the specialism, and how far either side of mobile it reaches — and then
+ * stops, because the windows behind it are the evidence.
+ */
 function profileTxt(L: Localize): FileNode {
   return {
     id: "profile-txt",
@@ -24,50 +29,51 @@ function profileTxt(L: Localize): FileNode {
         `> PROFILE.TXT — SYSTEM USER DATA
 > ─────────────────────────────────────────
 
-  My name is Khwan. I am a mobile developer with more than
-  four years in Flutter, currently in a full-stack role
-  where the mobile product is mine end to end.
+  My name is Khwan. I am a full-stack software engineer with
+  more than four years of experience, specialising in mobile
+  application development while contributing across backend
+  and web platforms.
 
-  I have led mobile teams, structured applications with
-  Clean Architecture, and kept build and release environments
-  in order across several products.
+  I build cross-platform applications with Flutter, write
+  backend services in Go, and deliver production software from
+  architecture and implementation through to release.
 
   Mobile is where I do my best work, but I am not confined to
-  it — I pick up unfamiliar front-end stacks quickly, because
-  most of what matters carries over between them.
+  it — I pick up unfamiliar stacks quickly, because most of
+  what matters carries over between them.
 
 ──────────────────────────────────────────────────────
   Developer   :  Khwanchai Nontawichit
   Alias       :  Khwan
-  Role        :  Mobile Developer (Flutter) · Full-Stack
+  Role        :  Mobile Developer · Full Stack Developer
   Experience  :  4+ Years
-  Location    :  Thailand
-  Stack       :  Flutter · Dart · Go · Vue · React · TypeScript
+  Location    :  Nonthaburi, Thailand
+  Stack       :  Flutter · Dart · Go · TypeScript · SQL
 ──────────────────────────────────────────────────────
 
 > END OF FILE`,
         `> PROFILE.TXT — ข้อมูลผู้ใช้ระบบ
 > ─────────────────────────────────────────
 
-  สวัสดีครับ ผมชื่อขวัญ เป็นนักพัฒนาแอปมือถือ ทำงานกับ Flutter
-  มากกว่า 4 ปี ปัจจุบันอยู่ในบทบาท full-stack ที่ดูแลโปรดักต์
-  ฝั่งมือถือทั้งหมดด้วยตัวเอง
+  สวัสดีครับ ผมชื่อขวัญ เป็นวิศวกรซอฟต์แวร์แบบ full-stack
+  ประสบการณ์มากกว่า 4 ปี เชี่ยวชาญงานพัฒนาแอปมือถือ
+  ควบคู่กับการทำงานฝั่ง backend และแพลตฟอร์มเว็บ
 
-  ผมเคยนำทีมมือถือ วางโครงสร้างแอปด้วย Clean Architecture
-  และดูแล environment ของการบิลด์และการปล่อยเวอร์ชัน
-  ให้เป็นระเบียบมาแล้วหลายโปรดักต์
+  ผมสร้างแอปข้ามแพลตฟอร์มด้วย Flutter เขียนเซอร์วิสฝั่งหลังบ้าน
+  ด้วย Go และส่งมอบซอฟต์แวร์ที่ใช้งานจริง ตั้งแต่วางสถาปัตยกรรม
+  ลงมือเขียน ไปจนถึงปล่อยขึ้นใช้งาน
 
   งานที่ผมทำได้ดีที่สุดคืองานมือถือ แต่ก็ไม่ได้จำกัดอยู่แค่นั้น
-  ผมจับเฟรมเวิร์กฝั่งหน้าบ้านที่ไม่เคยใช้ได้เร็ว เพราะแก่นของมัน
-  ส่วนใหญ่ใช้ร่วมกันได้อยู่แล้ว
+  ผมจับสแตกที่ไม่เคยใช้ได้เร็ว เพราะแก่นของมันส่วนใหญ่
+  ใช้ร่วมกันได้อยู่แล้ว
 
 ──────────────────────────────────────────────────────
   ผู้พัฒนา     :  ขวัญชัย นนทวิชิต
   ชื่อเล่น      :  ขวัญ
-  ตำแหน่ง      :  Mobile Developer (Flutter) · Full-Stack
+  ตำแหน่ง      :  Mobile Developer · Full Stack Developer
   ประสบการณ์   :  4+ ปี
-  ที่อยู่        :  ประเทศไทย
-  สแตก        :  Flutter · Dart · Go · Vue · React · TypeScript
+  ที่อยู่        :  นนทบุรี ประเทศไทย
+  สแตก        :  Flutter · Dart · Go · TypeScript · SQL
 ──────────────────────────────────────────────────────
 
 > จบไฟล์`,
@@ -102,6 +108,23 @@ const preferences: FileNode = {
   type: "program",
   icon: ICONS.prefs,
   data: { kind: "program", component: "Preferences" },
+};
+
+/**
+ * Empty, and staying that way. It held two joke files once; a visitor who came
+ * to read the work opened the bin and was handed a bit — the machine's furniture
+ * asking for attention the work should have had.
+ *
+ * It keeps its dock slot rather than being removed, because a desktop with no
+ * bin is a desktop with something missing, and an empty one is the honest state
+ * of a machine whose owner has nothing to throw away.
+ */
+const recycleBin: FileNode = {
+  id: "recycle-bin",
+  name: "Recycle Bin",
+  type: "folder",
+  icon: ICONS.recycle,
+  data: { kind: "folder", children: [] },
 };
 
 /** Everything the shell reads off the drive, in one language. */
@@ -142,25 +165,18 @@ function build(locale: Locale): DesktopData {
     icon: ICONS.cdrive,
     data: {
       kind: "folder",
-      children: [
-        projects,
-        skillsFolder(L),
-        experience,
-        educationFile(L),
-        aboutFolder(L),
-      ],
+      children: [projects, skillsFolder(L), experience, educationFile(L)],
     },
   };
 
   const profile = profileTxt(L);
   const craft = craftFile(L);
   const contact = contactApp(L);
-  const bin = recycleBin(L);
 
   return {
     fileSystem: [
       cDrive,
-      bin,
+      recycleBin,
       profile,
       resumePdf,
       craft,
@@ -183,7 +199,7 @@ function build(locale: Locale): DesktopData {
      * Anything opened from outside this list joins the row for as long as its
      * window lives; see `Taskbar`.
      */
-    dock: [cDrive, contact, systemCommand, preferences, bin],
+    dock: [cDrive, contact, systemCommand, preferences, recycleBin],
 
     /*
      * What the desktop offers under its search field: the documents first,

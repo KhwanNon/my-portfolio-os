@@ -1,10 +1,10 @@
 "use client";
 // Maps the `component` string on a UI FileNode to its React component.
 // Each portfolio UI lives in ./ui, grouped by the resume domain it serves.
-import { SkillsUI, SoftSkillsUI } from "./ui/skills-ui";
+import { SkillsUI } from "./ui/skills-ui";
 import { ExperienceUI } from "./ui/experience-ui";
 import { EducationUI } from "./ui/education-ui";
-import { PersonalBioUI, HobbiesUI, ContactUI } from "./ui/about-ui";
+import { ContactUI } from "./ui/contact-ui";
 import { ProjectUI } from "./ui/project-ui";
 import { PropertiesUI, AboutOSUI } from "./ui/system-ui";
 
@@ -12,11 +12,8 @@ import { PropertiesUI, AboutOSUI } from "./ui/system-ui";
 // and the compile-time authoring types below are derived from this one object.
 const REGISTRY = {
   SkillsUI,
-  SoftSkillsUI,
   ExperienceUI,
   EducationUI,
-  PersonalBioUI,
-  HobbiesUI,
   ContactUI,
   ProjectUI,
   PropertiesUI,

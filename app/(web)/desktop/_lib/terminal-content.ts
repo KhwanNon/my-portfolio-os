@@ -38,11 +38,11 @@ export const HELP_TEXT = `
   EXAMPLES
   ────────────────────────────────────────────────
     cd c-drive/projects/mobile
-    ls -l ~/c-drive/about
+    ls -l ~/c-drive/experience
     tree ~/c-drive/skills
     find resume
     cat ~/profile.txt
-    open ~/c-drive/about/me.ui
+    open ~/c-drive/skills/languages.ui
   ────────────────────────────────────────────────
 `;
 

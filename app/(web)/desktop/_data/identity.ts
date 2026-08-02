@@ -14,7 +14,12 @@ export const TIME_ZONE = "Asia/Bangkok";
 export interface Owner {
   name: string;
   alias: string;
-  /** The one line the home screen leads with — craft first, not credentials. */
+  /**
+   * The one line the home screen leads with — craft first, not credentials. It
+   * says how the work is done rather than what the job is called, because the
+   * title is in the résumé one click away and the standard is not written down
+   * anywhere else a visitor would look. See `khwan-craft.md` for it in full.
+   */
   tagline: string;
   role: string;
   experience: string;
@@ -32,10 +37,13 @@ export function owner(L: Localize): Owner {
     name: L("Khwanchai Nontawichit", "ขวัญชัย นนทวิชิต"),
     alias: L("Khwan", "ขวัญ"),
     tagline: L(
-      "Mobile developer. I build and ship Flutter apps end to end.",
-      "นักพัฒนาแอปมือถือ ดูแลแอป Flutter ตั้งแต่เขียนจนขึ้นสโตร์",
+      "I keep at a thing until the best answer and the simplest one are the same answer.",
+      "นักพัฒนาแอปมือถือ ทำซ้ำจนกว่าคำตอบที่ดีที่สุดกับคำตอบที่เรียบง่ายที่สุดจะเป็นอันเดียวกัน",
     ),
-    role: L("Mobile Developer · Full-Stack", "Mobile Developer · Full-Stack"),
+    role: L(
+      "Mobile Developer · Full Stack Developer",
+      "Mobile Developer · Full Stack Developer",
+    ),
     experience: L("4+ Years", "4+ ปี"),
     stack: "Flutter · Dart",
   };

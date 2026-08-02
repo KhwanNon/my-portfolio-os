@@ -112,14 +112,11 @@ const EN = {
 
   /** The heading each portfolio window leads with. */
   section: {
-    about: "About Me",
-    hobbies: "Hobbies & Interests",
     contact: "Contact",
     education: "Education",
     experience: "Experience",
     project: "Project",
     skills: "Skills",
-    softSkills: "Soft Skills",
   },
 
   project: {
@@ -351,14 +348,11 @@ const TH: Strings = {
   },
 
   section: {
-    about: "เกี่ยวกับฉัน",
-    hobbies: "งานอดิเรกและความสนใจ",
     contact: "ติดต่อ",
     education: "การศึกษา",
     experience: "ประสบการณ์ทำงาน",
     project: "โปรเจกต์",
     skills: "ทักษะ",
-    softSkills: "ทักษะเชิงพฤติกรรม",
   },
 
   project: {

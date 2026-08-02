@@ -6,7 +6,7 @@ import { MountainGlyph } from "./mountain-glyph";
 import { SparkGlyph } from "./spark-glyph";
 
 /**
- * The standard this whole OS is built to, stated in four lines — and the way
+ * The standard this whole OS is built to, one line per principle — and the way
  * into the file that states it in full. The card is the summary, so the card
  * itself is the control; a separate "read more" would be a second thing to look
  * at for the same one thing.
