@@ -75,6 +75,12 @@ interface Preference<I extends PreferenceId> {
    * render, a browser with scripting off).
    */
   readonly values: readonly Value<I>[];
+  /**
+   * The choice in force before anyone has made one. Left out, a preference that
+   * can ask the machine opens on `SYSTEM`; name a choice here for the ones the
+   * portfolio would rather introduce itself in.
+   */
+  readonly initial?: Choices[I];
   /** What the machine says, for the preferences that can defer to it. */
   readonly system?: () => Value<I>;
   /** The media query whose changes that answer follows. */
@@ -87,6 +93,9 @@ const PREFERENCES: { [I in PreferenceId]: Preference<I> } = {
   theme: {
     key: "portfolio-os.theme",
     values: THEMES.map(({ id }) => id),
+    // The portfolio is designed in Daylight, so that is what a first visit
+    // opens in — the device's scheme is a choice away, not the starting point.
+    initial: "daylight",
     system: () => (asks(PREFERS_DARK) ? "dark" : "daylight"),
     watch: PREFERS_DARK,
     attribute: "data-theme",
@@ -94,6 +103,8 @@ const PREFERENCES: { [I in PreferenceId]: Preference<I> } = {
   locale: {
     key: "portfolio-os.locale",
     values: LOCALES.map(({ id }) => id),
+    // English is the language the portfolio is written for, whoever arrives.
+    initial: DEFAULT_LOCALE,
     // Only the language subtag is asked for: `th-TH` and `th` are one reader.
     system: () =>
       isBrowser && navigator.language.slice(0, 2) === "th" ? "th" : DEFAULT_LOCALE,
@@ -133,7 +144,8 @@ function remembered(key: string): string | null {
 /** The choice in force before anyone has made one. */
 export function initialChoice<I extends PreferenceId>(id: I): Choices[I] {
   const preference = PREFERENCES[id];
-  return (preference.system ? SYSTEM : preference.values[0]) as Choices[I];
+  return (preference.initial ??
+    (preference.system ? SYSTEM : preference.values[0])) as Choices[I];
 }
 
 /** The value in force while there is no machine to ask — see `values` above. */
@@ -254,15 +266,18 @@ const literal = JSON.stringify;
  * the attribute names are written out, the same way the CSS that matches them
  * is. Change a rule here and above together.
  *
- * A stored choice that isn't one of the named values falls to `null`, which is
- * exactly what "system" does: the two collapse into the same branch, as they do
- * in `currentValue`.
+ * A stored choice that isn't one of the named values is no choice at all, so it
+ * falls back to the initial one — which may itself be "system", and is then
+ * asked exactly as a deliberate "system" would be, as in `currentValue`.
  */
 export const SETTINGS_BOOTSTRAP = `try{
 var root=document.documentElement;
-var chosen=function(key,values){var v=localStorage.getItem(key);return values.indexOf(v)<0?null:v};
 var asks=function(query){return matchMedia(query).matches};
-root.setAttribute("data-theme",chosen(${literal(PREFERENCES.theme.key)},${literal(PREFERENCES.theme.values)})||(asks(${literal(PREFERS_DARK)})?"dark":"daylight"));
-root.setAttribute("lang",chosen(${literal(PREFERENCES.locale.key)},${literal(PREFERENCES.locale.values)})||(navigator.language.slice(0,2)==="th"?"th":${literal(DEFAULT_LOCALE)}));
-root.setAttribute("data-motion",chosen(${literal(PREFERENCES.motion.key)},${literal(PREFERENCES.motion.values)})||(asks(${literal(PREFERS_REDUCED_MOTION)})?"reduced":"full"));
+var value=function(key,values,initial,system){
+var v=localStorage.getItem(key);
+if(values.indexOf(v)<0)v=initial;
+return v===${literal(SYSTEM)}?system:v};
+root.setAttribute("data-theme",value(${literal(PREFERENCES.theme.key)},${literal(PREFERENCES.theme.values)},${literal(initialChoice("theme"))},asks(${literal(PREFERS_DARK)})?"dark":"daylight"));
+root.setAttribute("lang",value(${literal(PREFERENCES.locale.key)},${literal(PREFERENCES.locale.values)},${literal(initialChoice("locale"))},navigator.language.slice(0,2)==="th"?"th":${literal(DEFAULT_LOCALE)}));
+root.setAttribute("data-motion",value(${literal(PREFERENCES.motion.key)},${literal(PREFERENCES.motion.values)},${literal(initialChoice("motion"))},asks(${literal(PREFERS_REDUCED_MOTION)})?"reduced":"full"));
 }catch(e){}`;

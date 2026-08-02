@@ -147,6 +147,9 @@ const EN = {
 
   pdf: {
     download: "Download",
+    open: "Open",
+    handoff:
+      "Phone browsers can't draw a PDF inside a window. Open it full screen, or keep a copy.",
   },
 
   slide: {
@@ -381,6 +384,9 @@ const TH: Strings = {
 
   pdf: {
     download: "ดาวน์โหลด",
+    open: "เปิด",
+    handoff:
+      "เบราว์เซอร์บนมือถือแสดงไฟล์ PDF ในหน้าต่างนี้ไม่ได้ เปิดแบบเต็มจอ หรือดาวน์โหลดเก็บไว้",
   },
 
   slide: {
