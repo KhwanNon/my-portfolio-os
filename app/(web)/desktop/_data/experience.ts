@@ -35,7 +35,7 @@ export function experienceFolder(L: Localize): FileNode {
               "บริษัท ซีนิธ คอมพ์ จำกัด — กรุงเทพมหานคร",
             ),
             period: L("09/2025 – Present", "09/2025 – ปัจจุบัน"),
-            duration: L("10+ Months", "10+ เดือน"),
+            duration: L("11 Months", "11 เดือน"),
             description: L(
               "Full-stack role with end-to-end ownership of the mobile product, reaching into the Go backend, the database design, and the web platforms around it — through to delivery on the customer's own site.",
               "ทำงานแบบ full-stack รับผิดชอบโปรดักต์ฝั่งมือถือทั้งหมดด้วยตัวเอง ต่อเนื่องไปถึงงาน backend ด้วย Go การออกแบบฐานข้อมูล และแพลตฟอร์มฝั่งเว็บรอบ ๆ จนถึงการส่งมอบที่หน้างานของลูกค้า",
@@ -83,8 +83,8 @@ export function experienceFolder(L: Localize): FileNode {
               "LearnCloud Co., Ltd. — Bangkok, Thailand",
               "บริษัท เลิร์นคลาวด์ จำกัด — กรุงเทพมหานคร",
             ),
-            period: "01/2024 – 09/2025",
-            duration: L("1 Year 9 Months", "1 ปี 9 เดือน"),
+            period: "01/2024 – 08/2025",
+            duration: L("1 Year 8 Months", "1 ปี 8 เดือน"),
             description: L(
               "Led mobile development of aiLearn, an AI-powered exam preparation platform — the Flutter architecture underneath it, the real-time AI features on top, and every release that reached a store.",
               "นำการพัฒนาฝั่งมือถือของ aiLearn แพลตฟอร์มเตรียมสอบที่ขับเคลื่อนด้วย AI ทั้งโครงสร้าง Flutter ที่อยู่ข้างล่าง ฟีเจอร์ AI แบบเรียลไทม์ที่อยู่ข้างบน และทุกเวอร์ชันที่ส่งขึ้นสโตร์",
@@ -129,8 +129,8 @@ export function experienceFolder(L: Localize): FileNode {
               "MyOrder Marketing Co., Ltd. — Chon Buri, Thailand",
               "บริษัท มายออเดอร์ มาร์เก็ตติ้ง จำกัด — ชลบุรี",
             ),
-            period: "05/2023 – 10/2023",
-            duration: L("6 Months", "6 เดือน"),
+            period: "05/2023 – 12/2023",
+            duration: L("8 Months", "8 เดือน"),
             description: L(
               "Built MyPinmall, a group-buying marketplace in Flutter, and shipped production features across the team's Flutter and React Native apps.",
               "สร้าง MyPinmall มาร์เก็ตเพลสแบบรวมกลุ่มซื้อด้วย Flutter และส่งฟีเจอร์ขึ้นใช้งานจริงทั้งในแอป Flutter และ React Native ของทีม",
