@@ -216,7 +216,7 @@ const EN = {
       systemHeading: "System Specifications",
       system: [
         ["Edition", "Portfolio Pro Edition"],
-        ["Experience", "4+ years shipping production apps"],
+        ["Experience", "5 years shipping production apps"],
         ["Install Date", "10/24/2024"],
         ["OS Build", "22631.3447"],
       ] as [string, string][],
@@ -445,7 +445,7 @@ const TH: Strings = {
       systemHeading: "ข้อมูลจำเพาะของระบบ",
       system: [
         ["รุ่น", "Portfolio Pro Edition"],
-        ["ประสบการณ์", "ส่งแอปขึ้นใช้งานจริงมา 4+ ปี"],
+        ["ประสบการณ์", "ส่งแอปขึ้นใช้งานจริงมา 5 ปี"],
         ["วันที่ติดตั้ง", "24/10/2024"],
         ["บิลด์ระบบ", "22631.3447"],
       ],

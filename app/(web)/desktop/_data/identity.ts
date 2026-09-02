@@ -44,7 +44,7 @@ export function owner(L: Localize): Owner {
       "Mobile Developer · Full Stack Developer",
       "Mobile Developer · Full Stack Developer",
     ),
-    experience: L("4+ Years", "4+ ปี"),
+    experience: L("5 Years", "5 ปี"),
     stack: "Flutter · Dart",
   };
 }

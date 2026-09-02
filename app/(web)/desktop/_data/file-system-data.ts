@@ -30,9 +30,9 @@ function profileTxt(L: Localize): FileNode {
 > ─────────────────────────────────────────
 
   My name is Khwan. I am a full-stack software engineer with
-  more than four years of experience, specialising in mobile
-  application development while contributing across backend
-  and web platforms.
+  five years of experience, specialising in mobile application
+  development while contributing across backend and web
+  platforms.
 
   I build cross-platform applications with Flutter, write
   backend services in Go, and deliver production software from
@@ -46,7 +46,7 @@ function profileTxt(L: Localize): FileNode {
   Developer   :  Khwanchai Nontawichit
   Alias       :  Khwan
   Role        :  Mobile Developer · Full Stack Developer
-  Experience  :  4+ Years
+  Experience  :  5 Years
   Location    :  Nonthaburi, Thailand
   Stack       :  Flutter · Dart · Go · TypeScript · SQL
 ──────────────────────────────────────────────────────
@@ -56,7 +56,7 @@ function profileTxt(L: Localize): FileNode {
 > ─────────────────────────────────────────
 
   สวัสดีครับ ผมชื่อขวัญ เป็นวิศวกรซอฟต์แวร์แบบ full-stack
-  ประสบการณ์มากกว่า 4 ปี เชี่ยวชาญงานพัฒนาแอปมือถือ
+  ประสบการณ์ 5 ปี เชี่ยวชาญงานพัฒนาแอปมือถือ
   ควบคู่กับการทำงานฝั่ง backend และแพลตฟอร์มเว็บ
 
   ผมสร้างแอปข้ามแพลตฟอร์มด้วย Flutter เขียนเซอร์วิสฝั่งหลังบ้าน
@@ -71,7 +71,7 @@ function profileTxt(L: Localize): FileNode {
   ผู้พัฒนา     :  ขวัญชัย นนทวิชิต
   ชื่อเล่น      :  ขวัญ
   ตำแหน่ง      :  Mobile Developer · Full Stack Developer
-  ประสบการณ์   :  4+ ปี
+  ประสบการณ์   :  5 ปี
   ที่อยู่        :  นนทบุรี ประเทศไทย
   สแตก        :  Flutter · Dart · Go · TypeScript · SQL
 ──────────────────────────────────────────────────────

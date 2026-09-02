@@ -53,7 +53,7 @@ export const WHOAMI_TEXT = `
   │  Name        :  Khwanchai Nontawichit       │
   │  Alias       :  Khwan                       │
   │  Role        :  Mobile Dev · Full-Stack     │
-  │  Experience  :  4+ Years                    │
+  │  Experience  :  5 Years                     │
   │  Location    :  Thailand                    │
   │  Status      :  Open to Opportunities       │
   └─────────────────────────────────────────────┘
@@ -68,6 +68,6 @@ export const NEOFETCH_TEXT = `
   ██████████           Stack   :  Flutter · React · Next.js
                        Lang    :  Dart · TypeScript
   ████    ████         Arch    :  Clean Architecture
-  ████    ████         Memory  :  4+ years of experience
+  ████    ████         Memory  :  5 years of experience
   ████    ████         Uptime  :  Available now
 `;

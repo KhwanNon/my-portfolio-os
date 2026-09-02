@@ -35,7 +35,7 @@ export function experienceFolder(L: Localize): FileNode {
               "บริษัท ซีนิธ คอมพ์ จำกัด — กรุงเทพมหานคร",
             ),
             period: L("09/2025 – Present", "09/2025 – ปัจจุบัน"),
-            duration: L("11 Months", "11 เดือน"),
+            duration: L("1 Year", "1 ปี"),
             description: L(
               "Full-stack role with end-to-end ownership of the mobile product, reaching into the Go backend, the database design, and the web platforms around it — through to delivery on the customer's own site.",
               "ทำงานแบบ full-stack รับผิดชอบโปรดักต์ฝั่งมือถือทั้งหมดด้วยตัวเอง ต่อเนื่องไปถึงงาน backend ด้วย Go การออกแบบฐานข้อมูล และแพลตฟอร์มฝั่งเว็บรอบ ๆ จนถึงการส่งมอบที่หน้างานของลูกค้า",
