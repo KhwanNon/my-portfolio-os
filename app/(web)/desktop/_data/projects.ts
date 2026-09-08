@@ -72,8 +72,8 @@ function shots(
  */
 export function featuredPitch(L: Localize): string {
   return L(
-    "The largest thing I have built alone — an offline-first, security-hardened meeting platform for government.",
-    "งานที่ใหญ่ที่สุดที่เคยทำคนเดียว — ระบบประชุมสำหรับหน่วยงานราชการ ที่ทำงานแบบ offline-first และเข้มงวดเรื่องความปลอดภัย",
+    "An offline-first, security-hardened meeting platform for government, built solo end to end.",
+    "ระบบประชุมสำหรับหน่วยงานราชการ ที่ทำงานแบบ offline-first และเข้มงวดเรื่องความปลอดภัย ทำเองทั้งหมดคนเดียว",
   );
 }
 

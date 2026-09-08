@@ -29,6 +29,13 @@ function profileTxt(L: Localize): FileNode {
         `> PROFILE.TXT — SYSTEM USER DATA
 > ─────────────────────────────────────────
 
+  I design from the user's side — simplifying complex
+  processes into something intuitive and accessible, and
+  treating "it works" as a starting point, not the final
+  standard. I keep refining for usability, reliability, and
+  maintainability, because good design comes from actually
+  understanding what people need.
+
   My name is Khwan. I am a full-stack software engineer with
   five years of experience, specialising in mobile application
   development while contributing across backend and web
@@ -54,6 +61,12 @@ function profileTxt(L: Localize): FileNode {
 > END OF FILE`,
         `> PROFILE.TXT — ข้อมูลผู้ใช้ระบบ
 > ─────────────────────────────────────────
+
+  ผมออกแบบจากมุมมองของผู้ใช้ก่อนเสมอ ทำเรื่องซับซ้อนให้เข้าใจง่าย
+  ใช้งานง่าย และเข้าถึงได้ "มันใช้งานได้" สำหรับผมคือจุดเริ่มต้น
+  ไม่ใช่มาตรฐานสุดท้าย ผมพัฒนาต่อเรื่อยๆ เพื่อความใช้งานง่าย
+  ความน่าเชื่อถือ และดูแลรักษาได้ในระยะยาว เพราะการออกแบบที่ดี
+  มาจากการเข้าใจสิ่งที่ผู้คนต้องการจริงๆ
 
   สวัสดีครับ ผมชื่อขวัญ เป็นวิศวกรซอฟต์แวร์แบบ full-stack
   ประสบการณ์ 5 ปี เชี่ยวชาญงานพัฒนาแอปมือถือ
