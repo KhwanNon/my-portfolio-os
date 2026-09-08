@@ -119,6 +119,11 @@ const EN = {
     skills: "Skills",
   },
 
+  experience: {
+    /** Heads the row of projects a job produced, inside that job's window. */
+    projects: "Projects from this role",
+  },
+
   project: {
     platform: "Platform:",
     recommended: "Start here",
@@ -353,6 +358,10 @@ const TH: Strings = {
     experience: "ประสบการณ์ทำงาน",
     project: "โปรเจกต์",
     skills: "ทักษะ",
+  },
+
+  experience: {
+    projects: "โปรเจกต์จากงานนี้",
   },
 
   project: {

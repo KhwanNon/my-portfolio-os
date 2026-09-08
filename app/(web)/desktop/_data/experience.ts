@@ -1,6 +1,7 @@
 import type { FileNode } from "@/app/shared/types/file-system";
 import type { Localize } from "@/app/shared/i18n/locale";
 import { ICONS } from "./icons";
+import type { ProjectId } from "./projects";
 import { uiNode } from "./ui-node";
 
 // One company = one .ui file: role, highlights, tech stack, and link together.
@@ -23,7 +24,7 @@ export function experienceFolder(L: Localize): FileNode {
       kind: "folder",
       children: [
         uiNode(
-          { id: "exp-zenith", name: "2025-Present — Zenith Comp.ui" },
+          { id: "exp-zenith", name: "2025-2026 — Zenith Comp.ui" },
           "ExperienceUI",
           {
             role: L(
@@ -34,7 +35,7 @@ export function experienceFolder(L: Localize): FileNode {
               "Zenith Comp Co., Ltd. — Bangkok, Thailand",
               "บริษัท ซีนิธ คอมพ์ จำกัด — กรุงเทพมหานคร",
             ),
-            period: L("09/2025 – Present", "09/2025 – ปัจจุบัน"),
+            period: "09/2025 – 08/2026",
             duration: L("1 Year", "1 ปี"),
             description: L(
               "Full-stack role with end-to-end ownership of the mobile product, reaching into the Go backend, the database design, and the web platforms around it — through to delivery on the customer's own site.",
@@ -42,19 +43,21 @@ export function experienceFolder(L: Localize): FileNode {
             ),
             highlights: L(
               [
-                "Architected and built the Government Meeting System — an offline-first Flutter iPad app whose two-way sync engine lets a meeting run with no network and reconcile once one returns",
-                "Designed the mobile security architecture: AES-256-GCM encryption, secure key management, certificate pinning, and jailbreak detection",
+                "Architected and built the Government Meeting System — an offline-first Flutter iPad app deployed across 50 devices, whose two-way sync engine and real-time WebSocket channel let a meeting run with no network and reconcile once one returns",
+                "Designed the application's security architecture: AES-256-GCM encryption, secure key management, certificate pinning, device integrity checks, and fail-closed access controls",
                 "Wrote the native Swift integrations behind encrypted PDF generation and dynamic watermarking",
+                "Raised reliability and engineering quality across the app: content-hash change detection, automated foreground/background cleanup, mock-data tooling, GitHub Actions CI, iOS integration testing, coverage thresholds on the critical modules, and 11 Architecture Decision Records",
                 "Extended the supporting Go backend with device synchronization, authentication flows, real-time communication, and system integrations",
-                "Designed and implemented the SWU AI Platform administration system across frontend, backend and database — RBAC, dynamic permissions, user administration, and API key lifecycle",
+                "Designed and implemented the SWU AI Platform administration system across database, backend and frontend — LDAP integration, a normalized RBAC architecture, dynamic permissions, user administration, and API key lifecycle",
                 "Owned technical delivery across client projects, from requirement discovery and solution design to on-site presentations, troubleshooting, UAT support, and production rollout",
               ],
               [
-                "ออกแบบและสร้างระบบการประชุมภาครัฐ แอป Flutter บน iPad แบบออฟไลน์เฟิร์สต์ ที่มีเอนจินซิงก์สองทาง ทำให้ประชุมเดินต่อได้แม้ไม่มีเน็ต แล้วค่อยปรับข้อมูลให้ตรงกันเมื่อกลับมาเชื่อมต่อ",
-                "ออกแบบสถาปัตยกรรมความปลอดภัยฝั่งมือถือ ทั้งการเข้ารหัส AES-256-GCM การจัดการกุญแจ certificate pinning และการตรวจจับเครื่องที่ถูกเจลเบรก",
+                "ออกแบบและสร้างระบบการประชุมภาครัฐ แอป Flutter บน iPad แบบออฟไลน์เฟิร์สต์ ใช้งานจริงบนเครื่อง 50 เครื่อง มีเอนจินซิงก์สองทางและช่องทาง WebSocket แบบเรียลไทม์ ทำให้ประชุมเดินต่อได้แม้ไม่มีเน็ต แล้วค่อยปรับข้อมูลให้ตรงกันเมื่อกลับมาเชื่อมต่อ",
+                "ออกแบบสถาปัตยกรรมความปลอดภัยของแอป ทั้งการเข้ารหัส AES-256-GCM การจัดการกุญแจ certificate pinning การตรวจสอบความสมบูรณ์ของเครื่อง และการควบคุมสิทธิ์แบบ fail-closed",
                 "เขียนส่วนเชื่อมต่อเนทีฟด้วย Swift สำหรับสร้างไฟล์ PDF แบบเข้ารหัสและใส่ลายน้ำแบบไดนามิก",
+                "ยกระดับความน่าเชื่อถือและคุณภาพเชิงวิศวกรรมของแอป ทั้งการตรวจจับความเปลี่ยนแปลงด้วย content hash การเคลียร์งานเบื้องหน้า/เบื้องหลังอัตโนมัติ เครื่องมือสร้างข้อมูลจำลอง CI บน GitHub Actions การทดสอบแบบ integration บน iOS เกณฑ์ coverage ของโมดูลสำคัญ และ Architecture Decision Record 11 ฉบับ",
                 "ต่อยอด backend ฝั่ง Go ให้รองรับการซิงก์ข้อมูลของอุปกรณ์ การยืนยันตัวตน การสื่อสารแบบเรียลไทม์ และการเชื่อมต่อกับระบบอื่น",
-                "ออกแบบและพัฒนาระบบผู้ดูแลของ SWU AI Platform ครบทั้งฝั่งหน้าเว็บ หลังบ้าน และฐานข้อมูล ทั้ง RBAC การจัดการสิทธิ์แบบยืดหยุ่น การดูแลผู้ใช้ และวงจรชีวิตของ API key",
+                "ออกแบบและพัฒนาระบบผู้ดูแลของ SWU AI Platform ครบทั้งฐานข้อมูล หลังบ้าน และหน้าเว็บ ทั้งการเชื่อมต่อ LDAP โครงสร้าง RBAC ที่ normalize แล้ว การจัดการสิทธิ์แบบยืดหยุ่น การดูแลผู้ใช้ และวงจรชีวิตของ API key",
                 "ดูแลการส่งมอบเชิงเทคนิคของหลายโปรเจกต์ ตั้งแต่เก็บ requirement ออกแบบแนวทาง นำเสนอที่หน้างาน แก้ปัญหา ดูแลช่วง UAT จนขึ้นใช้งานจริง",
               ],
             ),
@@ -67,8 +70,15 @@ export function experienceFolder(L: Localize): FileNode {
               "SvelteKit",
               "SQL Server",
               "PostgreSQL",
+              "WebSocket",
+              "GitHub Actions",
               "Git",
             ],
+            projects: [
+              "proj-gov-meeting",
+              "proj-mol-portal",
+              "proj-swu-ai",
+            ] satisfies ProjectId[],
           },
         ),
         uiNode(
@@ -91,20 +101,20 @@ export function experienceFolder(L: Localize): FileNode {
             ),
             highlights: L(
               [
-                "Led mobile development of aiLearn, delivering the core exam experience and the personalized learning built on top of it",
+                "Built aiLearn's core Flutter application from the ground up — complex exam flows, adaptive learning, and the performance visualization on top of them",
                 "Built real-time AI learning features over SSE and WebSocket — generated explanations, performance analysis, and progress visualization",
                 "Established the Flutter architecture from the ground up on Clean Architecture principles, so new features could land without the codebase fighting back",
-                "Owned the mobile platform's capabilities: authentication, subscriptions, CI/CD workflows, and App Store / Google Play releases",
-                "Translated product requirements into technical work for the team, alongside the backend, AI, product and design teams",
-                "Ran the team's work as Mobile Team Lead — Scrum sprints, assignment and tracking through Jira",
+                "Owned the mobile platform's capabilities: authentication, In-App Purchase, CI/CD workflows, and App Store / Google Play releases",
+                "Translated product requirements into technical work for the team, alongside the product, design, AI, backend and DevOps teams",
+                "Led a three-person junior mobile team while staying hands-on — planning the work, breaking down requirements, assigning and guiding implementation, and handling debugging and multi-environment deployments, run as Scrum sprints tracked in Jira",
               ],
               [
-                "นำการพัฒนาฝั่งมือถือของ aiLearn ส่งมอบทั้งประสบการณ์การทำข้อสอบหลัก และการเรียนรู้แบบเฉพาะบุคคลที่ต่อยอดจากตรงนั้น",
+                "สร้างแอป Flutter หลักของ aiLearn ขึ้นใหม่ตั้งแต่ต้น ทั้งขั้นตอนการทำข้อสอบที่ซับซ้อน การเรียนรู้แบบปรับตามผู้เรียน และการแสดงผลการทำข้อสอบที่ต่อยอดจากตรงนั้น",
                 "พัฒนาฟีเจอร์การเรียนด้วย AI แบบเรียลไทม์ผ่าน SSE และ WebSocket ทั้งคำอธิบายที่ AI สร้างให้ การวิเคราะห์ผลทำข้อสอบ และการแสดงความคืบหน้า",
                 "วางโครงสร้าง Flutter ขึ้นใหม่ตั้งแต่ต้นด้วยหลัก Clean Architecture เพื่อให้เพิ่มฟีเจอร์ใหม่ได้โดยไม่ต้องฝืนกับโค้ดเดิม",
-                "ดูแลความสามารถพื้นฐานของแอป ทั้งการยืนยันตัวตน ระบบสมาชิกแบบสมัครสมาชิก เวิร์กโฟลว์ CI/CD และการปล่อยเวอร์ชันขึ้น App Store และ Google Play",
-                "แปลความต้องการของโปรดักต์ออกมาเป็นงานเชิงเทคนิคให้ทีม โดยทำงานร่วมกับทีม backend ทีม AI ทีมโปรดักต์ และทีมดีไซน์",
-                "บริหารงานของทีมในฐานะหัวหน้าทีมมือถือ ทั้งการวางสปรินต์แบบ Scrum การมอบหมายงาน และการติดตามผ่าน Jira",
+                "ดูแลความสามารถพื้นฐานของแอป ทั้งการยืนยันตัวตน การซื้อในแอป (In-App Purchase) เวิร์กโฟลว์ CI/CD และการปล่อยเวอร์ชันขึ้น App Store และ Google Play",
+                "แปลความต้องการของโปรดักต์ออกมาเป็นงานเชิงเทคนิคให้ทีม โดยทำงานร่วมกับทีมโปรดักต์ ทีมดีไซน์ ทีม AI ทีม backend และทีม DevOps",
+                "นำทีมมือถือระดับจูเนียร์ 3 คน โดยยังลงมือเขียนเองเป็นหลัก ทั้งวางแผนงาน แตกความต้องการออกเป็นงานย่อย มอบหมายและกำกับการลงมือทำ ดูแลการไล่บั๊กและการดีพลอยหลายสภาพแวดล้อม บริหารเป็นสปรินต์แบบ Scrum และติดตามผ่าน Jira",
               ],
             ),
             stack: [
@@ -118,6 +128,7 @@ export function experienceFolder(L: Localize): FileNode {
               "Play Console",
               "Jira",
             ],
+            projects: ["proj-ailearn"] satisfies ProjectId[],
           },
         ),
         uiNode(
@@ -139,11 +150,13 @@ export function experienceFolder(L: Localize): FileNode {
               [
                 "Built MyPinmall, a Flutter/Riverpod group-buying marketplace — tiered pricing, campaigns, group progress tracking, and social sharing",
                 "Developed the shopping experience end to end: product catalog, cart, order tracking, and payment by QR, bank transfer, or cash on delivery",
+                "Enhanced My Order, a React Native/TypeScript ordering application, and made it easier to keep — modular models, reusable components, UI separated from its logic, and custom hooks",
                 "Delivered production features across both Flutter and React Native, from API design with the backend team through to App Store and Google Play releases",
               ],
               [
                 "สร้าง MyPinmall มาร์เก็ตเพลสแบบรวมกลุ่มซื้อด้วย Flutter และ Riverpod ทั้งราคาแบบขั้นบันได แคมเปญ การติดตามความคืบหน้าของกลุ่ม และการแชร์ผ่านโซเชียล",
                 "พัฒนาประสบการณ์การซื้อทั้งเส้นทาง ตั้งแต่หน้ารวมสินค้า ตะกร้า การติดตามคำสั่งซื้อ ไปจนถึงการชำระเงินด้วย QR โอนผ่านธนาคาร และเก็บเงินปลายทาง",
+                "ต่อยอด My Order แอปสั่งสินค้าที่เขียนด้วย React Native และ TypeScript พร้อมทำให้ดูแลต่อได้ง่ายขึ้น ทั้งการแยกโมเดลเป็นส่วน ๆ คอมโพเนนต์ที่ใช้ซ้ำได้ การแยก UI ออกจากลอจิก และ custom hook",
                 "ส่งฟีเจอร์ขึ้นใช้งานจริงทั้งฝั่ง Flutter และ React Native ตั้งแต่ออกแบบ API ร่วมกับทีม backend จนถึงปล่อยขึ้น App Store และ Google Play",
               ],
             ),
@@ -155,6 +168,10 @@ export function experienceFolder(L: Localize): FileNode {
               "TypeScript",
               "Git",
             ],
+            projects: [
+              "proj-mypinmall",
+              "proj-myorder",
+            ] satisfies ProjectId[],
           },
         ),
         uiNode(
@@ -169,21 +186,21 @@ export function experienceFolder(L: Localize): FileNode {
             period: "09/2021 – 04/2023",
             duration: L("1 Year 8 Months", "1 ปี 8 เดือน"),
             description: L(
-              "The first professional years: cross-platform apps in Flutter and React Native, web front ends in Nuxt, and the practices that come from working next to senior engineers.",
-              "ช่วงปีแรก ๆ ของการทำงาน พัฒนาแอปข้ามแพลตฟอร์มด้วย Flutter และ React Native ทำหน้าเว็บด้วย Nuxt และซึมซับแนวปฏิบัติจากการทำงานเคียงข้างนักพัฒนาอาวุโส",
+              "The first professional years: cross-platform apps in Flutter and React Native, web front ends in Nuxt — as the frontend and mobile side of a team whose backend was five people.",
+              "ช่วงปีแรก ๆ ของการทำงาน พัฒนาแอปข้ามแพลตฟอร์มด้วย Flutter และ React Native ทำหน้าเว็บด้วย Nuxt ในฐานะกำลังหลักฝั่งหน้าบ้านและมือถือของทีมที่มี backend อยู่ห้าคน",
             ),
             highlights: L(
               [
                 "Developed a real-time drone tracking platform with live GPS visualization, so an operator could follow an aircraft while it was still in the air",
                 "Built cross-platform mobile applications in Flutter and React Native across several products, through to production releases on iOS and Android",
                 "Developed responsive web features with Nuxt",
-                "Worked with the senior engineers on architecture, debugging and code review — where the habit of writing something maintainable was picked up",
+                "Served as the primary frontend/mobile developer alongside a five-person backend team, and supported the junior developers through the technical problems they got stuck on",
               ],
               [
                 "พัฒนาแพลตฟอร์มติดตามโดรนแบบเรียลไทม์ พร้อมแสดงพิกัด GPS สด ให้ผู้ควบคุมตามตำแหน่งอากาศยานได้ตั้งแต่ตอนที่ยังบินอยู่",
                 "พัฒนาแอปมือถือข้ามแพลตฟอร์มด้วย Flutter และ React Native ในหลายโปรดักต์ จนถึงปล่อยขึ้นใช้งานจริงทั้ง iOS และ Android",
                 "พัฒนาฟีเจอร์ฝั่งเว็บแบบ responsive ด้วย Nuxt",
-                "ทำงานร่วมกับนักพัฒนาอาวุโสเรื่องสถาปัตยกรรม การไล่บั๊ก และการรีวิวโค้ด เป็นช่วงที่ได้นิสัยการเขียนโค้ดที่ดูแลต่อได้มา",
+                "เป็นกำลังหลักฝั่งหน้าบ้านและมือถือ ทำงานคู่กับทีม backend ห้าคน และช่วยนักพัฒนารุ่นน้องแก้ปัญหาเชิงเทคนิคที่ติดอยู่",
               ],
             ),
             stack: [
@@ -195,6 +212,13 @@ export function experienceFolder(L: Localize): FileNode {
               "Vue",
               "Git",
             ],
+            projects: [
+              "proj-vn",
+              "proj-enfagrow",
+              "proj-g2g",
+              "proj-evp",
+              "proj-the-blacklist",
+            ] satisfies ProjectId[],
           },
         ),
       ],

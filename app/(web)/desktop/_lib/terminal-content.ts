@@ -52,7 +52,7 @@ export const WHOAMI_TEXT = `
   ├─────────────────────────────────────────────┤
   │  Name        :  Khwanchai Nontawichit       │
   │  Alias       :  Khwan                       │
-  │  Role        :  Mobile Dev · Full-Stack     │
+  │  Role        :  Software Engineer           │
   │  Experience  :  5 Years                     │
   │  Location    :  Thailand                    │
   │  Status      :  Open to Opportunities       │

@@ -9,8 +9,11 @@ import { uiNode } from "./ui-node";
 // notes and the descriptions are what a person wrote, and those translate. A
 // note states verifiable context, never a made-up score, in either language.
 //
-// Four windows, one for each of the résumé's groups, holding its entries in its
-// order — a visitor with both open should not have to work out which is current.
+// Four windows, grouped the way the work divides rather than the way the résumé
+// prints it: the one-page résumé collapses all of this into a single line, which
+// is a constraint of the page and not a claim that the groups stopped existing.
+// Every name here is still evidenced by an entry in Experience or Projects.
+//
 // What the résumé has no room for, this adds: where each was used, and a line or
 // two on what the thing actually is, for the reader who knows a name without
 // knowing what it does. What the résumé leaves out is left out here too — the
@@ -46,7 +49,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Go",
-              note: L("production backend · current", "ใช้ทำ backend · ปัจจุบัน"),
+              note: L("production backend · 2025–2026", "ใช้ทำ backend · 2025–2026"),
               description: L(
                 "Compiled and built for concurrency — what the backend services here are written in.",
                 "ภาษาคอมไพล์ที่ออกแบบมาให้ทำงานพร้อมกันหลายอย่าง ใช้เขียนเซอร์วิสฝั่งหลังบ้าน",

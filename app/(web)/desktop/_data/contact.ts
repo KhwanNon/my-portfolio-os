@@ -51,8 +51,8 @@ export function contactApp(L: Localize): FileNode {
         },
         {
           label: L("Website", "เว็บไซต์"),
-          value: "my-portfolio-os-omega.vercel.app",
-          href: "https://my-portfolio-os-omega.vercel.app",
+          value: "khwan-nontawichit.me",
+          href: "https://khwan-nontawichit.me",
         },
         {
           label: L("Location", "ที่อยู่"),

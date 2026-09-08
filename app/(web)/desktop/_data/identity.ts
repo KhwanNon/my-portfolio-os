@@ -40,10 +40,7 @@ export function owner(L: Localize): Owner {
       "I keep at a thing until the best answer and the simplest one are the same answer.",
       "นักพัฒนาแอปมือถือ ทำซ้ำจนกว่าคำตอบที่ดีที่สุดกับคำตอบที่เรียบง่ายที่สุดจะเป็นอันเดียวกัน",
     ),
-    role: L(
-      "Mobile Developer · Full Stack Developer",
-      "Mobile Developer · Full Stack Developer",
-    ),
+    role: L("Software Engineer", "Software Engineer"),
     experience: L("5 Years", "5 ปี"),
     stack: "Flutter · Dart",
   };

@@ -5,12 +5,40 @@ import { ICONS } from "./icons";
 import { uiNode } from "./ui-node";
 
 /**
+ * Every project id, in one list. Authored here rather than inferred so that a
+ * reference to a project from somewhere else in the tree — Experience links to
+ * the work it produced — is checked by the compiler instead of failing silently
+ * at runtime as a chip that opens nothing.
+ */
+export const PROJECT_IDS = [
+  "proj-gov-meeting",
+  "proj-ailearn",
+  "proj-mol-portal",
+  "proj-myorder",
+  "proj-mypinmall",
+  "proj-vn",
+  "proj-enfagrow",
+  "proj-g2g",
+  "proj-evp",
+  "proj-swu-ai",
+  "proj-the-blacklist",
+  "proj-langridge",
+  "proj-pdf-drawing",
+  "proj-c-docs",
+  "proj-dataq",
+  "proj-portfolio-os",
+  "proj-hajin-ai-cognix",
+] as const;
+
+export type ProjectId = (typeof PROJECT_IDS)[number];
+
+/**
  * One project = one .ui file: description, screenshots, stack, and link
  * together. `featured` is authored once here and read twice — by the window,
  * and by the folders above it, which inherit the mark.
  */
 function makeProject(
-  id: string,
+  id: ProjectId,
   props: UiComponentProps<"ProjectUI">,
 ): FileNode {
   return uiNode(
@@ -472,7 +500,7 @@ function personalMobile(L: Localize): FileNode[] {
         ],
       ),
       stack: ["Flutter", "Dart", "llama.cpp", "dart:ffi", "SQLite"],
-      status: L("In Development", "กำลังพัฒนา"),
+      status: L("Beta", "เบต้า"),
       year: "2026",
       platform: L("iOS · On-device AI", "iOS · AI ที่รันบนเครื่อง"),
       images: shots("langridge", 6),
@@ -615,6 +643,36 @@ function personalWeb(L: Localize): FileNode[] {
       year: "2026",
       platform: L("Web", "เว็บ"),
       links: [{ label: "GitHub", url: "https://github.com/KhwanNon" }],
+    }),
+    makeProject("proj-hajin-ai-cognix", {
+      name: "Hajin AI Cognix",
+      type: L("Web · Personal", "เว็บ · โปรเจกต์ส่วนตัว"),
+      description: L(
+        "A middle layer between an application and the model providers behind it: the app calls one API, and which provider answers — with what context — is decided here rather than in the app. Early work. The console around it is drafted far enough to see the shape; the concept underneath is still being worked out.",
+        "ชั้นกลางระหว่างแอปกับผู้ให้บริการโมเดลที่อยู่ข้างหลัง แอปเรียก API ตัวเดียว ส่วนว่าใครเป็นคนตอบและใช้บริบทอะไร ตัดสินใจกันตรงนี้แทนที่จะไปอยู่ในแอป ยังเป็นงานช่วงต้น หน้าคอนโซลร่างไว้พอให้เห็นเค้าโครงแล้ว ส่วนคอนเซปต์ข้างใต้ยังคิดไม่จบ",
+      ),
+      highlights: L(
+        [
+          "One API in front of several model providers, so an application does not have to care which one answered",
+          "A console around it for the practical parts — keys, usage against a plan, and a log of what was called",
+          "Kept here as a direction being explored, not a product with its concept settled",
+        ],
+        [
+          "มี API ตัวเดียวอยู่หน้าผู้ให้บริการโมเดลหลายเจ้า แอปจึงไม่ต้องสนใจว่าโมเดลไหนเป็นคนตอบ",
+          "มีคอนโซลประกอบสำหรับเรื่องที่ต้องใช้จริง ทั้งคีย์ การใช้งานเทียบกับแพ็กเกจ และบันทึกว่าเรียกอะไรไปบ้าง",
+          "เก็บไว้ตรงนี้ในฐานะทิศทางที่กำลังลองอยู่ ไม่ใช่โปรดักต์ที่คอนเซปต์นิ่งแล้ว",
+        ],
+      ),
+      stack: [
+        "LLM Orchestration",
+        "Multi-Agent Workflows",
+        "Context Engineering",
+        "REST API Design",
+      ],
+      status: L("In Development", "กำลังพัฒนา"),
+      year: "2026",
+      platform: L("Web", "เว็บ"),
+      images: shots("hajin-ai-cognix", 6),
     }),
   ];
 }
