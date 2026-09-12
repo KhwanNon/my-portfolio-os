@@ -106,8 +106,9 @@ function folder(id: string, name: string, children: FileNode[]): FileNode {
  */
 function workMobile(L: Localize): FileNode[] {
   return [
-    // Delivered under NDA: no screenshots, no client name, no store link. What is
-    // left is the architecture, which is the part worth reading anyway.
+    // Delivered under NDA: no client name, no store link, and the real screens
+    // can't be shown. The images below are a demo rebuild for this entry only —
+    // see imagesNote — so what's worth reading is still the architecture.
     makeProject("proj-gov-meeting", {
       name: "Government Meeting System",
       type: L("Mobile · Work", "มือถือ · งานบริษัท"),
@@ -141,6 +142,11 @@ function workMobile(L: Localize): FileNode[] {
       status: L("In Production", "ใช้งานจริงแล้ว"),
       year: "2026",
       platform: L("iPad · Enterprise iOS", "iPad · iOS สำหรับองค์กร"),
+      images: shots("nsc-meeting", 7),
+      imagesNote: L(
+        "Demo screens rebuilt to show roughly how the system behaves — not the actual delivered product, and only a partial look: a handful of screens, each showing only part of its UI.",
+        "หน้าจอเดโม่ที่ทำขึ้นเพื่อแสดงคร่าวๆ ว่าระบบทำงานประมาณไหน ไม่ใช่ของจริงที่ส่งมอบ และเอามาให้ดูแค่บางส่วน ทั้งจำนวนหน้าจอและส่วนของ UI ในแต่ละหน้า",
+      ),
       featured: true,
     }),
     makeProject("proj-ailearn", {

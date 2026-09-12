@@ -27,6 +27,10 @@ interface ProjectUIProps {
   platform?: string;
   /** Public paths to screenshots, rendered as a horizontal strip. */
   images?: string[];
+  /** Caveat shown under the screenshot strip — for demo shots that stand in
+   * for a real product (e.g. delivered under NDA), so a viewer doesn't read
+   * them as the actual, complete UI. */
+  imagesNote?: string;
   /** Where the work can be seen. A shipped app is often on two stores. */
   links?: Array<{ label: string; url: string }>;
   /** Marks the project to read first — a star beside the name, here and in the
@@ -45,6 +49,7 @@ export function ProjectUI({
   year = "",
   platform,
   images = [],
+  imagesNote,
   links = [],
   featured = false,
 }: ProjectUIProps) {
@@ -114,6 +119,12 @@ export function ProjectUI({
               </button>
             ))}
           </div>
+        )}
+
+        {images.length > 0 && imagesNote && (
+          <p className="opacity-50 italic text-[11px] mb-3 -mt-1.5">
+            {imagesNote}
+          </p>
         )}
 
         {highlights.length > 0 && (
