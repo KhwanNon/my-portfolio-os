@@ -29,6 +29,15 @@ function profileTxt(L: Localize): FileNode {
         `> PROFILE.TXT — SYSTEM USER DATA
 > ─────────────────────────────────────────
 
+  If your company is looking for someone who goes
+  beyond simply meeting requirements and cares about
+  every aspect of a product—from user experience and
+  system quality to long-term growth—I believe I can
+  bring a mindset of striving for perfection and
+  never overlooking the small details. I always aim
+  to build high-quality products and continuously
+  improve them to meet international standards.
+
   I design from the user's side — simplifying complex
   processes into something intuitive and accessible, and
   treating "it works" as a starting point, not the final
@@ -61,6 +70,14 @@ function profileTxt(L: Localize): FileNode {
 > END OF FILE`,
         `> PROFILE.TXT — ข้อมูลผู้ใช้ระบบ
 > ─────────────────────────────────────────
+
+  ถ้าบริษัทของคุณกำลังมองหาคนที่ไม่ได้ทำงานแค่ให้ผ่าน
+  ตามที่กำหนด แต่ใส่ใจในทุกมิติของโปรดักต์ ตั้งแต่
+  ประสบการณ์ผู้ใช้ คุณภาพของระบบ ไปจนถึงการเติบโต
+  ในระยะยาว ผมเชื่อว่าตัวเองมีความมุ่งมั่นที่จะทำให้ดีที่สุด
+  และไม่มองข้ามรายละเอียดเล็กๆ น้อยๆ ผมตั้งใจสร้าง
+  โปรดักต์ที่มีคุณภาพสูงเสมอ และพัฒนาต่อเนื่องให้ได้
+  มาตรฐานระดับสากล
 
   ผมออกแบบจากมุมมองของผู้ใช้ก่อนเสมอ ทำเรื่องซับซ้อนให้เข้าใจง่าย
   ใช้งานง่าย และเข้าถึงได้ "มันใช้งานได้" สำหรับผมคือจุดเริ่มต้น
