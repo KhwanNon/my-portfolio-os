@@ -24,26 +24,21 @@ export default function BootScreen() {
   }, [isReady, router]);
 
   return (
-    // The palette is the desktop's, inherited — the sequence boots in whichever
-    // theme is set. `boot-shell` adds only the rain's own ramp on top of it (see
-    // app/globals.css).
+    // Fixed black-and-green palette, set by `boot-shell` (see app/globals.css) —
+    // the machine powering on, before any theme applies.
     <main className="boot-shell fixed inset-0 z-50 flex flex-col bg-os-bg text-os-text-dim font-os-mono overflow-hidden uppercase">
-      {/* ── Ambient FX layers (back → front) ───────────────────────────────
-            The desktop's own stack, reused: the three blooms it is lit by, then
-            the paper veiling them. Negative depths keep the whole stack under
-            the boot content but over `main`'s background. The rain falls on top
-            of the veil, not under it — veiled, it would read as smudged paper
-            rather than as characters. */}
-      <div className="absolute inset-0 -z-30 bg-ambient-aura pointer-events-none" />
-      <div className="absolute inset-0 -z-20 bg-desktop-veil pointer-events-none" />
-      {/* The two layers that are motion and nothing else. A sequence that isn't
-          playing is gone within the frame — this is so that frame doesn't carry
-          a screenful of falling characters out with it. */}
-      {playing && <MatrixRain opacity={0.09} />}
+      {/* Rain is the lowest layer; the clear patch and vignette sit over it but
+          under the content, so the middle stays readable. Motion-only layers
+          are gone the frame the sequence stops. */}
+      {playing && <MatrixRain opacity={0.3} />}
+      <div className="absolute inset-0 pointer-events-none -z-5 bg-boot-clear" />
+      <div className="absolute inset-0 pointer-events-none -z-5 bg-boot-vignette" />
       {playing && (
-        <div className="absolute inset-0 pointer-events-none z-60 bg-scanlines opacity-20" />
+        <>
+          <div className="absolute inset-0 pointer-events-none z-60 bg-scanlines opacity-40" />
+          <div className="absolute inset-0 pointer-events-none z-60 bg-boot-grain opacity-[0.06]" />
+        </>
       )}
-
       <StatusDisplay
         stepText={stepText}
         percent={percent}

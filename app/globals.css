@@ -354,67 +354,73 @@ body {
 /* ─── Boot sequence ─────────────────────────────────────────────────────────── */
 
 /*
- * The cold-start screen is lit by the desktop's own palette — same paper, same
- * blooms, same text ramp — and inherits every one of them, so it boots in
- * whichever theme is set and the handover to /desktop doesn't step.
- *
- * It used to restate all of that as literals to hold one look across both
- * themes. That reasoning only held on Daylight: on the dark scheme it meant
- * booting white and cutting to ink, the hardest step there is, shown only to
- * the people who had asked for dark. Inheriting collapses the block to the one
- * thing that is boot's alone and nowhere else in the OS — the rain.
- */
-
-/*
- * The ramp the fall is painted through, so a character's colour says where in
- * the fall it has got to. It runs against the aura's own arrangement — the hue
- * the blooms put at the top is the one the rain ends on — so the fall crosses
- * the wash instead of doubling it and stays legible as its own layer.
- *
- * Literals, not `var()` onto the ambient tokens: the canvas reads these through
- * `getComputedStyle`, which substitutes `var()` but never evaluates
- * `color-mix()`, and every ambient token is a mix. These are the seeds those
- * mixes are built from — re-seed both together. See
- * app/shared/components/matrix-rain.tsx.
+ * The boot screen's own palette: fixed black and green, whichever theme the
+ * desktop is in. The sequence is the machine powering on, before any user
+ * setting applies, so it overrides the tokens it uses rather than inheriting.
+ * The rain reads --os-rain-* through `getComputedStyle`, so those are literals
+ * (see app/shared/components/matrix-rain.tsx).
  */
 .boot-shell {
-  --os-rain-from: #9334e6;
-  --os-rain-to: #4285f4;
+  --os-bg: #030603;
+  --os-accent: #39ff6a;
+  --os-text: #39ff6a;
+  --os-text-dim: #1fa84a;
+  --os-text-faint: #2fd45c;
+  --os-text-subtle: #1a7a38;
+  --os-rain-from: #39ff6a;
+  --os-rain-to: #0b5a22;
+  font-family: var(--font-vt323), var(--font-os-mono);
 }
 
-/* The dark scheme's own two, lifted. Its aura is seeded with a mid teal and a
-   navy, and the navy is gone at 9% over a ground that *is* navy — so the fall
-   takes the tones this theme already draws its icons in: the same two hues, at
-   the weight ink needs. */
-[data-theme="dark"] .boot-shell {
-  --os-rain-from: #8ab4f8;
-  --os-rain-to: #52d3d6;
+/* Soft glow for the line that has to carry the screen. */
+.boot-glow {
+  text-shadow:
+    0 0 6px rgba(57, 255, 106, 0.55),
+    0 0 18px rgba(57, 255, 106, 0.2);
 }
 
-/* CRT scanlines overlay — boot screen only (see app/(web)/boot/page.tsx). Ink
-   on paper: over a light surface the grain has to darken, not lighten. */
+/* Fine CRT scanlines — boot screen only (see app/(web)/boot/page.tsx). */
 .bg-scanlines {
   background-image: repeating-linear-gradient(
     to bottom,
-    rgba(38, 36, 59, 0.06) 0px,
-    rgba(38, 36, 59, 0.06) 1px,
+    rgba(0, 0, 0, 0.35) 0px,
+    rgba(0, 0, 0, 0.35) 1px,
     transparent 1px,
     transparent 3px
   );
-  mix-blend-mode: multiply;
 }
 
-/* Over ink the grain has to invert with the paper: `multiply` on a near-black
-   ground has nothing left to darken, so the scanlines simply vanish. */
-[data-theme="dark"] .bg-scanlines {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    rgba(230, 235, 245, 0.06) 0px,
-    rgba(230, 235, 245, 0.06) 1px,
-    transparent 1px,
-    transparent 3px
+/* Film grain: a small inline SVG noise tile, no asset request. */
+.bg-boot-grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 1 0 0 0 0 0.3 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Clears the middle so the rain never competes with the text. */
+.bg-boot-clear {
+  background: radial-gradient(
+    ellipse 55% 38% at 50% 50%,
+    rgba(3, 6, 3, 0.92) 0%,
+    rgba(3, 6, 3, 0.6) 55%,
+    transparent 100%
   );
-  mix-blend-mode: screen;
+}
+
+/* Tube vignetting at the corners. */
+.bg-boot-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+}
+
+@keyframes boot-cursor {
+  50% {
+    opacity: 0;
+  }
+}
+.boot-cursor {
+  animation: boot-cursor 1s steps(1) infinite;
 }
 
 /* ─── Utility classes used across the desktop ───────────────────────────────── */

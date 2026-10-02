@@ -52,6 +52,11 @@ export const MatrixRain = ({
     // The ramp the characters are painted through. Rebuilt only when the
     // palette or the viewport actually changes — the key is what makes that
     // cheap enough to check every frame.
+    // Each column has its own brightness; only the brightest glow.
+    const brightness: number[] = Array(columns)
+      .fill(0)
+      .map(() => Math.random() * 0.75 + 0.25);
+
     let rampKey = "";
     let ramp: CanvasGradient | undefined;
 
@@ -99,9 +104,11 @@ export const MatrixRain = ({
         const y = drops[i] * fontSize;
 
         // Apply glow effect for a cinematic terminal aesthetic
-        ctx.shadowBlur = 8;
+        ctx.globalAlpha = brightness[i];
+        ctx.shadowBlur = brightness[i] > 0.85 ? 8 : 0;
         ctx.shadowColor = accentColor;
         ctx.fillText(text, x, y);
+        ctx.globalAlpha = 1;
         ctx.shadowBlur = 0; // Reset shadow for performance efficiency
 
         // Reset column to the top once it passes the viewport bottom, with a randomized restart
