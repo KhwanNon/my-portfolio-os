@@ -324,6 +324,13 @@ button:not(:disabled),
   filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.7));
 }
 
+/* A folder's contents as numbered cards, as wide as the window allows. */
+.command-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
 /* A shelf of project covers: square tiles that fill the window's width. */
 .cover-grid {
   display: grid;

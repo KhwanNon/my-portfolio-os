@@ -1,8 +1,10 @@
 "use client";
 import type { SimpleIcon } from "simple-icons";
 import {
+  siAndroid,
   siAndroidstudio,
   siAppstore,
+  siCplusplus,
   siDart,
   siDocker,
   siFastapi,
@@ -19,6 +21,7 @@ import {
   siGraphql,
   siJavascript,
   siJira,
+  siKotlin,
   siNextdotjs,
   siNodedotjs,
   siNuxt,
@@ -27,9 +30,11 @@ import {
   siPython,
   siReact,
   siSqlalchemy,
+  siSocketdotio,
   siSqlite,
   siSupabase,
   siSvelte,
+  siSwift,
   siTailwindcss,
   siTypescript,
   siVuedotjs,
@@ -48,6 +53,10 @@ const TECH_ICONS: Record<string, SimpleIcon> = {
   javascript: siJavascript,
   python: siPython,
   go: siGo,
+  kotlin: siKotlin,
+  swift: siSwift,
+  "c/c++": siCplusplus,
+  "c++": siCplusplus,
 
   // Frameworks & libraries
   flutter: siFlutter,
@@ -60,6 +69,7 @@ const TECH_ICONS: Record<string, SimpleIcon> = {
   nuxt: siNuxt,
   vue: siVuedotjs,
   "vue.js": siVuedotjs,
+  "vue 3": siVuedotjs,
   "framer motion": siFramer,
   webassembly: siWebassembly,
   svelte: siSvelte,
@@ -72,7 +82,9 @@ const TECH_ICONS: Record<string, SimpleIcon> = {
   sqlalchemy: siSqlalchemy,
   sqlite: siSqlite,
   firestore: siFirebase,
+  "firebase firestore": siFirebase,
   "firebase auth": siFirebase,
+  websocket: siSocketdotio,
   "firebase fcm": siFirebase,
   "firebase app distribution": siFirebase,
   supabase: siSupabase,
@@ -87,6 +99,7 @@ const TECH_ICONS: Record<string, SimpleIcon> = {
   postman: siPostman,
   figma: siFigma,
   jira: siJira,
+  android: siAndroid,
   "android studio": siAndroidstudio,
   xcode: siXcode,
   "app store": siAppstore,
@@ -95,7 +108,20 @@ const TECH_ICONS: Record<string, SimpleIcon> = {
   "play console": siGoogleplay,
 };
 
-export function TechIcon({ name, size = 12 }: { name: string; size?: number }) {
+/** Whether `name` has a logo to draw — for surfaces that put something else in its place. */
+export function hasTechIcon(name: string): boolean {
+  return name.trim().toLowerCase() in TECH_ICONS;
+}
+
+export function TechIcon({
+  name,
+  size = 12,
+  className,
+}: {
+  name: string;
+  size?: number;
+  className?: string;
+}) {
   const icon = TECH_ICONS[name.trim().toLowerCase()];
   if (!icon) return null;
   return (
@@ -105,7 +131,7 @@ export function TechIcon({ name, size = 12 }: { name: string; size?: number }) {
       height={size}
       fill="currentColor"
       aria-hidden="true"
-      className="shrink-0 opacity-80"
+      className={`shrink-0 ${className ?? "opacity-80"}`}
     >
       <path d={icon.path} />
     </svg>

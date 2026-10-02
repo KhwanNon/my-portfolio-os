@@ -19,6 +19,7 @@ export function educationFile(L: Localize): FileNode {
         ),
         field: L("Software Engineering", "วิศวกรรมซอฟต์แวร์"),
         period: "2017 – 2021",
+        image: "/assets/images/university.webp",
         description: L(
           "Software engineering end to end — programming, algorithms, databases, networks — with a project each term that had to actually run, not just compile.",
           "เรียนวิศวกรรมซอฟต์แวร์ครบสาย ทั้งการเขียนโปรแกรม อัลกอริทึม ฐานข้อมูล และเครือข่าย พร้อมโปรเจกต์ประจำเทอมที่ต้องทำให้ใช้งานได้จริง ไม่ใช่แค่คอมไพล์ผ่าน",
@@ -52,6 +53,7 @@ export function educationFile(L: Localize): FileNode {
         ),
         field: L("Science & Mathematics", "วิทยาศาสตร์ – คณิตศาสตร์"),
         period: "2011 – 2017",
+        image: "/assets/images/school.webp",
         description: L(
           "The science and mathematics track, alongside student activities that were my first go at leading a group of people.",
           "เรียนสายวิทยาศาสตร์–คณิตศาสตร์ ควบคู่กับกิจกรรมนักเรียน ซึ่งเป็นครั้งแรกที่ได้ลองนำกลุ่มคน",

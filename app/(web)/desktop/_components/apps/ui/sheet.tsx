@@ -38,9 +38,11 @@ export function Portrait({ src }: { src: string }) {
 export function Globe({
   version,
   bracketed = false,
+  size = 92,
 }: {
   version?: string;
   bracketed?: boolean;
+  size?: number;
 }) {
   const corner = "absolute h-3 w-3 border-os-accent/70";
   return (
@@ -55,8 +57,8 @@ export function Globe({
           </>
         )}
       <svg
-        width="92"
-        height="92"
+        width={size}
+        height={size}
         viewBox="0 0 100 100"
         fill="none"
         stroke="currentColor"

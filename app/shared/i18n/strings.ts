@@ -38,6 +38,7 @@ const EN = {
     label: "Desktop",
   },
 
+
   /** The dock's right-hand readouts, which are all tooltip-only. */
   status: {
     online: "Online",
@@ -61,6 +62,14 @@ const EN = {
     breadcrumb: "Breadcrumb",
     notFound: "Path not found",
     empty: "This folder is empty",
+    search: "Search this folder…",
+    noMatch: "Nothing here matches",
+    places: "Places",
+    all: "All",
+    contents: "Contents",
+    quickInfo: "Quick info",
+    quickInfoText:
+      "Double-click a card to open it. The search box narrows this folder as you type.",
   },
 
   menu: {
@@ -130,6 +139,9 @@ const EN = {
   experience: {
     /** Heads the row of projects a job produced, inside that job's window. */
     projects: "Projects from this role",
+    subtitle: "Professional journey / work history",
+    highlights: "Key achievements & responsibilities",
+    technologies: "Technologies",
   },
 
   project: {
@@ -145,6 +157,7 @@ const EN = {
 
   education: {
     gpa: "GPA:",
+    subtitle: "Academic background that shaped my journey",
   },
 
   lightbox: {
@@ -295,6 +308,7 @@ const TH: Strings = {
     label: "เดสก์ท็อป",
   },
 
+
   status: {
     online: "ออนไลน์",
     offline: "ออฟไลน์",
@@ -316,6 +330,14 @@ const TH: Strings = {
     breadcrumb: "เส้นทางโฟลเดอร์",
     notFound: "ไม่พบเส้นทางนี้",
     empty: "โฟลเดอร์นี้ว่างเปล่า",
+    search: "ค้นหาในโฟลเดอร์นี้…",
+    noMatch: "ไม่พบรายการที่ตรงกัน",
+    places: "ตำแหน่ง",
+    all: "ทั้งหมด",
+    contents: "ภายในโฟลเดอร์",
+    quickInfo: "ข้อมูลย่อ",
+    quickInfoText:
+      "ดับเบิลคลิกการ์ดเพื่อเปิด ช่องค้นหาด้านบนจะกรองรายการในโฟลเดอร์นี้ขณะพิมพ์",
   },
 
   menu: {
@@ -381,6 +403,9 @@ const TH: Strings = {
 
   experience: {
     projects: "โปรเจกต์จากงานนี้",
+    subtitle: "เส้นทางการทำงาน / ประวัติการทำงาน",
+    highlights: "ผลงานและความรับผิดชอบหลัก",
+    technologies: "เทคโนโลยี",
   },
 
   project: {
@@ -394,6 +419,7 @@ const TH: Strings = {
 
   education: {
     gpa: "เกรดเฉลี่ย:",
+    subtitle: "พื้นฐานการศึกษาที่หล่อหลอมเส้นทางของผม",
   },
 
   lightbox: {

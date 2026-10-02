@@ -1,11 +1,16 @@
 "use client";
+// The file explorer, laid out like a command console: a bar with the way back,
+// where you are and a search; places down the left; the folder's contents as
+// numbered cards.
 import { useMemo, useState } from "react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { useStrings } from "@/app/shared/hooks/use-locale";
 import { FileIcon } from "../file-icon";
 import { CoverTile } from "../cover-tile";
+import { FileGraphic } from "../file-graphic";
 import { PixelGlyph } from "../pixel-glyph";
+import { Globe } from "../apps/ui/sheet";
 import { coverOf } from "../../_lib/cover";
 import { useDesktopData } from "../../_lib/use-desktop-data";
 import {
@@ -18,6 +23,9 @@ import {
 interface FolderRendererProps {
   fileNode: FileNode;
 }
+
+/** The drive every place on the left lives in. */
+const DRIVE_ID = "c-drive";
 
 /** What a folder window shows for a given path, or null where nothing lives. */
 function childrenAt(tree: FileNode[], path: Path): FileNode[] | null {
@@ -44,24 +52,38 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
   const [path, setPath] = useState<Path>(initialPath);
   const [back, setBack] = useState<Path[]>([]);
+  const [query, setQuery] = useState("");
 
-  const children = childrenAt(fileSystem, path);
+  const drive = fileSystem.find((n) => n.id === DRIVE_ID) ?? null;
+  const all = childrenAt(fileSystem, path);
+
+  // Search narrows what this folder shows, by name, as you type.
+  const q = query.trim().toLowerCase();
+  const children =
+    all && q ? all.filter((c) => c.name.toLowerCase().includes(q)) : all;
+
   // A shelf of projects is browsed by its covers; any other folder is a list of
-  // names. Decided by what the folder holds, so there is nothing to toggle.
-  const covers = children && children.length > 0 ? children.map(coverOf) : null;
+  // cards. Decided by what the folder holds, so there is nothing to toggle.
+  const covers =
+    children && children.length > 0 ? children.map(coverOf) : null;
   const isShelf = covers !== null && covers.every((c) => c !== null);
+
+  const move = (next: Path) => {
+    setPath(next);
+    setQuery("");
+  };
 
   const navigate = (next: Path) => {
     if (pathEquals(next, path)) return;
     setBack((b) => [...b, path]);
-    setPath(canonicalizePath(fileSystem, next));
+    move(canonicalizePath(fileSystem, next));
   };
 
   const goBack = () => {
     if (back.length === 0) return;
     const prev = back[back.length - 1];
     setBack((b) => b.slice(0, -1));
-    setPath(prev);
+    move(prev);
   };
 
   const navigateToCrumb = (idx: number) => {
@@ -73,7 +95,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
     // subtree we're leaving — otherwise "back" would jump forward into the
     // deeper folder we just navigated up from.
     setBack((b) => b.filter((entry) => !isPathPrefix(canonical, entry)));
-    setPath(canonical);
+    move(canonical);
   };
 
   const handleChildClick = (child: FileNode) => {
@@ -88,19 +110,13 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
   return (
     <div
-      className="flex h-full w-full flex-col"
-      style={{ background: "transparent" }}
+      className="@container flex h-full w-full flex-col"
+      style={{ background: "#020a05", color: "var(--os-text)" }}
     >
-      {/* One row: where you were, where you are, and how you'd like to see it.
-          The window's own title bar already names the folder, so the path is
-          the only label the contents need — and it sits where the reader is
-          already looking after pressing Back. */}
+      {/* ── Bar: back, where you are, and a search of this folder ────────── */}
       <header
         className="flex shrink-0 items-center gap-2 px-3 py-2"
-        style={{
-          background: "var(--os-surface-1)",
-          borderBottom: "3px solid #0f3a22",
-        }}
+        style={{ borderBottom: "2px solid var(--os-border-strong)" }}
       >
         <IconButton
           label={S.folder.back}
@@ -112,9 +128,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
         <nav
           aria-label={S.folder.breadcrumb}
-          // Sunk into the header like a game's text field.
-          className="font-os-pixel custom-scrollbar flex h-8 min-w-0 flex-1 items-center gap-1 overflow-x-auto px-2 text-[14px]"
-          style={{ background: "#000", boxShadow: "inset 2px 2px 0 0 rgba(0,0,0,0.8), inset -2px -2px 0 0 #1e5a36" }}
+          className="font-os-pixel custom-scrollbar flex h-9 min-w-0 flex-1 items-center gap-1 overflow-x-auto border-2 border-os-border-strong px-2 text-[14px]"
         >
           <Crumb active={path.length === 0} onClick={() => navigateToCrumb(-1)}>
             <PixelGlyph sprite="home" />
@@ -132,35 +146,188 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
             </span>
           ))}
         </nav>
+
+        <label className="hidden h-9 w-64 shrink-0 items-center gap-2 border-2 border-os-border-strong px-2.5 focus-within:border-os-accent @xl:flex">
+          <PixelGlyph sprite="search" color="var(--os-text-faint)" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Escape" && setQuery("")}
+            placeholder={S.folder.search}
+            aria-label={S.folder.search}
+            spellCheck={false}
+            className="font-os-mono min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-os-text-subtle"
+          />
+        </label>
       </header>
 
-      {/* Contents */}
-      <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto p-4">
-        {children === null ? (
-          <CenterMessage text={S.folder.notFound} />
-        ) : children.length === 0 ? (
-          <CenterMessage text={S.folder.empty} />
-        ) : isShelf ? (
-          <div className="cover-grid">
-            {children.map((child, i) => (
-              <CoverTile
-                key={child.id}
-                node={child}
-                src={covers![i]!}
-                onOpen={handleChildClick}
-              />
-            ))}
-          </div>
-        ) : (
-          // Everything else is the same grid, as inventory cards.
-          <div className="cover-grid">
-            {children.map((child) => (
-              <FileIcon key={child.id} fileNode={child} onOpen={handleChildClick} />
-            ))}
-          </div>
+      <div className="flex min-h-0 flex-1">
+        {drive && (
+          <Sidebar
+            drive={drive}
+            path={path}
+            onNavigate={(next) => {
+              if (pathEquals(next, path)) return;
+              setBack((b) => [...b, path]);
+              move(next);
+            }}
+          />
         )}
+
+        {/* ── Main column ─────────────────────────────────────────────── */}
+        <div className="custom-scrollbar min-w-0 flex-1 space-y-4 overflow-y-auto p-4">
+          <Panel title={S.folder.contents} icon={<PixelGlyph sprite="start" />}>
+            {children === null ? (
+              <CenterMessage text={S.folder.notFound} />
+            ) : children.length === 0 ? (
+              <CenterMessage text={q ? S.folder.noMatch : S.folder.empty} />
+            ) : isShelf ? (
+              <div className="cover-grid">
+                {children.map((child, i) => (
+                  <CoverTile
+                    key={child.id}
+                    node={child}
+                    src={covers![i]!}
+                    onOpen={handleChildClick}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="command-grid">
+                {children.map((child, i) => (
+                  <FileIcon
+                    key={child.id}
+                    index={i + 1}
+                    fileNode={child}
+                    onOpen={handleChildClick}
+                  />
+                ))}
+              </div>
+            )}
+
+          </Panel>
+        </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * Places down the left: the drive, then each folder at its top — the shelves a
+ * visitor jumps between — and under them a word on how this window works.
+ * Shown only when the window is wide enough to spare the column.
+ */
+function Sidebar({
+  drive,
+  path,
+  onNavigate,
+}: {
+  drive: FileNode;
+  path: Path;
+  onNavigate: (path: Path) => void;
+}) {
+  const S = useStrings();
+  const { owner } = useDesktopData();
+  const folders =
+    drive.data?.kind === "folder"
+      ? drive.data.children.filter((c) => c.data?.kind === "folder")
+      : [];
+  const places = [
+    { node: drive, label: S.folder.all, path: [drive.name] },
+    ...folders.map((f) => ({
+      node: f,
+      label: f.name,
+      path: [drive.name, f.name],
+    })),
+  ];
+
+  return (
+    <aside
+      className="custom-scrollbar hidden w-60 shrink-0 flex-col overflow-y-auto p-3 @3xl:flex"
+      style={{ borderRight: "2px solid var(--os-border-strong)" }}
+    >
+      <nav aria-label={S.folder.places} className="space-y-1">
+        {places.map((place, i) => {
+          // The drive row is lit only on the drive itself; a folder row is lit
+          // anywhere inside it.
+          const active =
+            i === 0
+              ? pathEquals(path, place.path)
+              : isPathPrefix(place.path, path);
+          return (
+            <button
+              key={place.node.id}
+              onClick={() => onNavigate(place.path)}
+              aria-current={active ? "page" : undefined}
+              className={`focus-ring font-os-pixel flex w-full cursor-pointer items-center gap-3 border-2 px-2.5 py-2 text-left text-[15px] ${
+                active
+                  ? "border-os-accent bg-os-accent-container/50 text-os-text"
+                  : "border-transparent text-os-text-dim hover:bg-os-accent-container/30 hover:text-os-text"
+              }`}
+            >
+              <FileGraphic
+                icon={place.node.icon}
+                size={24}
+                className="pixelated"
+              />
+              <span className="truncate">{place.label}</span>
+            </button>
+          );
+        })}
+      </nav>
+
+      <div
+        className="mt-4 pt-4"
+        style={{ borderTop: "2px solid var(--os-border-strong)" }}
+      >
+        <h3 className="font-os-pixel flex items-center gap-2 text-[13px] uppercase tracking-[0.16em] text-os-accent">
+          <PixelGlyph sprite="clock" />
+          {S.folder.quickInfo}
+        </h3>
+        <p
+          className="font-os-mono mt-2 text-[12px] leading-relaxed"
+          style={{ color: "var(--os-text-dim)" }}
+        >
+          {S.folder.quickInfoText}
+        </p>
+      </div>
+
+      <div className="mt-auto border-2 border-dashed border-os-border-strong pt-3">
+        <div className="flex justify-center">
+          <Globe size={110} />
+        </div>
+        <p
+          className="font-os-mono border-t-2 border-dashed border-os-border-strong px-3 py-3 text-[12px] leading-relaxed"
+          style={{ color: "var(--os-text-dim)" }}
+        >
+          &ldquo;{owner.tagline}&rdquo;
+        </p>
+      </div>
+    </aside>
+  );
+}
+
+/** A boxed section of the window, with its own title bar. */
+function Panel({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="border-2 border-os-border-strong">
+      <h2
+        className="font-os-pixel flex items-center gap-2.5 px-3 py-2 text-[15px] text-os-text"
+        style={{ borderBottom: "2px solid var(--os-border-strong)" }}
+      >
+        <span className="text-os-accent">{icon}</span>
+        {title}
+      </h2>
+      <div className="p-3">{children}</div>
+    </section>
   );
 }
 
@@ -181,8 +348,7 @@ function IconButton({
       disabled={disabled}
       title={label}
       aria-label={label}
-      className="focus-ring pixel-btn grid h-8 w-8 shrink-0 cursor-pointer place-items-center bg-os-surface-3 hover:bg-os-accent-container disabled:cursor-default disabled:opacity-30 disabled:hover:bg-os-surface-3"
-      style={{ color: "var(--os-text)" }}
+      className="focus-ring grid h-9 w-9 shrink-0 cursor-pointer place-items-center border-2 border-os-border-strong hover:border-os-accent hover:text-os-accent disabled:cursor-default disabled:opacity-30 disabled:hover:border-os-border-strong disabled:hover:text-inherit"
     >
       {children}
     </button>
@@ -203,9 +369,7 @@ function Crumb({
       onClick={onClick}
       disabled={active}
       className="focus-ring flex shrink-0 cursor-pointer items-center gap-1 px-1 hover:bg-os-accent-container disabled:cursor-default disabled:hover:bg-transparent"
-      style={{
-        color: active ? "var(--os-accent)" : "var(--os-text-dim)",
-      }}
+      style={{ color: active ? "var(--os-accent)" : "var(--os-text-dim)" }}
     >
       {children}
     </button>
@@ -215,7 +379,7 @@ function Crumb({
 function CenterMessage({ text }: { text: string }) {
   return (
     <div
-      className="font-os-pixel flex h-full items-center justify-center text-[15px]"
+      className="font-os-pixel flex min-h-24 items-center justify-center text-[15px]"
       style={{ color: "var(--os-text-faint)" }}
     >
       {text}

@@ -711,6 +711,7 @@ function personalWeb(L: Localize): FileNode[] {
       status: L("In Development", "กำลังพัฒนา"),
       year: "2026",
       platform: L("Web", "เว็บ"),
+      featured: true,
       images: shots("jinn", 5),
     }),
     makeProject("proj-hajin-ai-cognix", {
@@ -741,6 +742,7 @@ function personalWeb(L: Localize): FileNode[] {
       status: L("In Development", "กำลังพัฒนา"),
       year: "2026",
       platform: L("Web", "เว็บ"),
+      featured: true,
       images: shots("hajin-ai-cognix", 6),
     }),
   ];

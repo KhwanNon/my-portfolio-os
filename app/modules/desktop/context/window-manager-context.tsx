@@ -46,10 +46,11 @@ const DEFAULT_WINDOW_SIZES: Record<string, { width: number; height: number }> =
     "system-command": { width: 640, height: 420 },
     preferences: { width: 860, height: 620 },
     "recycle-bin": { width: 520, height: 400 },
-    "c-drive": { width: 680, height: 460 },
+    "c-drive": { width: 1120, height: 760 },
     profile: { width: 960, height: 640 },
     contact: { width: 980, height: 700 },
     "resume-pdf": { width: 1000, height: 760 },
+    education: { width: 1000, height: 720 },
   };
 
 /** Breathing room between a window and the edge of the workspace. */
@@ -58,9 +59,18 @@ const MARGIN = 16;
 const clamp = (value: number, max: number) => Math.max(0, Math.min(value, max));
 
 function getDefaultSize(fileNode: FileNode): { width: number; height: number } {
+  // Folder windows are consoles now — places, a terminal and a card grid —
+  // and open as wide as one of those needs.
   const target = fileNode.id.startsWith("props-")
     ? { width: 420, height: 360 }
-    : DEFAULT_WINDOW_SIZES[fileNode.id] ?? { width: 640, height: 460 };
+    : fileNode.id.startsWith("skill-")
+      ? { width: 1060, height: 760 }
+      : fileNode.id.startsWith("exp-")
+      ? { width: 1100, height: 780 }
+    : DEFAULT_WINDOW_SIZES[fileNode.id] ??
+      (fileNode.type === "folder"
+        ? { width: 1120, height: 760 }
+        : { width: 640, height: 460 });
   if (typeof window === "undefined") return target;
   // A window opens no larger than the box it opens into, dock band excluded.
   const box = workspaceBox();

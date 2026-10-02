@@ -33,6 +33,7 @@ export function skillsFolder(L: Localize): FileNode {
           items: [
             {
               name: "Dart",
+              tags: ["Mobile", "Flutter", "OOP"],
               note: L("production daily · since 2021", "ใช้ทุกวัน · ตั้งแต่ 2021"),
               description: L(
                 "The language Flutter is written in — typed, and compiled ahead of time for release builds.",
@@ -41,6 +42,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "TypeScript",
+              tags: ["Web", "Type Safety", "Frontend"],
               note: L("production · web platforms", "ใช้งานจริง · งานเว็บ"),
               description: L(
                 "JavaScript with types — a wrong shape is caught while writing, not once the browser runs it.",
@@ -49,6 +51,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Go",
+              tags: ["Backend", "Cloud", "Concurrent"],
               note: L("production backend · 2025–2026", "ใช้ทำ backend · 2025–2026"),
               description: L(
                 "Compiled and built for concurrency — what the backend services here are written in.",
@@ -57,6 +60,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Python",
+              tags: ["Data", "Automation", "AI"],
               note: L("familiar", "พอใช้งานได้"),
               description: L(
                 "Scripting and data work, where a task is faster written than engineered.",
@@ -65,6 +69,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Kotlin",
+              tags: ["Android", "Mobile", "Native"],
               note: L("native Android integration", "เชื่อมต่อฝั่ง Android"),
               description: L(
                 "Android's own language — where a Flutter app has to reach the platform itself.",
@@ -73,6 +78,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "SQL",
+              tags: ["Database", "Query", "Schema"],
               note: L("production · schema design", "ใช้งานจริง · ออกแบบสคีมา"),
               description: L(
                 "How a relational database is asked a question — and how its tables are shaped in the first place.",
@@ -81,6 +87,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "C/C++",
+              tags: ["System", "AI/ML", "Performance"],
               note: L("llama.cpp via Dart FFI", "llama.cpp ผ่าน Dart FFI"),
               description: L(
                 "Native code with no runtime in between — how llama.cpp runs on the device in Langridge.",
@@ -94,6 +101,7 @@ export function skillsFolder(L: Localize): FileNode {
           items: [
             {
               name: "Flutter",
+              tags: ["Mobile", "Cross-platform", "UI"],
               note: L("production daily · since 2021", "ใช้ทุกวัน · ตั้งแต่ 2021"),
               description: L(
                 "One Dart codebase that draws its own interface on iOS, Android, web and desktop.",
@@ -102,6 +110,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "React Native",
+              tags: ["Mobile", "JavaScript", "Cross-platform"],
               note: L("production · 2021–2023", "ใช้งานจริง · 2021–2023"),
               description: L(
                 "React written for mobile, rendered through each platform's own native views.",
@@ -110,6 +119,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Clean Architecture",
+              tags: ["Layers", "Testability", "SOLID"],
               note: L("aiLearn · from the ground up", "aiLearn · วางตั้งแต่ต้น"),
               description: L(
                 "Layers that depend inward, so the rules of the business survive a change of UI or database.",
@@ -118,6 +128,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Mobile Architecture",
+              tags: ["Structure", "Standards", "Team"],
               note: L("set the standard for the team", "วางมาตรฐานให้ทั้งทีม"),
               description: L(
                 "State, navigation and module boundaries decided once, so a team can add features without collisions.",
@@ -126,6 +137,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Offline-first Systems",
+              tags: ["Sync", "Local Data", "Resilience"],
               note: L("two-way sync · meeting system", "ซิงก์สองทาง · ระบบการประชุม"),
               description: L(
                 "The device works from its own database first; the server is reconciled with once it is reachable again.",
@@ -134,6 +146,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Performance Optimization",
+              tags: ["Isolates", "Profiling", "On-device"],
               note: L("on-device LLM · isolates", "รัน LLM บนเครื่อง · isolates"),
               description: L(
                 "Finding what makes a frame arrive late, and moving the heavy work off the thread that draws.",
@@ -142,6 +155,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Native Integration",
+              tags: ["iOS", "Android", "Channels"],
               note: L("Swift · Kotlin · platform channels", "Swift · Kotlin · platform channel"),
               description: L(
                 "A channel down to Swift or Kotlin for the things a cross-platform framework has no answer for.",
@@ -155,6 +169,7 @@ export function skillsFolder(L: Localize): FileNode {
           items: [
             {
               name: "Go",
+              tags: ["Backend", "REST", "GORM"],
               note: L("Echo · GORM · production", "Echo · GORM · ใช้งานจริง"),
               description: L(
                 "Echo routes the HTTP side and GORM speaks to the database — the shape every service here takes.",
@@ -163,6 +178,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Next.js",
+              tags: ["React", "Web", "SSR"],
               note: L("this site", "เว็บนี้"),
               description: L(
                 "React with routing and server rendering already decided. This site is one.",
@@ -171,6 +187,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "SvelteKit",
+              tags: ["Svelte", "Web", "Fullstack"],
               note: L("side projects", "โปรเจกต์ส่วนตัว"),
               description: L(
                 "Compiles components away at build time, so very little framework is shipped to the browser.",
@@ -179,6 +196,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Vue 3",
+              tags: ["Web", "Frontend", "Components"],
               note: L("production · web work", "ใช้งานจริง · งานเว็บ"),
               description: L(
                 "The Composition API — reactive state kept next to the markup that reads it.",
@@ -187,6 +205,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "REST API Design",
+              tags: ["Backend", "HTTP", "Contracts"],
               note: L("Go services · client apps", "ฝั่ง Go และฝั่งแอป"),
               description: L(
                 "Resources, methods and status codes chosen so a client can guess the next call and be right.",
@@ -195,6 +214,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "WebSocket",
+              tags: ["Real-time", "Streaming", "Backend"],
               note: L("real-time AI · aiLearn", "AI แบบเรียลไทม์ · aiLearn"),
               description: L(
                 "One connection held open with both ends free to speak — what live features are built on.",
@@ -203,6 +223,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Server-Sent Events (SSE)",
+              tags: ["Real-time", "Streaming", "AI"],
               note: L("streamed AI explanations", "สตรีมคำอธิบายจาก AI"),
               description: L(
                 "A one-way stream from server to browser — how an AI answer arrives a word at a time.",
@@ -216,6 +237,7 @@ export function skillsFolder(L: Localize): FileNode {
           items: [
             {
               name: "SQLite",
+              tags: ["Database", "Local", "Offline"],
               note: L("offline-first apps", "แอปแบบออฟไลน์เฟิร์สต์"),
               description: L(
                 "A whole relational database living in a single file on the device.",
@@ -224,6 +246,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Drift",
+              tags: ["Flutter", "ORM", "Local Data"],
               note: L("Flutter · local data layer", "Flutter · เลเยอร์ข้อมูลในเครื่อง"),
               description: L(
                 "SQLite for Dart with the queries type-checked at compile time rather than at the user's expense.",
@@ -232,6 +255,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "PostgreSQL",
+              tags: ["Database", "Relational", "Backend"],
               note: L("production · SWU AI Platform", "ใช้งานจริง · SWU AI Platform"),
               description: L(
                 "The open-source relational database the services default to.",
@@ -240,6 +264,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "SQL Server",
+              tags: ["Database", "Relational", "Enterprise"],
               note: L("production · meeting system", "ใช้งานจริง · ระบบการประชุม"),
               description: L(
                 "Microsoft's relational database — where an enterprise client's data already lives.",
@@ -248,6 +273,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Firebase Firestore",
+              tags: ["NoSQL", "Cloud", "Real-time"],
               note: L("production apps", "ใช้ในแอปจริง"),
               description: L(
                 "A hosted document database that syncs down to the client and keeps working offline.",
@@ -256,6 +282,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "Docker",
+              tags: ["Containers", "DevOps", "Deploy"],
               note: L("service packaging", "แพ็กเซอร์วิส"),
               description: L(
                 "A service and everything it depends on in one image, which runs the same everywhere.",
@@ -264,6 +291,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "GitHub Actions",
+              tags: ["CI", "Automation", "Release"],
               note: L("CI · app releases", "CI · ปล่อยเวอร์ชันแอป"),
               description: L(
                 "Build, test and release triggered by a push, with no machine left to babysit.",
@@ -272,6 +300,7 @@ export function skillsFolder(L: Localize): FileNode {
             },
             {
               name: "CI/CD",
+              tags: ["Release", "App Store", "Google Play"],
               note: L("App Store · Google Play", "App Store · Google Play"),
               description: L(
                 "Every commit built and tested, so a release is a pipeline run rather than an afternoon.",
