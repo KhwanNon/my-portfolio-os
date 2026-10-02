@@ -6,10 +6,7 @@ import "./globals.css";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f8fc" },
-    { media: "(prefers-color-scheme: dark)", color: "#182035" },
-  ],
+  themeColor: "#020a05",
 };
 
 const roboto = Roboto({
@@ -87,7 +84,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // The bootstrap script below writes `data-theme`, `lang` and `data-motion`
+    // The bootstrap script below writes `lang` and `data-motion`
     // before React hydrates.
     <html lang="en" suppressHydrationWarning>
       <head>

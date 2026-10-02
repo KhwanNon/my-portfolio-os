@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   MOTION_VALUES,
   STARTUP_VALUES,
-  THEMES,
   currentValue,
   resetPreferences,
   type Choices,
@@ -190,28 +189,6 @@ function OsVersionSection({ S }: { S: Strings }) {
   );
 }
 
-function ThemeSection() {
-  const S = useStrings();
-  const { value } = useSetting("theme");
-  const inForce = THEMES.find(({ id }) => id === value) ?? THEMES[0];
-
-  return (
-    <OptionList
-      id="theme"
-      label={S.prefs.nav.theme}
-      options={[
-        {
-          value: "system",
-          label: S.prefs.system.label,
-          detail: S.prefs.system.detail(inForce.label),
-          swatch: inForce.swatch,
-        },
-        ...THEMES.map(({ id, label, swatch }) => ({ value: id, label, swatch })),
-      ]}
-    />
-  );
-}
-
 /**
  * The language, which moves the whole shell the moment it is pressed — the
  * setting writes `<html lang>`, and every surface reads the language from
@@ -281,7 +258,6 @@ export function PreferencesApp() {
 
   const navItems: { id: Section; label: string }[] = [
     { id: "os-version", label: S.prefs.nav.osVersion },
-    { id: "theme", label: S.prefs.nav.theme },
     { id: "locale", label: S.prefs.nav.language },
     { id: "motion", label: S.prefs.nav.motion },
     { id: "startup", label: S.prefs.nav.startup },
@@ -341,7 +317,6 @@ export function PreferencesApp() {
       {/* Content Panel */}
       <div className="flex-1 overflow-hidden">
         {active === "os-version" && <OsVersionSection S={S} />}
-        {active === "theme" && <ThemeSection />}
         {active === "locale" && <LanguageSection />}
         {active === "motion" && <MotionSection />}
         {active === "startup" && <StartupSection />}

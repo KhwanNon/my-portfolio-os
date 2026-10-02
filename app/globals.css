@@ -1,268 +1,66 @@
 @import "tailwindcss";
 
 /*
- * Material 3 Expressive token system. Each theme defines the same set of
- * roles — primary (accent), tonal surface staircase, neutral text ramp,
- * neutral outline, and container pairs — so components never hardcode a
- * color; they consume the role. Shape and elevation scales below are
- * theme-invariant (shape/elevation don't change with color scheme).
+ * Material 3 Expressive token system, in the one theme this OS has: Matrix —
+ * black ground, phosphor green. Every component consumes a role (primary,
+ * tonal surface staircase, text ramp, outline, container pair), never a hex.
+ * The surface staircase is black stepped toward green; the text ramp is green
+ * -tinted white; green is the only hue, so the few signals that must differ
+ * (error, featured star) are the only things that arrive from outside it.
  */
 :root {
-  /* Theme 1: Daylight (Default) — M3 light, seeded with Google primary blue */
-  --os-bg: #f6f8fc;
-  --os-accent: #0b57d0;
-  --os-surface-1: #ffffff;
-  --os-surface-2: #ffffff;
-  --os-surface-3: #f0f4f9;
-  --os-header: var(--os-surface-1);
+  --os-bg: #020a05;
+  --os-accent: #00ff41;
+  --os-surface-1: #04120a;
+  --os-surface-2: #06180d;
+  --os-surface-3: #0b2415;
+  --os-header: var(--os-surface-3);
   --os-surface: var(--os-surface-2);
 
-  --os-text: #1f1f1f;
-  --os-text-dim: #444746;
-  /* Holds AA on the tonal surfaces too, not just on white — captions and meta
-     columns sit on surface-3 whenever a row is hovered. */
-  --os-text-faint: #6d706e;
-  /* One step below faint, and the only tier that gives up AA on body copy —
-     reserved for group labels, which are landmarks you scan past, never text
-     you read. Nothing that carries meaning on its own may use it. */
-  --os-text-subtle: #9aa0a6;
+  --os-text: #d8ffe4;
+  --os-text-dim: #8fd6a4;
+  --os-text-faint: #6fb887;
+  --os-text-subtle: #3f8a5a;
 
-  --os-border: #e3e6ea;
-  --os-border-strong: #c7cbd1;
+  --os-border: rgba(0, 255, 65, 0.16);
+  --os-border-strong: rgba(0, 255, 65, 0.34);
 
-  --os-accent-container: #d3e3fd;
-  --os-on-accent-container: #041e49;
+  --os-accent-container: #053d1a;
+  --os-on-accent-container: #b6ffcb;
+  --os-primary: var(--os-on-accent-container);
 
-  /*
-   * The brand primary. Deliberately *not* rolled out yet — it is spent on the
-   * rail's active row (icon + label) and nothing else, so `--os-accent` still
-   * carries focus rings, links and the rest. Widen its reach one surface at a
-   * time; don't swap it in for `--os-accent` wholesale.
-   */
-  --os-primary: #094cf2;
+  --os-tertiary: #9be564;
+  --os-error: #ff5f5f;
+  --os-success: #00ff41;
 
-  --os-tertiary: #a15c00;
-  --os-error: #b3261e;
-  --os-success: #1e8e3e;
+  /* The star on the project to open first — the one yellow-ish shape. */
+  --os-featured: #e6ff3f;
 
-  /*
-   * The mark on the one project to open first — the star on it and on every
-   * folder above it, and the card on the desktop that points at it. The mark is
-   * the star alone; nothing else is repainted. Deliberately not `--os-accent`:
-   * accent is what everything interactive already wears, so a recommendation
-   * painted in it would be one more control rather than a thing being singled
-   * out. Yellow is spent on the star and on nothing else — not the label beside
-   * it, not a border, not a rim: one yellow shape per surface.
-   *
-   * It is 1.8:1 on white, under the 3:1 a meaningful graphic owes, and that is
-   * a decision rather than an oversight. Every darker yellow that clears the bar
-   * has turned orange by the time it gets there, and a rim in the darker tone
-   * reads as an orange outline around a yellow star. So the star is left as the
-   * colour it is meant to be, and the meaning never rests on it alone: it
-   * carries a label for assistive tech, and the card that shows it says
-   * "Recommended" in words at full text contrast.
-   */
-  --os-featured: #fabb05;
-
-  /*
-   * The two blooms washing the desktop, one per corner. Each theme states its
-   * own finished colour — strength baked in — because the weight that reads as
-   * "barely there" over white is not the weight that reads that way over ink.
-   */
-  --os-ambient-a: color-mix(in srgb, #4285f4 55%, transparent);
-  --os-ambient-b: color-mix(in srgb, #9334e6 45%, transparent);
-
-  /*
-   * The third bloom, in the middle of the surface and the middle of the two
-   * hues. Derived rather than picked, so it stays the midpoint if either of
-   * them is ever re-tuned — and because the substitution happens per element,
-   * this one line resolves to the right colour in both themes.
-   */
+  --os-ambient-a: color-mix(in srgb, #00ff41 35%, transparent);
+  --os-ambient-b: color-mix(in srgb, #0b7a2e 55%, transparent);
   --os-ambient-c: color-mix(in srgb, var(--os-ambient-a), var(--os-ambient-b));
+  --os-desktop-veil: color-mix(in srgb, var(--os-surface-1) 78%, transparent);
 
-  /*
-   * The desktop lies *over* the blooms, and this is how much of them it lets
-   * through — the one number to turn when the wash is too strong or too faint.
-   * More surface = more opaque = fainter colour. The aura underneath stays at
-   * full strength whatever this is set to.
-   */
-  --os-desktop-veil: color-mix(in srgb, var(--os-surface-1) 72%, transparent);
+  /* Icon palette: every hue is a green, so a chip still means "this launches"
+     without bringing a colour the theme doesn't have. */
+  --os-icon-blue: #39ff6a;
+  --os-icon-purple: #7dffa0;
+  --os-icon-yellow: #c8ff3f;
+  --os-icon-red: #ff5f5f;
+  --os-icon-green: #00ff41;
+  --os-icon-ink: #d8ffe4;
+  --os-icon-neutral: #6fb887;
 
-  /*
-   * Icon palette. Colour is spent only on the apps — the disk, the terminal,
-   * the settings, the bin, the mailbox — so that a coloured chip *means* "this
-   * launches". Documents run on `neutral` and stay quiet; `ink` is the
-   * terminal's filled chip. Google product-icon values on Daylight; every theme
-   * restates the same seven so nothing hardcodes a hex.
-   */
-  --os-icon-blue: #1a73e8;
-  --os-icon-purple: #9334e6;
-  --os-icon-yellow: #f9ab00;
-  --os-icon-red: #d93025;
-  /* Contact's hue, and spent on nothing else — "reach me" is the one action on
-     this desktop, so it gets the one colour no other chip can claim. */
-  --os-icon-green: #1e8e3e;
-  --os-icon-ink: #202124;
-  --os-icon-neutral: #5f6368;
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.7), 0 4px 10px rgba(0, 0, 0, 0.45);
 
-  /* Elevation reads as soft neutral shadow on light surfaces, never as a line. */
-  --shadow-1: 0 1px 2px rgba(60, 64, 67, 0.1), 0 1px 3px 1px rgba(60, 64, 67, 0.06);
-  --shadow-2: 0 1px 3px rgba(60, 64, 67, 0.12), 0 4px 8px 3px rgba(60, 64, 67, 0.08);
-  --shadow-3: 0 4px 8px rgba(60, 64, 67, 0.12), 0 12px 28px 6px rgba(60, 64, 67, 0.1);
-
-  /*
-   * The dock across the foot, and the shell's only piece of chrome since the
-   * top bar and the side rail went. There is no vertical padding on the bar —
-   * this number *is* the padding: the tile it carries is 44px in a 48px slot,
-   * and what is left over is the air above and below it. Deliberately thinner
-   * than the 12px the row keeps at either end, so the bar reads as a band the
-   * tiles fill rather than a tray they sit in.
-   *
-   * It sits in the flow and reserves its own space; only overlays anchored to
-   * the viewport have to know this number.
-   */
+  /* The dock across the foot: the tile is 44px in a 48px slot. */
   --os-dock-h: 56px;
 
   --background: var(--os-bg);
   --foreground: var(--os-text);
-}
-
-/*
- * Theme 2: Cyber Blue — two colours and everything else derived from them. The
- * navy is the ground and the whole surface staircase is that one hue held at
- * 224° and stepped in lightness (15 → 18 → 21 → 25%), so no step introduces a
- * colour; the teal is the only hue that ever arrives from outside it, which is
- * what makes it read as *the* accent rather than as one more blue. Even the
- * text ramp is tinted toward the ground — a neutral grey over a navy this
- * saturated reads as a foreign sheet laid on top.
- */
-[data-theme="dark"] {
-  --os-bg: #182035;
-  --os-accent: #52d3d6;
-  --os-surface-1: #1e2740;
-  --os-surface-2: #232d49;
-  --os-surface-3: #2b3757;
-  --os-header: var(--os-surface-3);
-  --os-surface: var(--os-surface-2);
-
-  /* Tinted white and three steps down it. `faint` is set by the hardest ground
-     it has to hold AA on — surface-3, the hover row — not by the bg. */
-  --os-text: #e6ebf5;
-  --os-text-dim: #a8b3ce;
-  --os-text-faint: #97a2be;
-  --os-text-subtle: #6f7a99;
-
-  --os-border: rgba(230, 235, 245, 0.12);
-  --os-border-strong: rgba(230, 235, 245, 0.24);
-
-  /* The accent's own low tone. It lifts with the surfaces it sits among —
-     a container pitched for a near-black ground reads as a hole in this one. */
-  --os-accent-container: #1d474b;
-  --os-on-accent-container: #a6eef0;
-
-  /* The new primary is a Daylight decision; this theme keeps the on-container
-     tone it already used, so the rail's active row is unchanged here. Blue that
-     dark would be unreadable on a teal container anyway. */
-  --os-primary: var(--os-on-accent-container);
-
-  --os-tertiary: #e8a21a;
-  --os-error: #ff6b6b;
-  --os-success: #81c995;
-
-  /* The same star, lifted for the navy — where yellow has no contrast problem
-     to solve in the first place. */
-  --os-featured: #fbbf24;
-
-  /* The two again, as light: the teal, and the ground's own hue raised until it
-     glows. The second bloom is not a third colour — it is this navy at the top
-     of its range, which is why the aura reads as the surface being lit rather
-     than as something painted on it. */
-  --os-ambient-a: color-mix(in srgb, #52d3d6 45%, transparent);
-  --os-ambient-b: color-mix(in srgb, #3b6fd4 55%, transparent);
-  --os-desktop-veil: color-mix(in srgb, var(--os-surface-1) 78%, transparent);
-
-  /* Same seven, lifted to Material dark tones so they read on #1e2740. The two
-     that carry no hue of their own take the ground's, like the text ramp. */
-  --os-icon-blue: #8ab4f8;
-  --os-icon-purple: #d7aefb;
-  --os-icon-yellow: #fdd663;
-  --os-icon-red: #f28b82;
-  --os-icon-green: #81c995;
-  --os-icon-ink: #e0e6f2;
-  --os-icon-neutral: #9aa4bd;
-
-  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
-  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.38), 0 2px 4px rgba(0, 0, 0, 0.22);
-  --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.48), 0 4px 10px rgba(0, 0, 0, 0.26);
-}
-
-/*
- * Console — the System Command window, and nothing else. Not a scheme you can
- * pick: it is scoped to that one window (see WINDOW_SCHEME in
- * window/window-frame.tsx) and never lands on <html>, so the terminal shows the
- * same face on Daylight as it does on Cyber Blue.
- *
- * It is the one surface in the OS with no hue at all. A terminal is ink on a
- * black screen — it is the picture everyone already holds of the thing — and
- * borrowing a scheme's colour made it read as one more app window that happened
- * to be dark, rather than as the machine underneath them. Everything it has to
- * say it says in brightness: the ground, three steps of grey, and white at the
- * top for the lines that must not be missed.
- */
-[data-theme="console"] {
-  --os-bg: #0e0e0e;
-  --os-surface-1: #161616;
-  --os-surface-2: #121212;
-  --os-surface-3: #232323;
-  /* A step off the body ground and no more — enough for the bar to read as
-     chrome, not so much that it becomes a band laid across the screen. */
-  --os-header: #1a1a1a;
-  --os-surface: var(--os-surface-2);
-
-  /* The output ramp, brightest first: your own typed line, the machine's
-     answer, its asides. `subtle` keeps its place at the foot of the ramp. */
-  --os-text: #f5f5f5;
-  --os-text-dim: #a8a8a8;
-  --os-text-faint: #8a8a8a;
-  --os-text-subtle: #6b6b6b;
-
-  --os-border: rgba(255, 255, 255, 0.12);
-  --os-border-strong: rgba(255, 255, 255, 0.26);
-
-  /* No accent to speak of — the prompt and the body of the output, which on a
-     monochrome screen is simply "text that isn't yours". */
-  --os-accent: #d5d5d5;
-  --os-accent-container: #262626;
-  --os-on-accent-container: #f5f5f5;
-  --os-primary: var(--os-accent);
-  --os-tertiary: var(--os-text-dim);
-
-  /* Both signals arrive as the brightest thing on screen, because that is all
-     a monochrome screen has to offer. It costs nothing: the line already says
-     which it is in words — `error:` — and colour was never carrying that alone. */
-  --os-error: #ffffff;
-  --os-success: #ffffff;
-
-  /* Yellow is a colour, and this screen has none. The mark still works — a star
-     is a shape before it is a hue. */
-  --os-featured: var(--os-accent);
-
-  /* The same seven, with the hue taken out of them. Nothing in this window
-     draws a glyph today — the title bar shows the terminal's own artwork — but
-     the set is restated so no icon dropped in here can smuggle a colour back. */
-  --os-icon-blue: #c8c8c8;
-  --os-icon-purple: #c8c8c8;
-  --os-icon-yellow: #c8c8c8;
-  --os-icon-red: #c8c8c8;
-  --os-icon-green: #c8c8c8;
-  --os-icon-ink: #f0f0f0;
-  --os-icon-neutral: #9a9a9a;
-
-  /* Cast on whatever desktop it floats over, so it is pitched for the harder of
-     the two: a black window needs a black shadow to sit on white paper. */
-  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.34), 0 1px 2px rgba(0, 0, 0, 0.26);
-  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.42), 0 2px 4px rgba(0, 0, 0, 0.24);
-  --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.52), 0 4px 10px rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
 }
 
 /*
@@ -445,35 +243,6 @@ body {
   );
 }
 
-/* Ambient FX belong to the dark theme only — on Daylight they'd muddy the white. */
-.bg-vignette,
-.bg-ambient-grid {
-  display: none;
-}
-[data-theme="dark"] .bg-vignette,
-[data-theme="dark"] .bg-ambient-grid {
-  display: block;
-}
-
-/*
- * App artwork ships as a light/dark pair, both drawn into the same box (see
- * `Artwork` in file-graphic.tsx). The swap is CSS rather than state so the right
- * drawing is showing at first paint — nothing has to hydrate for it — and so it
- * follows `data-theme` wherever that is set, which is how the terminal's icons
- * stay dark on a Daylight desktop.
- *
- * Both dark scopes take the dark inking: what the pair is choosing between is a
- * light ground and a dark one, not one named scheme and another.
- */
-.icon-art-dark {
-  display: none;
-}
-:is([data-theme="dark"], [data-theme="console"]) .icon-art-light {
-  display: none;
-}
-:is([data-theme="dark"], [data-theme="console"]) .icon-art-dark {
-  display: block;
-}
 
 /*
  * The desktop, banded by group. The bands split the surface between them, so

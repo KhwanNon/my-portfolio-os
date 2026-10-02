@@ -84,19 +84,12 @@ function Desktop() {
         }}
       >
         {/* ── Ambient FX layers (back → front) ───────────────────────── */}
-        {/* The colour the desktop is lit by. It sits under the surface rather
-              than inside it, so how much of it reads is the surface's business
-              — see `--os-desktop-veil`. Unlike the two below, it shows on every
-              theme. */}
-        <div className="absolute inset-0 bg-ambient-aura pointer-events-none" />
-        <div className="absolute inset-0 bg-ambient-grid opacity-[0.05] pointer-events-none" />
-        <div className="absolute inset-0 bg-vignette pointer-events-none z-10" />
-        {/* The veil, painted static and at full strength from the first frame —
-              same pairing the boot screen already uses. Arriving from boot is a
-              route change, not a mount this component controls the pacing of, so
-              the aura must never be caught bare: if the veil faded in with the
-              content below, the three blooms would flash unveiled for a beat. */}
-        <div className="absolute inset-0 z-10 bg-desktop-veil pointer-events-none" />
+        {/* The wallpaper, bare: no aura, grid or veil over it. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url(/assets/images/bg.webp)" }}
+        />
 
         {/* ── Desktop: the surface windows open from ───────────────────── */}
         <motion.main

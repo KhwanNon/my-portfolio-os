@@ -32,22 +32,6 @@ type Finish =
   /** Document: the mark on a neutral plate that carries no meaning of its own. */
   | "plain";
 
-/**
- * The two inkings of one drawing: the same picture, weighted for a light ground
- * and for a dark one. A single artwork cannot serve both — line art dark enough
- * to read on Daylight goes to a smudge on the dark scheme.
- */
-interface ArtPair {
-  light: string;
-  dark: string;
-}
-
-/** Both files of a pair, named off one stem so the table names a picture once. */
-const art = (name: string): ArtPair => ({
-  light: `/assets/icon/${name}.png`,
-  dark: `/assets/icon/${name}-dark.png`,
-});
-
 interface IconSpec {
   glyph: ProductGlyph;
   tone: string;
@@ -58,10 +42,9 @@ interface IconSpec {
    * Properties. An app is one picture everywhere it turns up; a second drawing
    * of the same app at small sizes would be a second identity for it, and the
    * one place recognition matters most is the inline row you are skimming.
-   * Documents have no artwork and keep their glyph, which is what line art is
-   * for.
+   * Types without artwork keep their glyph.
    */
-  image?: ArtPair;
+  image?: string;
 }
 
 const NEUTRAL = "var(--os-icon-neutral)";
@@ -74,19 +57,17 @@ const REGISTRY: Record<string, IconSpec> = {
   // Apps. System Command is the one solid chip in the set — a terminal is a
   // surface you type into, and drawing it as ink makes it the anchor the other
   // three are read against; they keep the same footprint on a washed chip.
-  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",    finish: "filled", image: art("command") },
-  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)",   finish: "chip",   image: art("c")       },
-  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-purple)", finish: "chip",   image: art("setting") },
-  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip",   image: art("bin")     },
-  contact: { glyph: MailGlyph,     tone: "var(--os-icon-green)",  finish: "chip",   image: art("contact") },
+  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",    finish: "filled", image: "/assets/icon/command.png" },
+  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)",   finish: "chip",   image: "/assets/icon/c-drive.png"},
+  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-purple)", finish: "chip",   image: "/assets/icon/setting.png" },
+  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip",   image: "/assets/icon/bin.png"},
+  contact: { glyph: MailGlyph,     tone: "var(--os-icon-green)",  finish: "chip",   image: "/assets/icon/contact.png" },
 
-  // Documents. No artwork here on purpose: painted art is the mark of something
-  // that launches, so a file drawn that way would claim to be an app. Red on the
-  // PDF is the one hue a file keeps — it is the format's own signal, the way
-  // every file manager already draws it.
-  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",    finish: "plain"  },
-  folder:  { glyph: FolderGlyph,   tone: NEUTRAL,                 finish: "plain"  },
-  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain"  },
+  // Documents. Red on the PDF is the one hue a glyph keeps — the format's own
+  // signal. Folder, text and PDF ship artwork; the rest keep their glyphs.
+  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",    finish: "plain", image: "/assets/icon/pdf.png" },
+  folder:  { glyph: FolderGlyph,   tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/folder.png" },
+  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/text.png" },
   slide:   { glyph: SlideGlyph,    tone: NEUTRAL,                 finish: "plain"  },
   ui:      { glyph: LayersGlyph,   tone: NEUTRAL,                 finish: "plain"  },
   link:    { glyph: LinkGlyph,     tone: NEUTRAL,                 finish: "plain"  },
@@ -121,21 +102,12 @@ export function iconSurface(icon?: string): string {
   return `linear-gradient(150deg, ${wash(tone, 9)}, ${wash(tone, 4)})`;
 }
 
-/**
- * Both inkings of one artwork, drawn into the same box — CSS shows the one the
- * scheme asks for and hides the other (`.icon-art-*` in globals.css). Drawing
- * the pair rather than picking in JS is what keeps the right one on screen from
- * the first paint: the theme lives in `data-theme`, which no server render can
- * know, so a chosen picture would land light and then swap. It also means the
- * artwork follows whichever scope it is drawn inside — the terminal keeps the
- * dark palette on a light desktop, and its icons come along.
- */
 function Artwork({
-  image,
+  src,
   size,
   px,
 }: {
-  image: ArtPair;
+  src: string;
   /** A fixed box, for the bare graphic. Omit to let the art fill its tile. */
   size?: number;
   /** Rendered tile width, so the optimiser picks the file that size deserves. */
@@ -144,14 +116,8 @@ function Artwork({
   const shape = size
     ? { width: size, height: size }
     : { fill: true, sizes: `${px}px` };
-  const fit = size ? "" : " object-contain";
 
-  return (
-    <>
-      <Image src={image.light} alt="" {...shape} className={`icon-art-light${fit}`} />
-      <Image src={image.dark}  alt="" {...shape} className={`icon-art-dark${fit}`}  />
-    </>
-  );
+  return <Image src={src} alt="" {...shape} className={size ? "" : "object-contain"} />;
 }
 
 interface FileGraphicProps {
@@ -170,17 +136,12 @@ export function FileGraphic({
 }: FileGraphicProps) {
   const { glyph: Glyph, tone, image } = specOf(icon);
 
-  // Artwork brings its own ground even here, where the glyph would be drawn
-  // bare — so it is clipped to the same ~28%-of-the-box squircle the chips use.
-  // Left square, art drawn edge to edge reads as a hard tile in a column of
-  // line art.
+  // Artwork is transparent and carries its own glow, so it is drawn bare —
+  // clipping it would cut the glow off.
   if (image) {
     return (
-      <span
-        className={`inline-flex shrink-0 overflow-hidden ${className ?? ""}`}
-        style={{ borderRadius: Math.round(size * 0.28) }}
-      >
-        <Artwork image={image} size={size} />
+      <span className={`inline-flex shrink-0 ${className ?? ""}`}>
+        <Artwork src={image} size={size} />
       </span>
     );
   }
@@ -231,15 +192,12 @@ export function IconTile({ icon, size = "md", className }: IconTileProps) {
   const filled = finish === "filled";
   const plate = finish === "plain" ? PLATE : null;
 
-  // Shipped artwork carries its own ground, so there is no chip to paint under
-  // it — only the box, clipped to the same squircle so art drawn edge to edge
-  // takes the silhouette every other tile already has.
+  // Shipped artwork is transparent and carries its own glow, so there is no
+  // chip under it and no clip over it — only the box it is sized by.
   if (image) {
     return (
-      <span
-        className={`relative block shrink-0 overflow-hidden ${box} ${className ?? ""}`}
-      >
-        <Artwork image={image} px={px} />
+      <span className={`relative block shrink-0 ${box} ${className ?? ""}`}>
+        <Artwork src={image} px={px} />
       </span>
     );
   }

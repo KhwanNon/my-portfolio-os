@@ -22,7 +22,6 @@ import { DEFAULT_LOCALE, LOCALES, type Locale } from "@/app/shared/i18n/locale";
  * holds only the choice.
  */
 
-export type Theme = "daylight" | "dark";
 export type Motion = "full" | "reduced";
 export type Startup = "boot" | "instant";
 
@@ -32,7 +31,6 @@ type System = typeof SYSTEM;
 
 /** What each preference may be set to. */
 export type Choices = {
-  theme: Theme | System;
   locale: Locale | System;
   motion: Motion | System;
   /** No system to defer to — no device has an opinion on how a portfolio opens. */
@@ -46,16 +44,9 @@ export type Value<I extends PreferenceId> = Exclude<Choices[I], System>;
 
 // ─── The declarations ────────────────────────────────────────────────────────
 
-/** Both schemes, with a chip of each so a picker can show the choice itself. */
-export const THEMES: { id: Theme; label: string; swatch: string }[] = [
-  { id: "daylight", label: "Daylight", swatch: "#ffffff" },
-  { id: "dark", label: "Cyber Blue", swatch: "#182035" },
-];
-
 export const MOTION_VALUES = ["full", "reduced"] as const;
 export const STARTUP_VALUES = ["boot", "instant"] as const;
 
-const PREFERS_DARK = "(prefers-color-scheme: dark)";
 const PREFERS_REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 
 /**
@@ -90,16 +81,6 @@ interface Preference<I extends PreferenceId> {
 }
 
 const PREFERENCES: { [I in PreferenceId]: Preference<I> } = {
-  theme: {
-    key: "portfolio-os.theme",
-    values: THEMES.map(({ id }) => id),
-    // The portfolio is designed in Daylight, so that is what a first visit
-    // opens in — the device's scheme is a choice away, not the starting point.
-    initial: "daylight",
-    system: () => (asks(PREFERS_DARK) ? "dark" : "daylight"),
-    watch: PREFERS_DARK,
-    attribute: "data-theme",
-  },
   locale: {
     key: "portfolio-os.locale",
     values: LOCALES.map(({ id }) => id),
@@ -277,7 +258,6 @@ var value=function(key,values,initial,system){
 var v=localStorage.getItem(key);
 if(values.indexOf(v)<0)v=initial;
 return v===${literal(SYSTEM)}?system:v};
-root.setAttribute("data-theme",value(${literal(PREFERENCES.theme.key)},${literal(PREFERENCES.theme.values)},${literal(initialChoice("theme"))},asks(${literal(PREFERS_DARK)})?"dark":"daylight"));
 root.setAttribute("lang",value(${literal(PREFERENCES.locale.key)},${literal(PREFERENCES.locale.values)},${literal(initialChoice("locale"))},navigator.language.slice(0,2)==="th"?"th":${literal(DEFAULT_LOCALE)}));
 root.setAttribute("data-motion",value(${literal(PREFERENCES.motion.key)},${literal(PREFERENCES.motion.values)},${literal(initialChoice("motion"))},asks(${literal(PREFERS_REDUCED_MOTION)})?"reduced":"full"));
 }catch(e){}`;

@@ -579,11 +579,9 @@ export function SystemCommandApp() {
   };
 
   // ── Render ─────────────────────────────────────────────────────────────────
-
   return (
-    // Scheme-free on purpose: the frame puts this window in `console` (see
-    // WINDOW_SCHEME in window/window-frame.tsx), so the screen and the title bar
-    // above it are one black object on either desktop theme.
+    // The terminal screen sits on the ground colour, a step darker than the
+    // surface its title bar uses.
     <div
       className="h-full flex flex-col font-os-mono text-xs"
       style={{ background: "var(--os-bg)" }}

@@ -160,16 +160,10 @@ const EN = {
     empty: "No slides found",
   },
 
-  theme: {
-    group: "Color scheme",
-    option: (label: string) => `${label} theme`,
-  },
-
   prefs: {
     title: "Preferences",
     nav: {
       osVersion: "OS Version",
-      theme: "Theme Mode",
       language: "Language",
       motion: "Motion",
       startup: "Startup",
@@ -398,16 +392,10 @@ const TH: Strings = {
     empty: "ไม่พบสไลด์",
   },
 
-  theme: {
-    group: "โทนสี",
-    option: (label) => `ธีม ${label}`,
-  },
-
   prefs: {
     title: "การตั้งค่า",
     nav: {
       osVersion: "เวอร์ชันระบบ",
-      theme: "ธีม",
       language: "ภาษา",
       motion: "การเคลื่อนไหว",
       startup: "การเริ่มระบบ",
