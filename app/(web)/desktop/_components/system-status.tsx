@@ -33,8 +33,11 @@ import { useSystemStatus } from "../_lib/use-system-status";
 export function SystemStatus() {
   return (
     <div
-      className="flex shrink-0 items-center gap-3 text-[11px]"
-      style={{ color: "var(--os-text-dim)" }}
+      className="font-os-mono flex shrink-0 items-center gap-3 px-3 text-[11px] sm:gap-4 sm:px-4"
+      style={{
+        color: "var(--os-text-dim)",
+        borderLeft: "1px solid var(--os-border)",
+      }}
     >
       <SystemTray />
       <Clock />
@@ -68,7 +71,7 @@ function SystemTray() {
           style={flat ? { color: "var(--os-error)" } : undefined}
         >
           <BatteryGlyph level={battery.level} charging={battery.charging} />
-          <span className="tabular-nums">{battery.level}%</span>
+          <span className="tabular-nums max-sm:hidden">{battery.level}%</span>
         </span>
       )}
     </div>

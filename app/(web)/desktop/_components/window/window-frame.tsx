@@ -2,13 +2,13 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Copy, Minus, Square, X } from "lucide-react";
+import { activeWindowId } from "@/app/modules/desktop/lib/active-window";
 import type { WindowInstance } from "@/app/modules/desktop/context/window-manager-context";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { workspaceBox } from "@/app/modules/desktop/lib/workspace";
 import { useStrings } from "@/app/shared/hooks/use-locale";
 import { useIsSmallViewport } from "../../_lib/use-viewport";
 import { FileGraphic } from "../file-graphic";
-import { SPRING_EXPRESSIVE } from "@/app/shared/constants/motion";
 
 interface WindowFrameProps {
   window: WindowInstance;
@@ -25,7 +25,7 @@ const MIN_HEIGHT = 180;
 const clamp = (value: number, max: number, min = 0) =>
   Math.max(min, Math.min(value, max));
 
-/** Ghost round control in the title bar; `danger` tints the close action red. */
+/** Square control in the title bar; `danger` tints the close action red. */
 function TitleButton({
   label,
   onClick,
@@ -45,10 +45,10 @@ function TitleButton({
         e.stopPropagation();
         onClick();
       }}
-      className={`focus-ring grid h-8 w-8 cursor-pointer place-items-center rounded-full text-os-text-dim transition-colors duration-150 ${
+      className={`focus-ring grid h-8 w-10 cursor-pointer place-items-center text-os-text-dim transition-colors duration-150 ${
         danger
-          ? "hover:bg-os-error/12 hover:text-os-error"
-          : "hover:bg-os-surface-3"
+          ? "hover:bg-os-error/80 hover:text-white"
+          : "hover:bg-os-accent/15 hover:text-os-accent"
       }`}
     >
       {children}
@@ -58,6 +58,7 @@ function TitleButton({
 
 export function WindowFrame({ window: win, children }: WindowFrameProps) {
   const {
+    windows,
     closeWindow,
     minimizeWindow,
     maximizeWindow,
@@ -70,6 +71,8 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
   // Small viewport → treat every window as maximised. Drag/resize disabled.
   const isMobile = useIsSmallViewport();
   const effectivelyMaximized = win.isMaximized || isMobile;
+  // Only the window you are working in is lit; the rest sit back.
+  const isActive = activeWindowId(windows) === win.id;
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -202,16 +205,18 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
   return (
     <motion.div
       layout={false}
-      initial={{ opacity: 0, scale: 0.92, y: 14 }}
+      initial={{ opacity: 0, scale: 0.97, y: 8 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.94, y: 6 }}
-      transition={SPRING_EXPRESSIVE}
-      className="absolute flex flex-col overflow-hidden rounded-lg"
+      exit={{ opacity: 0, scale: 0.98, y: 4 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className="absolute flex flex-col overflow-hidden rounded-md"
       style={{
         ...style,
-        border: "1px solid var(--os-border)",
-        background: "var(--os-surface)",
-        boxShadow: "var(--shadow-3)",
+        border: `1px solid ${isActive ? "var(--os-border-strong)" : "var(--os-border)"}`,
+        background: "rgba(2, 8, 5, 0.94)",
+        boxShadow: isActive
+          ? "var(--shadow-3), var(--glow-window)"
+          : "var(--shadow-2)",
       }}
       onMouseDown={() => {
         focusWindow(win.id);
@@ -229,10 +234,10 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     >
       {/* Title Bar */}
       <div
-        className="flex shrink-0 select-none items-center justify-between gap-2 pl-4 pr-2"
+        className="flex shrink-0 select-none items-center justify-between gap-2 pl-3"
         style={{
-          height: 44,
-          background: "var(--os-header)",
+          height: 34,
+          background: isActive ? "#06200f" : "var(--os-surface-1)",
           borderBottom: "1px solid var(--os-border)",
           cursor: effectivelyMaximized ? "default" : "move",
         }}
@@ -247,8 +252,10 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
         <div className="flex min-w-0 items-center gap-2">
           <FileGraphic icon={win.fileNode.icon} size={16} />
           <span
-            className="truncate text-[13px] font-medium"
-            style={{ color: "var(--os-text)" }}
+            className="font-os-mono truncate text-[12px]"
+            style={{
+              color: isActive ? "var(--os-text)" : "var(--os-text-faint)",
+            }}
           >
             {win.fileNode.name}
           </span>
@@ -260,7 +267,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
             label={S.window.minimize}
             onClick={() => minimizeWindow(win.id)}
           >
-            <Minus size={15} strokeWidth={2} />
+            <Minus size={14} strokeWidth={2} />
           </TitleButton>
           {/* Maximize — hidden on mobile (auto-maximised already) */}
           {!isMobile && (

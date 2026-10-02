@@ -1,12 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_Thai, Roboto, Roboto_Mono, VT323 } from "next/font/google";
+import {
+  JetBrains_Mono,
+  Noto_Sans_Thai,
+  Roboto,
+  Roboto_Mono,
+  VT323,
+} from "next/font/google";
 import { SETTINGS_BOOTSTRAP } from "@/app/shared/settings/settings";
 import "./globals.css";
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#020a05",
+  themeColor: "#020906",
 };
 
 const roboto = Roboto({
@@ -17,6 +23,12 @@ const roboto = Roboto({
 
 const robotoMono = Roboto_Mono({
   variable: "--font-roboto-mono",
+  subsets: ["latin"],
+});
+
+/** The system voice: desktop labels, taskbar, title bars, terminal. */
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
 
@@ -91,7 +103,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOTSTRAP }} />
       </head>
       <body
-        className={`${roboto.variable} ${robotoMono.variable} ${vt323.variable} ${notoSansThai.variable} antialiased`}
+        className={`${roboto.variable} ${robotoMono.variable} ${jetbrainsMono.variable} ${vt323.variable} ${notoSansThai.variable} antialiased`}
       >
         {children}
       </body>

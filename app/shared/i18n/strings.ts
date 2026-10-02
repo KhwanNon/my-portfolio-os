@@ -22,9 +22,25 @@ const EN = {
   },
 
   dock: {
-    label: "Dock",
+    label: "Taskbar",
     minimized: ", minimized",
     running: ", running",
+  },
+
+  /** The Start button and the menu it opens. */
+  start: {
+    button: "START",
+    title: "PORTFOLIO OS",
+    status: "SYSTEM READY",
+    apps: "Apps",
+    pinned: "Pinned",
+    recommended: "Start here",
+    close: "Close Start menu",
+  },
+
+  /** The desktop surface itself. */
+  desktop: {
+    label: "Desktop",
   },
 
   /** The dock's right-hand readouts, which are all tooltip-only. */
@@ -50,6 +66,8 @@ const EN = {
     breadcrumb: "Breadcrumb",
     gridView: "Grid view",
     listView: "List view",
+    places: "Places",
+    home: "Home",
     notFound: "Path not found",
     empty: "This folder is empty",
   },
@@ -262,9 +280,23 @@ const TH: Strings = {
   },
 
   dock: {
-    label: "ด็อก",
+    label: "แถบงาน",
     minimized: " (ย่อไว้)",
     running: " (เปิดอยู่)",
+  },
+
+  start: {
+    button: "START",
+    title: "PORTFOLIO OS",
+    status: "SYSTEM READY",
+    apps: "แอป",
+    pinned: "ปักหมุด",
+    recommended: "เริ่มอ่านที่นี่",
+    close: "ปิดเมนู Start",
+  },
+
+  desktop: {
+    label: "เดสก์ท็อป",
   },
 
   status: {
@@ -288,6 +320,8 @@ const TH: Strings = {
     breadcrumb: "เส้นทางโฟลเดอร์",
     gridView: "มุมมองตาราง",
     listView: "มุมมองรายการ",
+    places: "ตำแหน่ง",
+    home: "หน้าแรก",
     notFound: "ไม่พบเส้นทางนี้",
     empty: "โฟลเดอร์นี้ว่างเปล่า",
   },

@@ -56,10 +56,8 @@ function Desktop() {
   };
 
   return (
-    // One column: the workspace taking everything, and the dock closing it off
-    // along the bottom. The shell's chrome is that one edge — what a top bar
-    // and a side rail each used to hold now lives either in the dock or on the
-    // desktop itself.
+    // One column: the workspace taking everything, and the taskbar closing it
+    // off along the bottom. The shell's chrome is that one edge.
     <div className="flex h-dvh w-full flex-col overflow-hidden bg-os-bg text-os-text">
       {/* The workspace: everything above the dock, and all of it. Positioning
           context for windows and ambient layers, and the box the window manager
@@ -83,13 +81,18 @@ function Desktop() {
           active.blur();
         }}
       >
-        {/* ── Ambient FX layers (back → front) ───────────────────────── */}
-        {/* The wallpaper, bare: no aura, grid or veil over it. */}
+        {/* ── Wallpaper and screen texture (back → front) ────────────── */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url(/assets/images/bg.webp)" }}
         />
+        {/* A light shade under the icons and the taskbar so labels read against
+            the brightest part of the city, then scanlines and grain. All three
+            sit under the desktop, so nothing a window says is ever dimmed. */}
+        <div aria-hidden className="os-wallpaper-shade pointer-events-none absolute inset-0" />
+        <div aria-hidden className="os-scanlines pointer-events-none absolute inset-0" />
+        <div aria-hidden className="os-grain pointer-events-none absolute inset-0" />
 
         {/* ── Desktop: the surface windows open from ───────────────────── */}
         <motion.main
@@ -97,8 +100,8 @@ function Desktop() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
           onContextMenu={handleDesktopContextMenu}
-          // No padding: the surface reaches every edge, and the one thing on it
-          // keeps its own margin from the corner.
+          // No padding: the surface reaches every edge, and the icons keep their
+          // own margin from it.
           className="custom-scrollbar absolute inset-0 z-20 overflow-auto"
         >
           <DesktopSurface />

@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { ArrowLeft, Home, LayoutGrid, List } from "lucide-react";
+import { FileGraphic } from "../file-graphic";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { useStrings } from "@/app/shared/hooks/use-locale";
@@ -31,6 +32,41 @@ function childrenAt(tree: FileNode[], path: Path): FileNode[] | null {
     : null;
 }
 
+/** A shortcut down the left edge: where it goes, and what to call it. */
+interface Place {
+  node: FileNode | null;
+  label: string;
+  path: Path;
+}
+
+/**
+ * The places worth jumping to: home, then every folder on the drive's top level
+ * and the folders one level inside the drive — which is where the work lives.
+ * Derived from the tree, so a folder added to the drive turns up here on its own.
+ */
+function placesOf(tree: FileNode[], home: string): Place[] {
+  const places: Place[] = [{ node: null, label: home, path: [] }];
+  const folders = (nodes: FileNode[]) =>
+    nodes.filter(
+      (n): n is FileNode & { data: { kind: "folder"; children: FileNode[] } } =>
+        n.type === "folder" && n.data?.kind === "folder",
+    );
+  for (const top of folders(tree)) {
+    places.push({ node: top, label: top.name, path: [top.name] });
+    // The drive is the one folder whose children are places in their own right.
+    if (top.icon === "cdrive") {
+      for (const inner of folders(top.data.children)) {
+        places.push({
+          node: inner,
+          label: inner.name,
+          path: [top.name, inner.name],
+        });
+      }
+    }
+  }
+  return places;
+}
+
 export function FolderRenderer({ fileNode }: FolderRendererProps) {
   const { openFile } = useWindowManager();
   const { fileSystem } = useDesktopData();
@@ -49,6 +85,10 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
   const [view, setView] = useState<ViewMode>("list");
 
   const children = childrenAt(fileSystem, path);
+  const places = useMemo(
+    () => placesOf(fileSystem, S.folder.home),
+    [fileSystem, S.folder.home],
+  );
 
   const navigate = (next: Path) => {
     if (pathEquals(next, path)) return;
@@ -87,8 +127,8 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
   return (
     <div
-      className="flex h-full w-full flex-col"
-      style={{ background: "var(--os-surface)" }}
+      className="@container flex h-full w-full flex-col"
+      style={{ background: "transparent" }}
     >
       {/* One row: where you were, where you are, and how you'd like to see it.
           The window's own title bar already names the folder, so the path is
@@ -97,7 +137,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
       <header
         className="flex shrink-0 items-center gap-2 px-4 py-3"
         style={{
-          background: "var(--os-header)",
+          background: "var(--os-surface-1)",
           borderBottom: "1px solid var(--os-border)",
         }}
       >
@@ -111,11 +151,11 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
         <nav
           aria-label={S.folder.breadcrumb}
-          className="custom-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto text-[13px]"
+          className="font-os-mono custom-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto text-[12px]"
         >
           <Crumb active={path.length === 0} onClick={() => navigateToCrumb(-1)}>
             <Home size={13} strokeWidth={1.9} />
-            <span>~</span>
+            <span className="font-os-mono">~</span>
           </Crumb>
           {path.map((seg, i) => (
             <span key={i} className="flex shrink-0 items-center gap-1">
@@ -131,7 +171,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
         </nav>
 
         <div
-          className="flex shrink-0 items-center gap-0.5 rounded-full p-1"
+          className="flex shrink-0 items-center gap-0.5 rounded-sm p-0.5"
           style={{ background: "var(--os-surface-3)" }}
         >
           <ViewButton
@@ -151,8 +191,49 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
         </div>
       </header>
 
+      <div className="flex min-h-0 flex-1">
+      {/* Places: shown once the window is wide enough to spare the room. */}
+      <aside
+        aria-label={S.folder.places}
+        className="custom-scrollbar hidden w-44 shrink-0 overflow-y-auto py-3 @xl:block"
+        style={{
+          background: "var(--os-surface-1)",
+          borderRight: "1px solid var(--os-border)",
+        }}
+      >
+        <h2
+          className="font-os-mono px-4 pb-2 text-[10px] uppercase tracking-[0.2em]"
+          style={{ color: "var(--os-text-subtle)" }}
+        >
+          {S.folder.places}
+        </h2>
+        {places.map((place) => {
+          const here = pathEquals(place.path, path);
+          return (
+            <button
+              key={place.path.join("/") || "~"}
+              onClick={() => navigate(place.path)}
+              aria-current={here ? "page" : undefined}
+              className="focus-ring font-os-mono flex w-full cursor-pointer items-center gap-2.5 px-4 py-1.5 text-left text-[12px] transition-colors duration-150 hover:bg-os-accent/10"
+              style={{
+                color: here ? "var(--os-accent)" : "var(--os-text-dim)",
+                background: here ? "rgba(85,255,136,0.08)" : undefined,
+                borderLeft: `2px solid ${here ? "var(--os-accent)" : "transparent"}`,
+              }}
+            >
+              {place.node ? (
+                <FileGraphic icon={place.node.icon} size={16} />
+              ) : (
+                <Home size={15} strokeWidth={1.8} />
+              )}
+              <span className="truncate">{place.label}</span>
+            </button>
+          );
+        })}
+      </aside>
+
       {/* Contents */}
-      <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto p-5">
+      <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto p-4">
         {children === null ? (
           <CenterMessage text={S.folder.notFound} />
         ) : children.length === 0 ? (
@@ -181,6 +262,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
           </div>
         )}
       </div>
+      </div>
     </div>
   );
 }
@@ -202,7 +284,7 @@ function IconButton({
       disabled={disabled}
       title={label}
       aria-label={label}
-      className="focus-ring grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-full transition-colors duration-200 hover:bg-os-surface-3 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
+      className="focus-ring grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-sm transition-colors duration-200 hover:bg-os-accent/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
       style={{ color: "var(--os-text-dim)" }}
     >
       {children}
@@ -227,11 +309,10 @@ function ViewButton({
       title={label}
       aria-label={label}
       aria-pressed={active}
-      className="focus-ring grid h-7 w-7 cursor-pointer place-items-center rounded-full transition-colors duration-200"
+      className="focus-ring grid h-7 w-7 cursor-pointer place-items-center rounded-sm transition-colors duration-200"
       style={{
         background: active ? "var(--os-surface-1)" : "transparent",
-        boxShadow: active ? "var(--shadow-1)" : "none",
-        color: active ? "var(--os-accent)" : "var(--os-text-faint)",
+                color: active ? "var(--os-accent)" : "var(--os-text-faint)",
       }}
     >
       {children}
@@ -252,7 +333,7 @@ function Crumb({
     <button
       onClick={onClick}
       disabled={active}
-      className="focus-ring flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 transition-colors duration-150 hover:bg-os-surface-3 disabled:cursor-default disabled:hover:bg-transparent"
+      className="focus-ring flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 transition-colors duration-150 hover:bg-os-accent/10 disabled:cursor-default disabled:hover:bg-transparent"
       style={{
         color: active ? "var(--os-accent)" : "var(--os-text-dim)",
         fontWeight: active ? 500 : 400,

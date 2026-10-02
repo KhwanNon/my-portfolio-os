@@ -157,14 +157,25 @@ const recycleBin: FileNode = {
   data: { kind: "folder", children: [] },
 };
 
+/**
+ * A launcher lying on the desktop: a file on the drive under the name the
+ * desktop knows it by. The drive keeps its own names — search, the terminal and
+ * `cd` all walk those — so "Skills.dll" is a label on the Skills folder, not a
+ * second file.
+ */
+export interface DesktopIconSpec {
+  label: string;
+  node: FileNode;
+}
+
 /** Everything the shell reads off the drive, in one language. */
 export interface DesktopData {
   /** The drive itself — what search, the terminal and Properties walk. */
   fileSystem: FileNode[];
-  /** The dock's fixed slots. */
-  dock: FileNode[];
-  /** What the home screen offers under its search field. */
-  homeShortcuts: FileNode[];
+  /** The icons lying on the desktop, top to bottom. */
+  desktopIcons: DesktopIconSpec[];
+  /** What the Start menu lists under Apps. */
+  startApps: FileNode[];
   /** The projects cabinet, for the card that asks it which one is featured. */
   projects: FileNode;
   craftFile: FileNode;
@@ -187,6 +198,7 @@ function build(locale: Locale): DesktopData {
   // for every `useMemo` and every identity check downstream.
   const projects = projectsFolder(L);
   const experience = experienceFolder(L);
+  const skills = skillsFolder(L);
 
   const cDrive: FileNode = {
     id: "c-drive",
@@ -195,7 +207,7 @@ function build(locale: Locale): DesktopData {
     icon: ICONS.cdrive,
     data: {
       kind: "folder",
-      children: [projects, skillsFolder(L), experience, educationFile(L)],
+      children: [projects, skills, experience, educationFile(L)],
     },
   };
 
@@ -216,32 +228,30 @@ function build(locale: Locale): DesktopData {
     ],
 
     /*
-     * The dock's fixed slots: what this machine *opens*. Documents stay out of
-     * it. A dock is a place to launch from and a document is something you
-     * read, and the desktop already puts both within one click.
+     * The desktop reads like a machine someone sat down at: the drive, who they
+     * are, the work, what they can do, where they have been, how to reach them,
+     * then the two loose documents and the bin.
      *
-     * Read left to right it is two groups, not one list. First what the visit
-     * is for — the work, and the way to answer it. Then the machine's own
-     * tools, in the order a shell has always kept them: the terminal, the
-     * settings, the bin. Contact sits second rather than last because a dock is
-     * read from the left and the far end is where the bin goes.
-     *
-     * Anything opened from outside this list joins the row for as long as its
-     * window lives; see `Taskbar`.
+     * The labels borrow executable and library names for flavour, but every
+     * entry opens the real file it stands for. README.txt is the craft file —
+     * the statement of the standard the rest was built to.
      */
-    dock: [cDrive, contact, systemCommand, preferences, recycleBin],
+    desktopIcons: [
+      { label: "My Portfolio", node: cDrive },
+      { label: "About.exe", node: profile },
+      { label: "Projects", node: projects },
+      { label: "Skills.dll", node: skills },
+      { label: "Experience", node: experience },
+      { label: "Contact.txt", node: contact },
+      { label: "Resume.pdf", node: resumePdf },
+      { label: "README.txt", node: craft },
+      { label: "Terminal", node: systemCommand },
+      { label: "Preferences", node: preferences },
+      { label: "Recycle Bin", node: recycleBin },
+    ],
 
-    /*
-     * What the desktop offers under its search field: the documents first,
-     * because the visit is short and they are the whole answer on their own,
-     * then the two folders for the reader who has time. Each of these is
-     * otherwise a click or two down inside C-DRIVE, and the desktop is the one
-     * surface with the room to say so outright.
-     *
-     * khwan-craft is not here — it has its own card in the corner, and a second
-     * way in would have been the same door twice.
-     */
-    homeShortcuts: [resumePdf, profile, projects, experience],
+    /* What the Start menu lists: the machine's own tools and the drive. */
+    startApps: [systemCommand, cDrive, preferences, recycleBin],
 
     projects,
     craftFile: craft,
