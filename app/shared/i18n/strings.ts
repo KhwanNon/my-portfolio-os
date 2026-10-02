@@ -64,8 +64,6 @@ const EN = {
   folder: {
     back: "Back",
     breadcrumb: "Breadcrumb",
-    places: "Places",
-    home: "Home",
     notFound: "Path not found",
     empty: "This folder is empty",
   },
@@ -316,8 +314,6 @@ const TH: Strings = {
   folder: {
     back: "ย้อนกลับ",
     breadcrumb: "เส้นทางโฟลเดอร์",
-    places: "ตำแหน่ง",
-    home: "หน้าแรก",
     notFound: "ไม่พบเส้นทางนี้",
     empty: "โฟลเดอร์นี้ว่างเปล่า",
   },
