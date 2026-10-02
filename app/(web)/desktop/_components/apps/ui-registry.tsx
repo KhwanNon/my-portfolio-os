@@ -7,6 +7,7 @@ import { EducationUI } from "./ui/education-ui";
 import { ContactUI } from "./ui/contact-ui";
 import { ProjectUI } from "./ui/project-ui";
 import { ProfileUI } from "./ui/profile-ui";
+import { CraftUI } from "./ui/craft-ui";
 import { PropertiesUI, AboutOSUI } from "./ui/system-ui";
 
 // Single source of truth: component name → component. Both the runtime renderer
@@ -18,6 +19,7 @@ const REGISTRY = {
   ContactUI,
   ProjectUI,
   ProfileUI,
+  CraftUI,
   PropertiesUI,
   AboutOSUI,
 };

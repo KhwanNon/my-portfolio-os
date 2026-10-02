@@ -189,7 +189,7 @@ function build(locale: Locale): DesktopData {
      * then the two loose documents and the bin.
      *
      * The labels borrow executable and library names for flavour, but every
-     * entry opens the real file it stands for. README.txt is the craft file —
+     * entry opens the real file it stands for. skill.md is the craft file —
      * the statement of the standard the rest was built to.
      */
     desktopIcons: [
@@ -200,7 +200,7 @@ function build(locale: Locale): DesktopData {
       { label: "Experience", node: experience },
       { label: "Contact.txt", node: contact },
       { label: "Resume.pdf", node: resumePdf },
-      { label: "README.txt", node: craft },
+      { label: "skill.md", node: craft },
       { label: "Terminal", node: systemCommand },
       { label: "Preferences", node: preferences },
       { label: "Recycle Bin", node: recycleBin },

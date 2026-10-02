@@ -88,13 +88,13 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     type: "website",
-    images: [{ url: "/assets/logo.png", width: 2000, height: 2000 }],
+    images: [{ url: "/assets/logo-og.png", width: 879, height: 872 }],
   },
   twitter: {
     card: "summary",
     title: TITLE,
     description: DESCRIPTION,
-    images: ["/assets/logo.png"],
+    images: ["/assets/logo-og.png"],
   },
 };
 

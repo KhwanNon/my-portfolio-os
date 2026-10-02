@@ -18,7 +18,7 @@ export interface Owner {
    * The one line the home screen leads with — craft first, not credentials. It
    * says how the work is done rather than what the job is called, because the
    * title is in the résumé one click away and the standard is not written down
-   * anywhere else a visitor would look. See `khwan-craft.md` for it in full.
+   * anywhere else a visitor would look. See `skill.md` for it in full.
    */
   tagline: string;
   role: string;

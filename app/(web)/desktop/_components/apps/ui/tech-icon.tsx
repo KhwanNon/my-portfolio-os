@@ -1,5 +1,6 @@
 "use client";
 import type { SimpleIcon } from "simple-icons";
+import { PixelGlyph, type PixelSprite } from "../../pixel-glyph";
 import {
   siAndroid,
   siAndroidstudio,
@@ -136,4 +137,29 @@ export function TechIcon({
       <path d={icon.path} />
     </svg>
   );
+}
+
+/**
+ * The mark for a technology with no logo of its own — a concept rather than a
+ * product. Matched on words in the name, so a new entry finds a sensible mark
+ * without being listed here.
+ */
+function spriteFor(name: string): PixelSprite {
+  const n = name.toLowerCase();
+  if (/sql|drift|database|hive|isar/.test(n)) return "database";
+  if (/architecture|bloc|clean|provider|riverpod|getx/.test(n)) return "layers";
+  if (/performance/.test(n)) return "bolt";
+  if (/offline|ci\/cd|sync/.test(n)) return "sync";
+  if (/native|integration|ffi|channel/.test(n)) return "plug";
+  if (/socket|sse|events|rest|api|http/.test(n)) return "globe";
+  return "code";
+}
+
+/**
+ * A technology's mark at display size: its logo where it has one, a pixel
+ * sprite where it does not — so a grid of them never has a blank tile.
+ */
+export function TechMark({ name, size = 28 }: { name: string; size?: number }) {
+  if (hasTechIcon(name)) return <TechIcon name={name} size={size} className="" />;
+  return <PixelGlyph sprite={spriteFor(name)} scale={Math.max(2, Math.round(size / 9))} />;
 }

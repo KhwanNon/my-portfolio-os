@@ -27,7 +27,7 @@ export function BrandLogo({
       style={{ borderRadius: Math.round(size * 0.28) }}
     >
       <Image
-        src="/assets/logo.png"
+        src="/assets/logo.webp"
         alt={alt}
         width={size}
         height={size}

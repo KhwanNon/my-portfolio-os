@@ -71,7 +71,7 @@ function makeProject(
   return uiNode(
     { id, name: `${props.name}.ui`, featured: props.featured },
     "ProjectUI",
-    { cover: `/assets/images/${COVER_SLUG[id]}.webp`, ...props },
+    { cover: `/assets/images/${COVER_SLUG[id]}.webp`, projectId: id, ...props },
   );
 }
 

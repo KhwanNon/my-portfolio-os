@@ -48,6 +48,7 @@ const DEFAULT_WINDOW_SIZES: Record<string, { width: number; height: number }> =
     "recycle-bin": { width: 520, height: 400 },
     "c-drive": { width: 1120, height: 760 },
     profile: { width: 960, height: 640 },
+    "khwan-craft-md": { width: 1040, height: 720 },
     contact: { width: 980, height: 700 },
     "resume-pdf": { width: 1000, height: 760 },
     education: { width: 1000, height: 720 },
@@ -63,7 +64,9 @@ function getDefaultSize(fileNode: FileNode): { width: number; height: number } {
   // and open as wide as one of those needs.
   const target = fileNode.id.startsWith("props-")
     ? { width: 420, height: 360 }
-    : fileNode.id.startsWith("skill-")
+    : fileNode.id.startsWith("proj-")
+      ? { width: 1200, height: 820 }
+      : fileNode.id.startsWith("skill-")
       ? { width: 1060, height: 760 }
       : fileNode.id.startsWith("exp-")
       ? { width: 1100, height: 780 }

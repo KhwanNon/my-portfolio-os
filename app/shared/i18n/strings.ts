@@ -146,6 +146,19 @@ const EN = {
 
   project: {
     platform: "Platform:",
+    platformLabel: "Platform",
+    tabs: {
+      overview: "Overview",
+      screenshots: "Screenshots",
+      features: "Features",
+      stack: "Tech Stack",
+      role: "My Role",
+    },
+    overview: "Project Overview",
+    features: "Key Features & Highlights",
+    techStack: "Tech Stack",
+    myRole: "My Role",
+    related: "Related Projects",
     recommended: "Start here",
     /** The star's own label, for a reader who meets it without the word beside it. */
     featuredMark: "Featured — open this one first",
@@ -410,6 +423,19 @@ const TH: Strings = {
 
   project: {
     platform: "แพลตฟอร์ม:",
+    platformLabel: "แพลตฟอร์ม",
+    tabs: {
+      overview: "ภาพรวม",
+      screenshots: "ภาพหน้าจอ",
+      features: "ฟีเจอร์",
+      stack: "เทคโนโลยี",
+      role: "บทบาทของผม",
+    },
+    overview: "ภาพรวมโปรเจกต์",
+    features: "ฟีเจอร์และจุดเด่น",
+    techStack: "เทคโนโลยีที่ใช้",
+    myRole: "บทบาทของผม",
+    related: "โปรเจกต์ที่เกี่ยวข้อง",
     recommended: "เริ่มอ่านที่นี่",
     featuredMark: "โปรเจกต์แนะนำ — เปิดอันนี้ก่อน",
     openFile: (name) => `เปิด ${name}`,

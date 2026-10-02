@@ -1,7 +1,6 @@
 "use client";
 import { useStrings } from "@/app/shared/hooks/use-locale";
-import { PixelGlyph, type PixelSprite } from "../../pixel-glyph";
-import { TechIcon, hasTechIcon } from "./tech-icon";
+import { TechMark } from "./tech-icon";
 
 // SkillsUI — Props: { title, items: { name, note?, description?, tags? }[] }
 //
@@ -23,22 +22,6 @@ interface SkillItem {
 interface SkillsUIProps {
   title?: string;
   items?: SkillItem[];
-}
-
-/**
- * The mark for a skill with no logo of its own — a concept rather than a
- * product. Matched on words in the name, so a new entry finds a sensible mark
- * without being listed here.
- */
-function spriteFor(name: string): PixelSprite {
-  const n = name.toLowerCase();
-  if (/sql|drift|database/.test(n)) return "database";
-  if (/architecture/.test(n)) return "layers";
-  if (/performance/.test(n)) return "bolt";
-  if (/offline|ci\/cd|sync/.test(n)) return "sync";
-  if (/native|integration/.test(n)) return "plug";
-  if (/socket|sse|events|rest|api/.test(n)) return "globe";
-  return "code";
 }
 
 export function SkillsUI({ title, items = [] }: SkillsUIProps) {
@@ -64,11 +47,7 @@ export function SkillsUI({ title, items = [] }: SkillsUIProps) {
           >
             {/* The mark: the language's own logo where it has one. */}
             <span className="grid h-16 w-16 shrink-0 place-items-center border-2 border-os-border-strong bg-os-surface-1 text-os-accent group-hover:border-os-accent">
-              {hasTechIcon(s.name) ? (
-                <TechIcon name={s.name} size={34} className="" />
-              ) : (
-                <PixelGlyph sprite={spriteFor(s.name)} scale={4} />
-              )}
+              <TechMark name={s.name} size={34} />
             </span>
 
             <div className="flex min-w-0 flex-1 flex-col gap-3 @2xl:flex-row @2xl:items-center">

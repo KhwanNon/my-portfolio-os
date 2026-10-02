@@ -1,6 +1,7 @@
 import type { FileNode } from "@/app/shared/types/file-system";
 import type { Localize } from "@/app/shared/i18n/locale";
 import { ICONS } from "./icons";
+import { uiNode } from "./ui-node";
 
 /**
  * The lines the rail's craft card shows: the five principles the file below
@@ -36,13 +37,19 @@ export function craftLines(L: Localize): string[] {
  * only shortcut to it, and the rail deliberately carries none.
  */
 export function craftFile(L: Localize): FileNode {
-  return {
-    id: "khwan-craft-md",
-    name: "khwan-craft.md",
-    type: "txt",
-    icon: ICONS.txt,
-    data: {
-      kind: "txt",
+  return uiNode(
+    { id: "khwan-craft-md", name: "skill.md", icon: ICONS.txt },
+    "CraftUI",
+    {
+      photo: "/assets/images/cat-man.webp",
+      heading: "KHWAN-CRAFT",
+      file: "SKILL.MD",
+      version: "v1.0",
+      principles: craftLines(L),
+      quote: L(
+        "A great chair is redesigned again and again, until it finally looks simple — yet everyone agrees it is the best.",
+        "เก้าอี้ที่ดีถูกออกแบบใหม่ครั้งแล้วครั้งเล่า จนในที่สุดดูเรียบง่าย แต่ใครเห็นก็ยอมรับว่าดีที่สุด",
+      ),
       content: L(
         `> KHWAN-CRAFT.MD — THE STANDARD
 > ─────────────────────────────────────────
@@ -497,5 +504,5 @@ export function craftFile(L: Localize): FileNode {
 > จบไฟล์`,
       ),
     },
-  };
+  );
 }
