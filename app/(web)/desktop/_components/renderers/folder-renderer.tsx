@@ -152,14 +152,10 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col gap-0.5">
+          // Everything else is the same grid, as inventory cards.
+          <div className="cover-grid">
             {children.map((child) => (
-              <FileIcon
-                key={child.id}
-                fileNode={child}
-                layout="row"
-                onOpen={handleChildClick}
-              />
+              <FileIcon key={child.id} fileNode={child} onOpen={handleChildClick} />
             ))}
           </div>
         )}

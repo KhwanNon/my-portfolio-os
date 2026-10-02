@@ -8,6 +8,11 @@ interface MatrixRainProps {
   speedMultiplier?: number;
   /** Multiplier for character stream density. Higher values create more columns. Default is 1. */
   density?: number;
+  /**
+   * Draw at 1/n resolution and let the browser scale it up block by block, so
+   * every character lands as chunky pixels. 1 (the default) draws at full size.
+   */
+  pixelScale?: number;
 }
 
 /**
@@ -18,6 +23,7 @@ export const MatrixRain = ({
   opacity = 0.5,
   speedMultiplier = 1,
   density = 1,
+  pixelScale = 1,
 }: MatrixRainProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -29,13 +35,15 @@ export const MatrixRain = ({
 
     /** Sync canvas dimensions with the browser viewport */
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = Math.ceil(window.innerWidth / pixelScale);
+      canvas.height = Math.ceil(window.innerHeight / pixelScale);
     };
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    const fontSize = 18;
+    // Scaled down with the canvas, but not all the way: a pixel glyph wants to
+    // land a little larger than the smooth one, so its blocks can be seen.
+    const fontSize = pixelScale > 1 ? Math.round(24 / pixelScale) : 18;
     // Calculate total columns based on screen width and requested density
     const columns = Math.floor((canvas.width / fontSize) * density);
 
@@ -105,7 +113,9 @@ export const MatrixRain = ({
 
         // Apply glow effect for a cinematic terminal aesthetic
         ctx.globalAlpha = brightness[i];
-        ctx.shadowBlur = brightness[i] > 0.85 ? 8 : 0;
+        // A soft glow has no place on a pixel canvas — it would be scaled up
+        // into a blur of blocks.
+        ctx.shadowBlur = pixelScale === 1 && brightness[i] > 0.85 ? 8 : 0;
         ctx.shadowColor = accentColor;
         ctx.fillText(text, x, y);
         ctx.globalAlpha = 1;
@@ -128,12 +138,17 @@ export const MatrixRain = ({
       clearInterval(interval);
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [speedMultiplier, density]); // Re-initialize streams if global animation props change
+  }, [speedMultiplier, density, pixelScale]); // Re-initialize streams if global animation props change
 
   return (
     <canvas
       ref={canvasRef}
-      style={{ opacity: opacity }}
+      style={{
+        opacity: opacity,
+        width: "100%",
+        height: "100%",
+        imageRendering: pixelScale > 1 ? "pixelated" : undefined,
+      }}
       className="fixed inset-0 -z-10 pointer-events-none transition-opacity duration-500"
     />
   );

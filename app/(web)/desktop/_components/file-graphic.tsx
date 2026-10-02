@@ -70,7 +70,7 @@ const REGISTRY: Record<string, IconSpec> = {
   txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/text.webp" },
   me:      { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/me.webp" },
   slide:   { glyph: SlideGlyph,    tone: NEUTRAL,                 finish: "plain"  },
-  ui:      { glyph: LayersGlyph,   tone: NEUTRAL,                 finish: "plain"  },
+  ui:      { glyph: LayersGlyph,   tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/text.webp" },
   link:    { glyph: LinkGlyph,     tone: NEUTRAL,                 finish: "plain"  },
   about:   { glyph: InfoGlyph,     tone: NEUTRAL,                 finish: "plain"  },
   file:    { glyph: FileGlyph,     tone: NEUTRAL,                 finish: "plain"  },

@@ -44,10 +44,12 @@ type Action =
 const DEFAULT_WINDOW_SIZES: Record<string, { width: number; height: number }> =
   {
     "system-command": { width: 640, height: 420 },
-    preferences: { width: 580, height: 440 },
+    preferences: { width: 860, height: 620 },
     "recycle-bin": { width: 520, height: 400 },
     "c-drive": { width: 680, height: 460 },
     profile: { width: 960, height: 640 },
+    contact: { width: 980, height: 700 },
+    "resume-pdf": { width: 1000, height: 760 },
   };
 
 /** Breathing room between a window and the edge of the workspace. */

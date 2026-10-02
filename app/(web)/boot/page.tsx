@@ -30,7 +30,7 @@ export default function BootScreen() {
       {/* Rain is the lowest layer; the clear patch and vignette sit over it but
           under the content, so the middle stays readable. Motion-only layers
           are gone the frame the sequence stops. */}
-      {playing && <MatrixRain opacity={0.3} />}
+      {playing && <MatrixRain opacity={0.35} pixelScale={3} />}
       <div className="absolute inset-0 pointer-events-none -z-5 bg-boot-clear" />
       <div className="absolute inset-0 pointer-events-none -z-5 bg-boot-vignette" />
       {playing && (

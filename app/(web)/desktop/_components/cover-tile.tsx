@@ -1,7 +1,7 @@
 "use client";
 // A project in a folder of projects, drawn as its cover: the picture is the
-// whole tile, because the picture already says the name. One click opens it —
-// these are things to look at, not files to select.
+// whole tile, because the picture already says the name. Opened like any file:
+// one click selects, two open.
 import Image from "next/image";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useFileInteraction } from "../_lib/use-file-interaction";
@@ -15,16 +15,16 @@ interface CoverTileProps {
 }
 
 export function CoverTile({ node, src, onOpen }: CoverTileProps) {
-  const { interaction } = useFileInteraction(node, { onOpen });
+  const { selected, interaction } = useFileInteraction(node, { onOpen });
 
   return (
     <div
       {...interaction}
-      onClick={() => onOpen(node)}
       aria-label={node.name.replace(/\.ui$/, "")}
       // A cartridge on a shelf: it hops a block when pointed at.
-      className="focus-ring pixel-box group relative aspect-square cursor-pointer select-none overflow-hidden hover:-translate-y-1"
-      
+      // Selected, its frame lights the way an active window's does.
+      data-active={selected}
+      className="focus-ring pixel-box os-window group relative aspect-square cursor-pointer select-none overflow-hidden hover:-translate-y-1"
     >
       <Image
         src={src}

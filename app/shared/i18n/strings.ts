@@ -121,7 +121,6 @@ const EN = {
 
   /** The heading each portfolio window leads with. */
   section: {
-    contact: "Contact",
     education: "Education",
     experience: "Experience",
     project: "Project",
@@ -159,8 +158,17 @@ const EN = {
   pdf: {
     download: "Download",
     open: "Open",
-    handoff:
-      "Phone browsers can't draw a PDF inside a window. Open it full screen, or keep a copy.",
+    thumbnails: "Page thumbnails",
+    page: "Page",
+    previous: "Previous page",
+    next: "Next page",
+    zoomIn: "Zoom in",
+    zoomOut: "Zoom out",
+    fit: "Fit to width",
+    rotate: "Rotate",
+    print: "Print",
+    loading: "Loading document...",
+    error: "This document could not be opened.",
   },
 
   slide: {
@@ -177,6 +185,9 @@ const EN = {
       motion: "Motion",
       startup: "Startup",
     },
+    languageIntro: "Choose the system language.",
+    motionIntro: "Choose how much the interface moves.",
+    startupIntro: "Choose what happens when you arrive.",
     active: "Active",
     /**
      * The choice that names no value and hands the question back to the device.
@@ -228,7 +239,6 @@ const EN = {
         ["Install Date", "10/24/2024"],
         ["OS Build", "22631.3447"],
       ] as [string, string][],
-      actions: ["Check for Updates", "View License", "Copy Specs"],
     },
   },
 
@@ -363,7 +373,6 @@ const TH: Strings = {
   },
 
   section: {
-    contact: "ติดต่อ",
     education: "การศึกษา",
     experience: "ประสบการณ์ทำงาน",
     project: "โปรเจกต์",
@@ -398,8 +407,17 @@ const TH: Strings = {
   pdf: {
     download: "ดาวน์โหลด",
     open: "เปิด",
-    handoff:
-      "เบราว์เซอร์บนมือถือแสดงไฟล์ PDF ในหน้าต่างนี้ไม่ได้ เปิดแบบเต็มจอ หรือดาวน์โหลดเก็บไว้",
+    thumbnails: "ภาพย่อหน้า",
+    page: "หน้า",
+    previous: "หน้าก่อนหน้า",
+    next: "หน้าถัดไป",
+    zoomIn: "ซูมเข้า",
+    zoomOut: "ซูมออก",
+    fit: "พอดีความกว้าง",
+    rotate: "หมุน",
+    print: "พิมพ์",
+    loading: "กำลังโหลดเอกสาร...",
+    error: "เปิดเอกสารนี้ไม่ได้",
   },
 
   slide: {
@@ -416,6 +434,9 @@ const TH: Strings = {
       motion: "การเคลื่อนไหว",
       startup: "การเริ่มระบบ",
     },
+    languageIntro: "เลือกภาษาของระบบ",
+    motionIntro: "เลือกระดับการเคลื่อนไหวของหน้าจอ",
+    startupIntro: "เลือกสิ่งที่จะเกิดขึ้นเมื่อเปิดเข้ามา",
     active: "ใช้อยู่",
     system: {
       label: "ตามระบบ",
@@ -462,7 +483,6 @@ const TH: Strings = {
         ["วันที่ติดตั้ง", "24/10/2024"],
         ["บิลด์ระบบ", "22631.3447"],
       ],
-      actions: ["ตรวจหาอัปเดต", "ดูสัญญาอนุญาต", "คัดลอกข้อมูลจำเพาะ"],
     },
   },
 

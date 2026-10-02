@@ -234,11 +234,12 @@ button:not(:disabled),
   font-family: var(--font-vt323), var(--font-os-mono);
 }
 
-/* Soft glow for the line that has to carry the screen. */
+/* The line that has to carry the screen, lifted the way a sprite is: a hard
+   shadow a block down and right, never a blur. */
 .boot-glow {
   text-shadow:
-    0 0 6px rgba(57, 255, 106, 0.55),
-    0 0 18px rgba(57, 255, 106, 0.2);
+    3px 3px 0 #0b5a22,
+    6px 6px 0 rgba(0, 0, 0, 0.8);
 }
 
 /* Fine CRT scanlines — boot screen only (see app/(web)/boot/page.tsx). */

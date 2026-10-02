@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { useFileMenu } from "./use-file-menu";
+import { useIsSmallViewport } from "./use-viewport";
 
 interface Options {
   /** Override what "open" does — folder windows navigate in place. */
@@ -12,12 +13,14 @@ interface Options {
 /**
  * Everything a node does when you interact with it — open, select, right-click,
  * keyboard — in one place, so each surface only has to decide how it looks.
- * Opening takes a double click everywhere, the way an OS behaves.
+ * Opening takes a double click everywhere, the way an OS behaves: one click
+ * selects. On a touch screen there is no double click to make, so one tap opens.
  */
 export function useFileInteraction(node: FileNode, { onOpen }: Options = {}) {
   const { openFile } = useWindowManager();
   const openMenu = useFileMenu();
   const [selected, setSelected] = useState(false);
+  const touch = useIsSmallViewport(768);
 
   const open = onOpen ?? openFile;
 
@@ -33,7 +36,8 @@ export function useFileInteraction(node: FileNode, { onOpen }: Options = {}) {
     title: node.name,
     onClick: (e: React.MouseEvent) => {
       e.stopPropagation();
-      setSelected(true);
+      if (touch) open(node);
+      else setSelected(true);
     },
     onDoubleClick: (e: React.MouseEvent) => {
       e.stopPropagation();

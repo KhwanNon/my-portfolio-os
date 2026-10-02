@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
+import { Info, Globe as GlobeIcon, Monitor, Power, RotateCcw } from "lucide-react";
 import {
   MOTION_VALUES,
   STARTUP_VALUES,
   currentValue,
   resetPreferences,
-  type Choices,
   type PreferenceId,
 } from "@/app/shared/settings/settings";
 import { useSetting } from "@/app/shared/settings/use-setting";
@@ -13,18 +13,11 @@ import { useStrings } from "@/app/shared/hooks/use-locale";
 import { LOCALES } from "@/app/shared/i18n/locale";
 import { STRINGS, type Strings } from "@/app/shared/i18n/strings";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
+import { Globe } from "./ui/sheet";
+import { PixelGlyph, type PixelSprite } from "../pixel-glyph";
 
 /** The version page, plus one page per preference — the ids are the same ones. */
 type Section = "os-version" | PreferenceId;
-
-interface Option<C extends string> {
-  value: C;
-  label: string;
-  /** A second line under the name, where the name alone doesn't say enough. */
-  detail?: string;
-  /** A colour chip ahead of the name, for a list where colour *is* the choice. */
-  swatch?: string;
-}
 
 /**
  * One row of a settings list: a name on the left, a mark on the right when it is
@@ -38,46 +31,36 @@ function OptionRow({
   active,
   activeLabel,
   onSelect,
-  swatch,
 }: {
   label: string;
   detail?: string;
   active: boolean;
   activeLabel: string;
   onSelect: () => void;
-  swatch?: string;
 }) {
-  const tone = active ? "var(--os-on-accent-container)" : "var(--os-text)";
-
   return (
     <button
       role="radio"
       aria-checked={active}
-      className="focus-ring w-full flex items-center justify-between gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 cursor-pointer"
-      style={{
-        background: active ? "var(--os-accent-container)" : "var(--os-surface-3)",
-        border: active ? "1px solid transparent" : "1px solid var(--os-border)",
-      }}
+      className={`focus-ring flex w-full cursor-pointer items-center justify-between gap-3 border-2 px-4 py-3 text-left ${
+        active
+          ? "border-os-accent bg-os-accent-container/60"
+          : "border-os-border hover:border-os-border-strong hover:bg-os-accent-container/30"
+      }`}
       onClick={onSelect}
     >
-      <div className="flex items-center gap-3 min-w-0">
-        {swatch && (
-          <div
-            className="w-4 h-4 rounded-full shrink-0"
-            style={{
-              background: swatch,
-              border: "1px solid var(--os-border-strong)",
-            }}
-          />
-        )}
+      <div className="flex min-w-0 items-center gap-3">
         <div className="min-w-0">
-          <div className="text-[13px]" style={{ color: tone }}>
+          <div
+            className="font-os-pixel text-[15px]"
+            style={{ color: active ? "var(--os-accent)" : "var(--os-text)" }}
+          >
             {label}
           </div>
           {detail && (
             <div
-              className="text-[11px] mt-0.5 opacity-70"
-              style={{ color: active ? tone : "var(--os-text-faint)" }}
+              className="font-os-mono mt-0.5 text-[12px]"
+              style={{ color: "var(--os-text-faint)" }}
             >
               {detail}
             </div>
@@ -85,10 +68,7 @@ function OptionRow({
         </div>
       </div>
       {active && (
-        <span
-          className="text-[11px] font-medium shrink-0"
-          style={{ color: "var(--os-on-accent-container)" }}
-        >
+        <span className="font-os-pixel shrink-0 bg-os-accent px-2 py-0.5 text-[12px] text-os-on-accent">
           {activeLabel}
         </span>
       )}
@@ -97,94 +77,53 @@ function OptionRow({
 }
 
 /**
- * A preference as a list of the choices it can take, exactly one of them
- * ticked. What is ticked is the *choice*, not the value behind it — "System"
- * stays ticked while the device swings from light to dark, because following the
- * device is what was chosen and nothing about that has changed.
+ * About this machine, laid out like a game's system screen: the name large, the
+ * build under it, a globe in the corner, and two tables of specifications.
  */
-function OptionList<I extends PreferenceId>({
-  id,
-  label,
-  options,
-}: {
-  id: I;
-  label: string;
-  options: Option<Choices[I]>[];
-}) {
-  const { choice, set } = useSetting(id);
-  const S = useStrings();
-
-  return (
-    <div
-      role="radiogroup"
-      aria-label={label}
-      className="p-5 space-y-2 overflow-y-auto custom-scrollbar h-full"
-    >
-      {options.map((option) => (
-        <OptionRow
-          key={option.value}
-          label={option.label}
-          detail={option.detail}
-          swatch={option.swatch}
-          active={choice === option.value}
-          activeLabel={S.prefs.active}
-          onSelect={() => set(option.value)}
-        />
-      ))}
-    </div>
-  );
-}
-
 function OsVersionSection({ S }: { S: Strings }) {
   return (
-    <div className="p-5 text-[13px] space-y-5 overflow-y-auto custom-scrollbar h-full">
-      {/* Header */}
-      <div
-        className="pb-4"
-        style={{ borderBottom: "1px solid var(--os-border)", color: "var(--os-text)" }}
-      >
-        <div className="font-bold text-sm">Portfolio OS</div>
-        <div className="mt-1 opacity-80">{S.prefs.os.version}</div>
-        <div className="mt-0.5 opacity-60">{S.prefs.os.copyright}</div>
+    <div className="custom-scrollbar @container h-full overflow-y-auto px-6 py-6 @xl:px-8">
+      <div className="flex items-start justify-between gap-6">
+        <div className="min-w-0">
+          <h2
+            className="font-os-pixel text-[clamp(28px,7cqw,48px)] font-bold leading-none text-os-accent"
+            style={{ textShadow: "3px 3px 0 #000" }}
+          >
+            Portfolio OS
+          </h2>
+          <p className="font-os-mono mt-4 text-[15px]">{S.prefs.os.version}</p>
+          <p
+            className="font-os-mono mt-2 text-[12px]"
+            style={{ color: "var(--os-text-dim)" }}
+          >
+            {S.prefs.os.copyright}
+          </p>
+        </div>
+        <Globe bracketed />
       </div>
 
       {[
         [S.prefs.os.deviceHeading, S.prefs.os.device],
         [S.prefs.os.systemHeading, S.prefs.os.system],
       ].map(([heading, rows]) => (
-        <div
+        <section
           key={heading as string}
-          className="space-y-1.5"
-          style={{ color: "var(--os-text)" }}
+          className="mt-6 pt-6"
+          style={{ borderTop: "2px solid var(--os-border-strong)" }}
         >
-          <div className="opacity-70 font-medium mb-1">{heading as string}</div>
-          {(rows as [string, string][]).map(([k, v]) => (
-            <div key={k} className="flex gap-3">
-              <span className="opacity-60 w-28 shrink-0">{k}</span>
-              <span>{v}</span>
-            </div>
-          ))}
-        </div>
+          <h3 className="font-os-pixel mb-4 text-[18px] font-semibold text-os-accent">
+            {heading as string}
+          </h3>
+          <dl className="font-os-mono grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-x-6 gap-y-3 text-[14px]">
+            {(rows as [string, string][]).map(([k, v]) => (
+              <div key={k} className="contents">
+                <dt style={{ color: "var(--os-text-faint)" }}>{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       ))}
-
-      {/* Actions */}
-      <div
-        className="pt-4 flex gap-2 flex-wrap"
-        style={{ borderTop: "1px solid var(--os-border)" }}
-      >
-        {S.prefs.os.actions.map((label) => (
-          <button
-            key={label}
-            className="px-3 py-1.5 text-[11px] font-medium rounded-md transition-opacity hover:opacity-100 opacity-80 cursor-pointer"
-            style={{
-              border: "1px solid var(--os-border-strong)",
-              color: "var(--os-text)",
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
@@ -200,54 +139,222 @@ function OsVersionSection({ S }: { S: Strings }) {
  */
 function LanguageSection() {
   const S = useStrings();
-  const { value } = useSetting("locale");
+  const { value, choice, set } = useSetting("locale");
   const inForce = LOCALES.find(({ id }) => id === value) ?? LOCALES[0];
 
   return (
-    <OptionList
-      id="locale"
-      label={S.prefs.nav.language}
-      options={[
-        {
-          value: "system",
-          label: S.prefs.system.label,
-          detail: S.prefs.system.detail(inForce.endonym),
-        },
-        ...LOCALES.map(({ id, endonym }) => ({ value: id, label: endonym })),
-      ]}
-    />
+    <div className="custom-scrollbar @container h-full overflow-y-auto p-6">
+      <SectionHeader
+        Icon={GlobeIcon}
+        title={S.prefs.nav.language}
+        intro={S.prefs.languageIntro}
+      />
+
+      <div role="radiogroup" aria-label={S.prefs.nav.language} className="space-y-4">
+        {LOCALES.map(({ id, endonym }) => (
+          <SettingCard
+            key={id}
+            label={endonym}
+            detail={LANGUAGE_CARDS[id].detail}
+            sprite={LANGUAGE_CARDS[id].sprite}
+            active={choice === id}
+            activeLabel={S.prefs.active}
+            onSelect={() => set(id)}
+          />
+        ))}
+
+        {/* Following the device stays a choice, below the two pictures rather
+            than among them: it is not a language of its own. */}
+        <OptionRow
+          label={S.prefs.system.label}
+          detail={S.prefs.system.detail(inForce.endonym)}
+          active={choice === "system"}
+          activeLabel={S.prefs.active}
+          onSelect={() => set("system")}
+        />
+      </div>
+    </div>
   );
 }
+
+/**
+ * What each language card shows. The line under the name is written in that
+ * language, not the one being read — the same reason the name is: a reader who
+ * has landed in the wrong one has to be able to find their way out.
+ */
+const LANGUAGE_CARDS: Record<(typeof LOCALES)[number]["id"], { sprite: PixelSprite; detail: string }> = {
+  en: { sprite: "langEn", detail: "System language will be English." },
+  th: { sprite: "langTh", detail: "ระบบจะใช้ภาษาไทย" },
+};
+
+/**
+ * A page's opening: the same icon its sidebar row carries, the page's name, and
+ * one line on what it decides.
+ */
+function SectionHeader({
+  Icon,
+  title,
+  intro,
+}: {
+  Icon: typeof Info;
+  title: string;
+  intro: string;
+}) {
+  return (
+    <header className="mb-5 flex items-center gap-4">
+      <Icon size={44} strokeWidth={1.6} className="shrink-0 text-os-accent" />
+      <div>
+        <h2 className="font-os-pixel text-[24px] font-bold leading-none">{title}</h2>
+        <p
+          className="font-os-mono mt-2 text-[13px]"
+          style={{ color: "var(--os-text-dim)" }}
+        >
+          {intro}
+        </p>
+      </div>
+    </header>
+  );
+}
+
+/**
+ * One choice as a card: a sprite of what it means, then its name and a line.
+ * The one in force is lit and badged; the rest show an empty radio.
+ */
+function SettingCard({
+  label,
+  detail,
+  sprite,
+  active,
+  activeLabel,
+  onSelect,
+}: {
+  label: string;
+  detail: string;
+  sprite: PixelSprite;
+  active: boolean;
+  activeLabel: string;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      role="radio"
+      aria-checked={active}
+      onClick={onSelect}
+      className={`focus-ring group flex w-full cursor-pointer items-stretch overflow-hidden border-[3px] text-left ${
+        active ? "border-os-accent" : "border-os-border-strong hover:border-os-accent/70"
+      }`}
+    >
+      <span
+        className={`grid w-16 shrink-0 place-items-center border-r-[3px] bg-black py-3 @lg:w-20 ${
+          active
+            ? "border-os-accent text-os-accent"
+            : "border-os-border-strong text-os-text-subtle group-hover:text-os-text-faint"
+        }`}
+      >
+        <PixelGlyph sprite={sprite} scale={2} />
+      </span>
+      <span className="flex min-w-0 flex-1 items-start gap-3 px-4 py-3">
+        <span className="min-w-0 flex-1">
+          <span
+            className="font-os-pixel block text-[18px] font-bold @lg:text-[20px]"
+            style={{ color: active ? "var(--os-text)" : "var(--os-text-dim)" }}
+          >
+            {label}
+          </span>
+          <span
+            className="font-os-mono mt-1 block text-[12px]"
+            style={{ color: "var(--os-text-dim)" }}
+          >
+            {detail}
+          </span>
+        </span>
+        {active ? (
+          <span className="font-os-pixel shrink-0 bg-os-accent px-3 py-1 text-[14px] font-semibold text-os-on-accent">
+            {activeLabel}
+          </span>
+        ) : (
+          <span
+            aria-hidden
+            className="mt-1 h-6 w-6 shrink-0 rounded-full border-2 border-os-border-strong group-hover:border-os-accent"
+          />
+        )}
+      </span>
+    </button>
+  );
+}
+
+/** What each motion choice draws: a ball in flight, or one at rest. */
+const MOTION_SPRITES: Record<(typeof MOTION_VALUES)[number], PixelSprite> = {
+  full: "motionFull",
+  reduced: "motionReduced",
+};
 
 function MotionSection() {
   const S = useStrings();
-  const { value } = useSetting("motion");
+  const { value, choice, set } = useSetting("motion");
 
   return (
-    <OptionList
-      id="motion"
-      label={S.prefs.nav.motion}
-      options={[
-        {
-          value: "system",
-          label: S.prefs.system.label,
-          detail: S.prefs.system.detail(S.prefs.motion[value].label),
-        },
-        ...MOTION_VALUES.map((id) => ({ value: id, ...S.prefs.motion[id] })),
-      ]}
-    />
+    <div className="custom-scrollbar @container h-full overflow-y-auto p-6">
+      <SectionHeader
+        Icon={Monitor}
+        title={S.prefs.nav.motion}
+        intro={S.prefs.motionIntro}
+      />
+      <div role="radiogroup" aria-label={S.prefs.nav.motion} className="space-y-4">
+        {MOTION_VALUES.map((id) => (
+          <SettingCard
+            key={id}
+            label={S.prefs.motion[id].label}
+            detail={S.prefs.motion[id].detail}
+            sprite={MOTION_SPRITES[id]}
+            active={choice === id}
+            activeLabel={S.prefs.active}
+            onSelect={() => set(id)}
+          />
+        ))}
+        <OptionRow
+          label={S.prefs.system.label}
+          detail={S.prefs.system.detail(S.prefs.motion[value].label)}
+          active={choice === "system"}
+          activeLabel={S.prefs.active}
+          onSelect={() => set("system")}
+        />
+      </div>
+    </div>
   );
 }
 
+/** What each start-up choice draws: a screen counting up, or a bolt straight in. */
+const STARTUP_SPRITES: Record<(typeof STARTUP_VALUES)[number], PixelSprite> = {
+  boot: "bootSequence",
+  instant: "bootInstant",
+};
+
 function StartupSection() {
   const S = useStrings();
+  const { choice, set } = useSetting("startup");
 
   return (
-    <OptionList
-      id="startup"
-      label={S.prefs.nav.startup}
-      options={STARTUP_VALUES.map((id) => ({ value: id, ...S.prefs.startup[id] }))}
-    />
+    <div className="custom-scrollbar @container h-full overflow-y-auto p-6">
+      <SectionHeader
+        Icon={Power}
+        title={S.prefs.nav.startup}
+        intro={S.prefs.startupIntro}
+      />
+      <div role="radiogroup" aria-label={S.prefs.nav.startup} className="space-y-4">
+        {STARTUP_VALUES.map((id) => (
+          <SettingCard
+            key={id}
+            label={S.prefs.startup[id].label}
+            detail={S.prefs.startup[id].detail}
+            sprite={STARTUP_SPRITES[id]}
+            active={choice === id}
+            activeLabel={S.prefs.active}
+            onSelect={() => set(id)}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -256,11 +363,11 @@ export function PreferencesApp() {
   const { showToast } = useWindowManager();
   const S = useStrings();
 
-  const navItems: { id: Section; label: string }[] = [
-    { id: "os-version", label: S.prefs.nav.osVersion },
-    { id: "locale", label: S.prefs.nav.language },
-    { id: "motion", label: S.prefs.nav.motion },
-    { id: "startup", label: S.prefs.nav.startup },
+  const navItems: { id: Section; label: string; Icon: typeof Info }[] = [
+    { id: "os-version", label: S.prefs.nav.osVersion, Icon: Info },
+    { id: "locale", label: S.prefs.nav.language, Icon: GlobeIcon },
+    { id: "motion", label: S.prefs.nav.motion, Icon: Monitor },
+    { id: "startup", label: S.prefs.nav.startup, Icon: Power },
   ];
 
   const reset = () => {
@@ -271,45 +378,48 @@ export function PreferencesApp() {
   };
 
   return (
-    <div className="h-full flex" style={{ background: "var(--os-surface)" }}>
-      {/* Sidebar Nav */}
+    <div className="flex h-full" style={{ background: "#020a05", color: "var(--os-text)" }}>
+      {/* Sidebar: one row per page, the open one boxed in the accent. */}
       <nav
         aria-label={S.prefs.title}
-        className="shrink-0 flex flex-col py-2"
-        style={{
-          width: 168,
-          borderRight: "1px solid var(--os-border)",
-          background: "var(--os-header)",
-        }}
+        className="flex w-14 shrink-0 flex-col gap-1 py-3 sm:w-52"
+        style={{ borderRight: "2px solid var(--os-border-strong)" }}
       >
-        {navItems.map((item) => {
-          const isActive = active === item.id;
+        {navItems.map(({ id, label, Icon }) => {
+          const isActive = active === id;
           return (
             <button
-              key={item.id}
+              key={id}
               aria-current={isActive ? "page" : undefined}
-              className="focus-ring mx-2 px-3 py-2.5 text-[13px] text-left rounded-md transition-all duration-200 cursor-pointer"
-              style={{
-                color: isActive ? "var(--os-on-accent-container)" : "var(--os-text-dim)",
-                background: isActive ? "var(--os-accent-container)" : "transparent",
-                fontWeight: isActive ? 500 : 400,
-              }}
-              onClick={() => setActive(item.id)}
+              aria-label={label}
+              title={label}
+              className={`focus-ring font-os-pixel mx-2 flex cursor-pointer items-center gap-3 border-2 px-2.5 py-2.5 text-left text-[15px] sm:px-3 ${
+                isActive
+                  ? "border-os-accent bg-os-accent-container/50 text-os-text"
+                  : "border-transparent text-os-text-dim hover:bg-os-accent-container/30 hover:text-os-text"
+              }`}
+              onClick={() => setActive(id)}
             >
-              {item.label}
+              <Icon size={20} strokeWidth={2.2} className="shrink-0 text-os-accent" />
+              <span className="max-sm:sr-only">{label}</span>
             </button>
           );
         })}
 
         {/* The way back, kept at the foot of the list rather than inside any one
             page: it undoes all of them, and belongs to none of them. */}
-        <div className="mt-auto mx-2 pt-2" style={{ borderTop: "1px solid var(--os-border)" }}>
+        <div
+          className="mx-2 mt-auto pt-2"
+          style={{ borderTop: "2px solid var(--os-border-strong)" }}
+        >
           <button
-            className="focus-ring w-full px-3 py-2 text-[11px] text-left rounded-md transition-opacity duration-200 opacity-70 hover:opacity-100 cursor-pointer"
-            style={{ color: "var(--os-text-dim)" }}
+            aria-label={S.prefs.reset.action}
+            title={S.prefs.reset.action}
+            className="focus-ring font-os-pixel flex w-full cursor-pointer items-center gap-3 px-2.5 py-2.5 text-left text-[14px] text-os-text-dim hover:text-os-text sm:px-3"
             onClick={reset}
           >
-            {S.prefs.reset.action}
+            <RotateCcw size={18} strokeWidth={2.2} className="shrink-0 text-os-accent" />
+            <span className="max-sm:sr-only">{S.prefs.reset.action}</span>
           </button>
         </div>
       </nav>

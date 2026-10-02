@@ -4,7 +4,6 @@
 // where there is no double click to make. Selection and hover are the only
 // chrome it ever draws.
 import type { FileNode } from "@/app/shared/types/file-system";
-import { useIsSmallViewport } from "../_lib/use-viewport";
 import { useFileInteraction } from "../_lib/use-file-interaction";
 import { IconTile } from "./file-graphic";
 
@@ -16,13 +15,11 @@ interface DesktopIconProps {
 
 export function DesktopIcon({ node, label }: DesktopIconProps) {
   const { selected, interaction } = useFileInteraction(node);
-  const touch = useIsSmallViewport(768);
 
   return (
     <div
       {...interaction}
       title={label}
-      onClick={(e) => (touch ? interaction.onDoubleClick(e) : interaction.onClick(e))}
       className="focus-ring group flex h-fit w-[90px] cursor-default select-none flex-col items-center gap-1 px-1 py-2"
     >
       {/* A hop of one block on hover, the way a sprite reacts. */}
