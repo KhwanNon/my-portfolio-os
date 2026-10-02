@@ -38,7 +38,7 @@ export type ProjectId = (typeof PROJECT_IDS)[number];
  * and by the folders above it, which inherit the mark.
  */
 /**
- * The cover tile of each project: `/assets/images/<slug>.png`. Listed rather
+ * The cover tile of each project: `/assets/images/<slug>.webp`. Listed rather
  * than derived from the id, because the slugs are the image files' names and
  * those predate — and don't match — the ids.
  */
@@ -69,7 +69,7 @@ function makeProject(
   return uiNode(
     { id, name: `${props.name}.ui`, featured: props.featured },
     "ProjectUI",
-    { cover: `/assets/images/${COVER_SLUG[id]}.png`, ...props },
+    { cover: `/assets/images/${COVER_SLUG[id]}.webp`, ...props },
   );
 }
 
@@ -81,7 +81,7 @@ function makeProject(
 function shots(
   slug: string,
   count: number,
-  ext: "png" | "jpg" = "png",
+  ext: "webp" | "jpg" = "webp",
 ): string[] {
   return Array.from(
     { length: count },

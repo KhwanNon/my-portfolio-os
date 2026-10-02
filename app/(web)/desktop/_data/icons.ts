@@ -4,6 +4,7 @@ export const ICONS = {
   cdrive:  "cdrive",
   recycle: "recycle",
   txt:     "txt",
+  me:      "me",
   pdf:     "pdf",
   ui:      "ui",
   slide:   "slide",

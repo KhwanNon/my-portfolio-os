@@ -22,7 +22,7 @@ function profileTxt(L: Localize): FileNode {
     id: "profile-txt",
     name: "Profile.txt",
     type: "txt",
-    icon: ICONS.txt,
+    icon: ICONS.me,
     data: {
       kind: "txt",
       content: L(

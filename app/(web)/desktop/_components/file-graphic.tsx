@@ -57,17 +57,18 @@ const REGISTRY: Record<string, IconSpec> = {
   // Apps. System Command is the one solid chip in the set — a terminal is a
   // surface you type into, and drawing it as ink makes it the anchor the other
   // three are read against; they keep the same footprint on a washed chip.
-  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",    finish: "filled", image: "/assets/icon/command.png" },
-  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)",   finish: "chip",   image: "/assets/icon/c-drive.png"},
-  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-purple)", finish: "chip",   image: "/assets/icon/setting.png" },
-  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip",   image: "/assets/icon/bin.png"},
-  contact: { glyph: MailGlyph,     tone: "var(--os-icon-green)",  finish: "chip",   image: "/assets/icon/contact.png" },
+  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",    finish: "filled", image: "/assets/icon/command.webp" },
+  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)",   finish: "chip",   image: "/assets/icon/c-drive.webp"},
+  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-purple)", finish: "chip",   image: "/assets/icon/setting.webp" },
+  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip",   image: "/assets/icon/bin.webp"},
+  contact: { glyph: MailGlyph,     tone: "var(--os-icon-green)",  finish: "chip",   image: "/assets/icon/contact.webp" },
 
   // Documents. Red on the PDF is the one hue a glyph keeps — the format's own
   // signal. Folder, text and PDF ship artwork; the rest keep their glyphs.
-  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",    finish: "plain", image: "/assets/icon/pdf.png" },
-  folder:  { glyph: FolderGlyph,   tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/folder.png" },
-  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/text.png" },
+  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",    finish: "plain", image: "/assets/icon/pdf.webp" },
+  folder:  { glyph: FolderGlyph,   tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/folder.webp" },
+  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/text.webp" },
+  me:      { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/me.webp" },
   slide:   { glyph: SlideGlyph,    tone: NEUTRAL,                 finish: "plain"  },
   ui:      { glyph: LayersGlyph,   tone: NEUTRAL,                 finish: "plain"  },
   link:    { glyph: LinkGlyph,     tone: NEUTRAL,                 finish: "plain"  },
