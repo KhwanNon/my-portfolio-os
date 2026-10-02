@@ -23,12 +23,11 @@ export function ToastStack({ toasts }: { toasts: Toast[] }) {
   if (toasts.length === 0) return null;
   return (
     <div
-      className="fixed flex flex-col gap-2 text-[12px] pointer-events-none"
+      className="font-os-pixel pointer-events-none fixed flex flex-col gap-3 text-[14px]"
       style={{
-        right: 16,
-        // Nothing to clear at the foot of the shell any more — the same margin
-        // it keeps from the right edge is the whole of it.
-        bottom: 16,
+        right: 20,
+        // Clear of the taskbar, by the same margin it keeps from the right.
+        bottom: "calc(var(--os-dock-h) + 20px)",
         zIndex: 9000,
       }}
     >
@@ -37,16 +36,16 @@ export function ToastStack({ toasts }: { toasts: Toast[] }) {
         return (
           <div
             key={t.id}
-            className="px-3 py-2 rounded-md animate-[fadeIn_0.18s_ease-out]"
-            style={{
-              color: c.fg,
-              background: c.bg,
-              border: `1px solid ${c.border}`,
-              boxShadow: "var(--shadow-2)",
-              backdropFilter: "blur(4px)",
-              minWidth: 200,
-              maxWidth: 360,
-            }}
+            className="pixel-box px-3 py-2"
+            style={
+              {
+                "--pb-color": c.border,
+                color: c.fg,
+                background: "#020a05",
+                minWidth: 200,
+                maxWidth: 360,
+              } as React.CSSProperties
+            }
           >
             {t.text}
           </div>

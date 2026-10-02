@@ -1,6 +1,6 @@
 "use client";
 // The taskbar: the shell's one piece of chrome, full width across the foot of
-// the screen. START at the left, then one slot per open window, and what the
+// the screen. SEARCH at the left, then one slot per open window, and what the
 // machine has to say about itself at the right-hand end. Launchers live on the
 // desktop, not here.
 import { motion } from "framer-motion";
@@ -13,7 +13,7 @@ import { activeWindowId } from "@/app/modules/desktop/lib/active-window";
 import { useStrings } from "@/app/shared/hooks/use-locale";
 import { useFileMenu } from "../_lib/use-file-menu";
 import { FileGraphic } from "./file-graphic";
-import { StartMenu } from "./start-menu";
+import { SearchLauncher } from "./search-launcher";
 import { SystemStatus } from "./system-status";
 
 export function Taskbar() {
@@ -29,21 +29,21 @@ export function Taskbar() {
       aria-label={S.dock.label}
       initial={{ y: 48, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.2, duration: 0.3, ease: "easeOut" }}
-      // In the flow rather than floating over the workspace, so it takes a
-      // hairline where a floating bar would take a shadow.
-      className="relative z-300 flex shrink-0 items-stretch"
+      transition={{ delay: 0.2, duration: 0.3, ease: (t: number) => Math.ceil(t * 4) / 4 }}
+      // A game's HUD strip: solid, with a thick lit edge along the top.
+      className="relative z-300 flex shrink-0 items-stretch gap-1 px-1 py-1"
       style={{
         height: "var(--os-dock-h)",
-        background: "rgba(1, 5, 3, 0.94)",
-        borderTop: "1px solid var(--os-border-strong)",
+        background: "#020a05",
+        borderTop: "3px solid var(--os-accent)",
+        boxShadow: "inset 0 3px 0 0 #0f3a22",
       }}
     >
-      <StartMenu />
+      <SearchLauncher />
 
       {/* The only part that may outgrow the bar: every window adds a
           slot, so this strip is what scrolls and the tray never moves. */}
-      <div className="custom-scrollbar flex min-w-0 flex-1 items-stretch overflow-x-auto">
+      <div className="custom-scrollbar flex min-w-0 flex-1 items-stretch gap-1 overflow-x-auto">
         {open.map((node) => (
           <TaskSlot
             key={node.id}
@@ -69,9 +69,8 @@ export function Taskbar() {
  * opened a second window for something already running would be a bar you
  * cannot use to get back to anything.
  *
- * The line along the bottom is the whole of the window state: bright for the
- * window you are in, dim for one that is open behind it or minimised, absent
- * for one that is not running.
+ * Drawn as a game button: raised while its window sits behind another or is
+ * minimised, pressed in and lit while it is the window you are in.
  */
 function TaskSlot({
   node,
@@ -109,22 +108,15 @@ function TaskSlot({
       }}
       title={node.name}
       aria-label={`${node.name}${state}`}
-      className="focus-ring font-os-mono relative flex shrink-0 cursor-pointer items-center gap-2 px-3.5 text-[12px] transition-colors duration-150 hover:bg-os-accent/10 sm:min-w-[116px] sm:px-4"
+      data-pressed={active}
+      className="focus-ring font-os-pixel pixel-btn relative flex shrink-0 cursor-pointer items-center gap-2 px-2.5 text-[14px] hover:bg-os-accent-container sm:min-w-[132px] sm:px-3"
       style={{
-        color: win ? "var(--os-text)" : "var(--os-text-dim)",
-        background: active ? "rgba(85,255,136,0.08)" : undefined,
+        color: active ? "var(--os-accent)" : "var(--os-text-dim)",
+        background: active ? "#0b2e18" : "var(--os-surface-3)",
       }}
     >
-      <FileGraphic icon={node.icon} size={20} />
+      <FileGraphic icon={node.icon} size={22} className="pixelated" />
       <span className="max-w-[110px] truncate max-sm:hidden">{node.name}</span>
-      <span
-        className="absolute inset-x-0 bottom-0 h-0.5 transition-opacity duration-150"
-        style={{
-          opacity: win ? 1 : 0,
-          background: active ? "var(--os-accent)" : "var(--os-text-subtle)",
-          boxShadow: active ? "0 0 8px rgba(85,255,136,0.7)" : undefined,
-        }}
-      />
     </button>
   );
 }

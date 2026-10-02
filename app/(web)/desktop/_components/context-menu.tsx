@@ -48,15 +48,13 @@ export function ContextMenu({ menu, onClose }: ContextMenuProps) {
     <div
       ref={ref}
       onContextMenu={(e) => e.preventDefault()}
-      className="fixed text-[12px] rounded-md overflow-hidden select-none"
+      className="pixel-box font-os-pixel fixed select-none overflow-hidden py-1 text-[14px]"
       style={{
         left: pos.x,
         top: pos.y,
         zIndex: 10000,
-        minWidth: 180,
-        background: "var(--os-surface)",
-        border: "1px solid var(--os-border-strong)",
-        boxShadow: "var(--shadow-2)",
+        minWidth: 190,
+        background: "#020a05",
       }}
     >
       {menu.items.map((item, i) =>
@@ -64,9 +62,9 @@ export function ContextMenu({ menu, onClose }: ContextMenuProps) {
           <div
             key={i}
             style={{
-              height: 1,
+              height: 0,
               margin: "4px 6px",
-              background: "var(--os-border)",
+              borderTop: "2px dashed #1e5a36",
             }}
           />
         ) : (
@@ -78,12 +76,8 @@ export function ContextMenu({ menu, onClose }: ContextMenuProps) {
               item.onSelect?.();
               onClose();
             }}
-            className="w-full text-left px-3 py-1.5 transition-colors hover:bg-(--os-accent-container) disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-            style={{
-              color: "var(--os-text)",
-              background: "transparent",
-              border: "none",
-            }}
+            // The item under the pointer inverts, the way a game menu marks it.
+            className="w-full cursor-pointer border-none bg-transparent px-3 py-1 text-left text-os-text hover:bg-os-accent hover:text-[#021a0c] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-os-text"
           >
             {item.label}
           </button>

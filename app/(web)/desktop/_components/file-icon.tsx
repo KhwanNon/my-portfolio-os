@@ -53,22 +53,22 @@ export const FileIcon = ({
     return (
       <div
         {...interaction}
-        className={`focus-ring group flex cursor-pointer select-none items-center gap-3 rounded-md border border-transparent px-3 py-2 transition-colors duration-150 ${
-          selected ? "bg-os-accent-container" : "hover:bg-os-accent/10"
+        className={`focus-ring group flex cursor-pointer select-none items-center gap-3 px-2 py-1.5 ${
+          selected ? "bg-os-accent-container" : "hover:bg-os-accent-container/60"
         }`}
       >
-        <IconTile icon={fileNode.icon} size="sm" />
+        <IconTile icon={fileNode.icon} size="sm" className="pixelated" />
         <span className="flex min-w-0 flex-1 items-center gap-1.5">
           {featured && <FeaturedStar size={12} />}
           <span
-            className="truncate text-[13px]"
+            className="font-os-pixel truncate text-[15px]"
             style={{ color: "var(--os-text)" }}
           >
             {fileNode.name}
           </span>
         </span>
         <span
-          className="shrink-0 text-[11px]"
+          className="font-os-pixel shrink-0 text-[12px]"
           style={{ color: "var(--os-text-faint)" }}
         >
           {summarize(fileNode, S)}

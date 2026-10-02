@@ -1,0 +1,193 @@
+// Tiny sprites for the chrome, drawn from a grid of characters: `#` is a lit
+// block, anything else is empty. A vector icon scaled down blurs at its edges;
+// these are whole pixels, so they stay as sharp as the rest of the sprite art.
+
+/** Each sprite as rows of equal length, top to bottom. */
+const SPRITES = {
+  minimize: [
+    "       ",
+    "       ",
+    "       ",
+    "       ",
+    "       ",
+    "#######",
+    "#######",
+  ],
+  maximize: [
+    "#######",
+    "#######",
+    "#     #",
+    "#     #",
+    "#     #",
+    "#     #",
+    "#######",
+  ],
+  restore: [
+    "  #####",
+    "  #####",
+    "  #   #",
+    "##### #",
+    "##### #",
+    "#   ###",
+    "#####  ",
+  ],
+  close: [
+    "##   ##",
+    "### ###",
+    " ##### ",
+    "  ###  ",
+    " ##### ",
+    "### ###",
+    "##   ##",
+  ],
+  start: [
+    "### ###",
+    "### ###",
+    "### ###",
+    "       ",
+    "### ###",
+    "### ###",
+    "### ###",
+  ],
+  pointer: [
+    "#    ",
+    "##   ",
+    "###  ",
+    "#### ",
+    "###  ",
+    "##   ",
+    "#    ",
+  ],
+  back: [
+    "   #   ",
+    "  ##   ",
+    " ##    ",
+    "#######",
+    " ##    ",
+    "  ##   ",
+    "   #   ",
+  ],
+  home: [
+    "   #   ",
+    "  ###  ",
+    " ##### ",
+    "#######",
+    " #   # ",
+    " # # # ",
+    " ##### ",
+  ],
+  search: [
+    " ###   ",
+    "#   #  ",
+    "#   #  ",
+    "#   #  ",
+    " ####  ",
+    "    ## ",
+    "     ##",
+  ],
+  star: [
+    "   #   ",
+    "   #   ",
+    "#######",
+    " ##### ",
+    "  ###  ",
+    " ## ## ",
+    "##   ##",
+  ],
+  user: [
+    "  ###  ",
+    " ##### ",
+    " ##### ",
+    "  ###  ",
+    "       ",
+    " ##### ",
+    "#######",
+  ],
+  laptop: [
+    " ##### ",
+    " #   # ",
+    " #   # ",
+    " ##### ",
+    "       ",
+    "#######",
+    "#######",
+  ],
+  clock: [
+    " ##### ",
+    "#  #  #",
+    "#  #  #",
+    "#  ## #",
+    "#     #",
+    "#     #",
+    " ##### ",
+  ],
+  pin: [
+    " ##### ",
+    "##   ##",
+    "##   ##",
+    " ##### ",
+    "  ###  ",
+    "   #   ",
+    "   #   ",
+  ],
+  code: [
+    "  #   #  ",
+    " #     # ",
+    "#       #",
+    " #     # ",
+    "  #   #  ",
+  ],
+  cat: [
+    "#       #  ",
+    "##     ##  ",
+    "# ##### #  ",
+    "#       #  ",
+    "# #   # #  ",
+    "#   #   #  ",
+    " #     #   ",
+    " #     # ##",
+    "#       # #",
+    "#       #  ",
+    " #######   ",
+  ],
+} as const;
+
+export type PixelSprite = keyof typeof SPRITES;
+
+interface PixelGlyphProps {
+  sprite: PixelSprite;
+  /** Size of one block, in CSS pixels. */
+  scale?: number;
+  className?: string;
+  /** Defaults to the current text colour. */
+  color?: string;
+}
+
+export function PixelGlyph({
+  sprite,
+  scale = 2,
+  className,
+  color = "currentColor",
+}: PixelGlyphProps) {
+  const rows = SPRITES[sprite];
+  const w = rows[0].length;
+  const h = rows.length;
+
+  return (
+    <svg
+      aria-hidden
+      width={w * scale}
+      height={h * scale}
+      viewBox={`0 0 ${w} ${h}`}
+      shapeRendering="crispEdges"
+      className={className}
+      fill={color}
+    >
+      {rows.flatMap((row, y) =>
+        [...row].map((c, x) =>
+          c === "#" ? <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} /> : null,
+        ),
+      )}
+    </svg>
+  );
+}

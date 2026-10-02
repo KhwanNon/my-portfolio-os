@@ -2,6 +2,7 @@ import type { FileNode } from "@/app/shared/types/file-system";
 import { DEFAULT_LOCALE, localize, type Locale } from "@/app/shared/i18n/locale";
 import type { Localize } from "@/app/shared/i18n/locale";
 import { ICONS } from "./icons";
+import { uiNode } from "./ui-node";
 import { projectsFolder, featuredPitch } from "./projects";
 import { skillsFolder } from "./skills";
 import { experienceFolder } from "./experience";
@@ -11,105 +12,60 @@ import { contactApp } from "./contact";
 import { owner, type Owner } from "./identity";
 
 /**
- * The résumé's summary, in the first person and with room to breathe. With the
- * About folder gone this is the only file that introduces a person rather than
- * a body of work, so it says the same three things the PDF opens with — the
- * span, the specialism, and how far either side of mobile it reaches — and then
- * stops, because the windows behind it are the evidence.
+ * The résumé's summary, in the first person and with room to breathe — the one
+ * file that introduces a person rather than a body of work. Laid out as a
+ * character sheet: portrait and facts on one side, the story on the other, and
+ * the standard it all comes back to boxed underneath.
  */
-function profileTxt(L: Localize): FileNode {
-  return {
-    id: "profile-txt",
-    name: "Profile.txt",
-    type: "txt",
-    icon: ICONS.me,
-    data: {
-      kind: "txt",
-      content: L(
-        `> PROFILE.TXT — SYSTEM USER DATA
-> ─────────────────────────────────────────
-
-  If your company is looking for someone who goes
-  beyond simply meeting requirements and cares about
-  every aspect of a product—from user experience and
-  system quality to long-term growth—I believe I can
-  bring a mindset of striving for perfection and
-  never overlooking the small details. I always aim
-  to build high-quality products and continuously
-  improve them to meet international standards.
-
-  I design from the user's side — simplifying complex
-  processes into something intuitive and accessible, and
-  treating "it works" as a starting point, not the final
-  standard. I keep refining for usability, reliability, and
-  maintainability, because good design comes from actually
-  understanding what people need.
-
-  My name is Khwan. I am a full-stack software engineer with
-  five years of experience, specialising in mobile application
-  development while contributing across backend and web
-  platforms.
-
-  I build cross-platform applications with Flutter, write
-  backend services in Go, and deliver production software from
-  architecture and implementation through to release.
-
-  Mobile is where I do my best work, but I am not confined to
-  it — I pick up unfamiliar stacks quickly, because most of
-  what matters carries over between them.
-
-──────────────────────────────────────────────────────
-  Developer   :  Khwanchai Nontawichit
-  Alias       :  Khwan
-  Role        :  Software Engineer
-  Experience  :  5 Years
-  Location    :  Nonthaburi, Thailand
-  Stack       :  Flutter · Dart · Go · TypeScript · SQL
-──────────────────────────────────────────────────────
-
-> END OF FILE`,
-        `> PROFILE.TXT — ข้อมูลผู้ใช้ระบบ
-> ─────────────────────────────────────────
-
-  ถ้าบริษัทของคุณกำลังมองหาคนที่ไม่ได้ทำงานแค่ให้ผ่าน
-  ตามที่กำหนด แต่ใส่ใจในทุกมิติของโปรดักต์ ตั้งแต่
-  ประสบการณ์ผู้ใช้ คุณภาพของระบบ ไปจนถึงการเติบโต
-  ในระยะยาว ผมเชื่อว่าตัวเองมีความมุ่งมั่นที่จะทำให้ดีที่สุด
-  และไม่มองข้ามรายละเอียดเล็กๆ น้อยๆ ผมตั้งใจสร้าง
-  โปรดักต์ที่มีคุณภาพสูงเสมอ และพัฒนาต่อเนื่องให้ได้
-  มาตรฐานระดับสากล
-
-  ผมออกแบบจากมุมมองของผู้ใช้ก่อนเสมอ ทำเรื่องซับซ้อนให้เข้าใจง่าย
-  ใช้งานง่าย และเข้าถึงได้ "มันใช้งานได้" สำหรับผมคือจุดเริ่มต้น
-  ไม่ใช่มาตรฐานสุดท้าย ผมพัฒนาต่อเรื่อยๆ เพื่อความใช้งานง่าย
-  ความน่าเชื่อถือ และดูแลรักษาได้ในระยะยาว เพราะการออกแบบที่ดี
-  มาจากการเข้าใจสิ่งที่ผู้คนต้องการจริงๆ
-
-  สวัสดีครับ ผมชื่อขวัญ เป็นวิศวกรซอฟต์แวร์แบบ full-stack
-  ประสบการณ์ 5 ปี เชี่ยวชาญงานพัฒนาแอปมือถือ
-  ควบคู่กับการทำงานฝั่ง backend และแพลตฟอร์มเว็บ
-
-  ผมสร้างแอปข้ามแพลตฟอร์มด้วย Flutter เขียนเซอร์วิสฝั่งหลังบ้าน
-  ด้วย Go และส่งมอบซอฟต์แวร์ที่ใช้งานจริง ตั้งแต่วางสถาปัตยกรรม
-  ลงมือเขียน ไปจนถึงปล่อยขึ้นใช้งาน
-
-  งานที่ผมทำได้ดีที่สุดคืองานมือถือ แต่ก็ไม่ได้จำกัดอยู่แค่นั้น
-  ผมจับสแตกที่ไม่เคยใช้ได้เร็ว เพราะแก่นของมันส่วนใหญ่
-  ใช้ร่วมกันได้อยู่แล้ว
-
-──────────────────────────────────────────────────────
-  ผู้พัฒนา     :  ขวัญชัย นนทวิชิต
-  ชื่อเล่น      :  ขวัญ
-  ตำแหน่ง      :  Software Engineer
-  ประสบการณ์   :  5 ปี
-  ที่อยู่        :  นนทบุรี ประเทศไทย
-  สแตก        :  Flutter · Dart · Go · TypeScript · SQL
-──────────────────────────────────────────────────────
-
-> จบไฟล์`,
+function profileUi(L: Localize): FileNode {
+  const me = owner(L);
+  return uiNode(
+    { id: "profile", name: "Profile.ui", icon: ICONS.me },
+    "ProfileUI",
+    {
+      photo: "/assets/images/profile.webp",
+      heading: "SYSTEM USER DATA",
+      file: "PROFILE.UI",
+      version: "v1.0",
+      paragraphs: L(
+        [
+          "If your company is looking for someone who goes beyond simply meeting requirements and cares about every aspect of a product — from user experience and system quality to long-term growth — I believe I can bring a mindset of striving for perfection and never overlooking the small details. I always aim to build high-quality products and continuously improve them to meet international standards.",
+          "I design from the user's side — simplifying complex processes into something intuitive and accessible, and treating \"it works\" as a starting point, not the final standard. I keep refining for usability, reliability, and maintainability, because good design comes from actually understanding what people need.",
+          "My name is Khwan. I am a full-stack software engineer with five years of experience, specialising in mobile application development while contributing across backend and web platforms.",
+          "I build cross-platform applications with Flutter, write backend services in Go, and deliver production software from architecture and implementation through to release.",
+          "Mobile is where I do my best work, but I am not confined to it — I pick up unfamiliar stacks quickly, because most of what matters carries over between them.",
+        ],
+        [
+          "ถ้าบริษัทของคุณกำลังมองหาคนที่ไม่ได้ทำงานแค่ให้ผ่านตามที่กำหนด แต่ใส่ใจในทุกมิติของโปรดักต์ ตั้งแต่ประสบการณ์ผู้ใช้ คุณภาพของระบบ ไปจนถึงการเติบโตในระยะยาว ผมเชื่อว่าตัวเองมีความมุ่งมั่นที่จะทำให้ดีที่สุด และไม่มองข้ามรายละเอียดเล็กๆ น้อยๆ ผมตั้งใจสร้างโปรดักต์ที่มีคุณภาพสูงเสมอ และพัฒนาต่อเนื่องให้ได้มาตรฐานระดับสากล",
+          "ผมออกแบบจากมุมมองของผู้ใช้ก่อนเสมอ ทำเรื่องซับซ้อนให้เข้าใจง่าย ใช้งานง่าย และเข้าถึงได้ \"มันใช้งานได้\" สำหรับผมคือจุดเริ่มต้น ไม่ใช่มาตรฐานสุดท้าย ผมพัฒนาต่อเรื่อยๆ เพื่อความใช้งานง่าย ความน่าเชื่อถือ และดูแลรักษาได้ในระยะยาว เพราะการออกแบบที่ดีมาจากการเข้าใจสิ่งที่ผู้คนต้องการจริงๆ",
+          "สวัสดีครับ ผมชื่อขวัญ เป็นวิศวกรซอฟต์แวร์แบบ full-stack ประสบการณ์ 5 ปี เชี่ยวชาญงานพัฒนาแอปมือถือ ควบคู่กับการทำงานฝั่ง backend และแพลตฟอร์มเว็บ",
+          "ผมสร้างแอปข้ามแพลตฟอร์มด้วย Flutter เขียนเซอร์วิสฝั่งหลังบ้านด้วย Go และส่งมอบซอฟต์แวร์ที่ใช้งานจริง ตั้งแต่วางสถาปัตยกรรม ลงมือเขียน ไปจนถึงปล่อยขึ้นใช้งาน",
+          "งานที่ผมทำได้ดีที่สุดคืองานมือถือ แต่ก็ไม่ได้จำกัดอยู่แค่นั้น ผมจับสแตกที่ไม่เคยใช้ได้เร็ว เพราะแก่นของมันส่วนใหญ่ใช้ร่วมกันได้อยู่แล้ว",
+        ],
       ),
+      infoTitle: "USER INFO",
+      info: [
+        { icon: "user", label: L("Name", "ชื่อ"), lines: [me.name, me.alias] },
+        {
+          icon: "laptop",
+          label: L("Role", "ตำแหน่ง"),
+          lines: [me.role, L("Full-stack · Mobile", "Full-stack · มือถือ")],
+        },
+        { icon: "clock", label: L("Experience", "ประสบการณ์"), lines: [me.experience] },
+        {
+          icon: "pin",
+          label: L("Location", "ที่อยู่"),
+          lines: [L("Nonthaburi, Thailand", "นนทบุรี ประเทศไทย")],
+        },
+        {
+          icon: "code",
+          label: L("Stack", "สแตก"),
+          lines: ["Flutter · Dart · Go", "TypeScript · Python · SQL"],
+        },
+      ],
+      quote: me.tagline,
     },
-  };
+  );
 }
 
 const resumePdf: FileNode = {
@@ -211,7 +167,7 @@ function build(locale: Locale): DesktopData {
     },
   };
 
-  const profile = profileTxt(L);
+  const profile = profileUi(L);
   const craft = craftFile(L);
   const contact = contactApp(L);
 

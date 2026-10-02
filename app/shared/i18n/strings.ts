@@ -27,15 +27,10 @@ const EN = {
     running: ", running",
   },
 
-  /** The Start button and the menu it opens. */
-  start: {
-    button: "START",
-    title: "PORTFOLIO OS",
-    status: "SYSTEM READY",
-    apps: "Apps",
-    pinned: "Pinned",
-    recommended: "Start here",
-    close: "Close Start menu",
+  /** The SEARCH button and the prompt it opens in the middle of the screen. */
+  launcher: {
+    button: "SEARCH",
+    heading: "What are you looking for?",
   },
 
   /** The desktop surface itself. */
@@ -281,14 +276,9 @@ const TH: Strings = {
     running: " (เปิดอยู่)",
   },
 
-  start: {
-    button: "START",
-    title: "PORTFOLIO OS",
-    status: "SYSTEM READY",
-    apps: "แอป",
-    pinned: "ปักหมุด",
-    recommended: "เริ่มอ่านที่นี่",
-    close: "ปิดเมนู Start",
+  launcher: {
+    button: "ค้นหา",
+    heading: "กำลังหาอะไรอยู่?",
   },
 
   desktop: {

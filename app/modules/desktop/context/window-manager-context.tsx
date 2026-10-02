@@ -47,7 +47,7 @@ const DEFAULT_WINDOW_SIZES: Record<string, { width: number; height: number }> =
     preferences: { width: 580, height: 440 },
     "recycle-bin": { width: 520, height: 400 },
     "c-drive": { width: 680, height: 460 },
-    "profile-txt": { width: 620, height: 440 },
+    profile: { width: 960, height: 640 },
   };
 
 /** Breathing room between a window and the edge of the workspace. */

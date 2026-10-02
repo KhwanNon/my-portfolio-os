@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Copy, Minus, Square, X } from "lucide-react";
 import { activeWindowId } from "@/app/modules/desktop/lib/active-window";
 import type { WindowInstance } from "@/app/modules/desktop/context/window-manager-context";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
@@ -9,6 +8,7 @@ import { workspaceBox } from "@/app/modules/desktop/lib/workspace";
 import { useStrings } from "@/app/shared/hooks/use-locale";
 import { useIsSmallViewport } from "../../_lib/use-viewport";
 import { FileGraphic } from "../file-graphic";
+import { PixelGlyph } from "../pixel-glyph";
 
 interface WindowFrameProps {
   window: WindowInstance;
@@ -25,7 +25,10 @@ const MIN_HEIGHT = 180;
 const clamp = (value: number, max: number, min = 0) =>
   Math.max(min, Math.min(value, max));
 
-/** Square control in the title bar; `danger` tints the close action red. */
+/** Motion in whole frames, the way a sprite animates: four steps, no tween. */
+const STEPPED = (t: number) => Math.ceil(t * 4) / 4;
+
+/** A bevelled block in the title bar; `danger` lights the close action red. */
 function TitleButton({
   label,
   onClick,
@@ -45,10 +48,8 @@ function TitleButton({
         e.stopPropagation();
         onClick();
       }}
-      className={`focus-ring grid h-8 w-10 cursor-pointer place-items-center text-os-text-dim transition-colors duration-150 ${
-        danger
-          ? "hover:bg-os-error/80 hover:text-white"
-          : "hover:bg-os-accent/15 hover:text-os-accent"
+      className={`focus-ring pixel-btn grid h-[22px] w-[24px] cursor-pointer place-items-center bg-os-surface-3 text-os-text ${
+        danger ? "hover:bg-os-error hover:text-white" : "hover:bg-os-accent-container"
       }`}
     >
       {children}
@@ -205,19 +206,13 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
   return (
     <motion.div
       layout={false}
-      initial={{ opacity: 0, scale: 0.97, y: 8 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.98, y: 4 }}
-      transition={{ duration: 0.15, ease: "easeOut" }}
-      className="absolute flex flex-col overflow-hidden rounded-md"
-      style={{
-        ...style,
-        border: `1px solid ${isActive ? "var(--os-border-strong)" : "var(--os-border)"}`,
-        background: "rgba(2, 8, 5, 0.94)",
-        boxShadow: isActive
-          ? "var(--shadow-3), var(--glow-window)"
-          : "var(--shadow-2)",
-      }}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.16, ease: STEPPED }}
+      className="os-window pixel-box absolute flex flex-col overflow-hidden"
+      data-active={isActive}
+      style={{ ...style, background: "#020a05" }}
       onMouseDown={() => {
         focusWindow(win.id);
         setTimeout(() => {
@@ -234,11 +229,13 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
     >
       {/* Title Bar */}
       <div
-        className="flex shrink-0 select-none items-center justify-between gap-2 pl-3"
+        // Lit like a game's dialog header when this is the window in use;
+        // banked down to the surface when it is not.
+        className="flex shrink-0 select-none items-center justify-between gap-2 pl-2 pr-1.5"
         style={{
-          height: 34,
-          background: isActive ? "#06200f" : "var(--os-surface-1)",
-          borderBottom: "1px solid var(--os-border)",
+          height: 32,
+          background: isActive ? "var(--os-accent)" : "var(--os-surface-3)",
+          borderBottom: `3px solid ${isActive ? "#1e8a4a" : "#0f3a22"}`,
           cursor: effectivelyMaximized ? "default" : "move",
         }}
         onMouseDown={handleTitleBarMouseDown}
@@ -250,11 +247,16 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       >
         {/* Title */}
         <div className="flex min-w-0 items-center gap-2">
-          <FileGraphic icon={win.fileNode.icon} size={16} />
           <span
-            className="font-os-mono truncate text-[12px]"
+            className="grid h-[22px] w-[22px] shrink-0 place-items-center"
+            style={{ background: isActive ? "var(--os-on-accent)" : "transparent" }}
+          >
+            <FileGraphic icon={win.fileNode.icon} size={18} className="pixelated" />
+          </span>
+          <span
+            className="font-os-pixel truncate text-[14px] font-semibold tracking-wide"
             style={{
-              color: isActive ? "var(--os-text)" : "var(--os-text-faint)",
+              color: isActive ? "var(--os-on-accent)" : "var(--os-text-faint)",
             }}
           >
             {win.fileNode.name}
@@ -262,12 +264,12 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
         </div>
 
         {/* Window Controls */}
-        <div className="flex shrink-0 items-center gap-0.5">
+        <div className="flex shrink-0 items-center gap-1">
           <TitleButton
             label={S.window.minimize}
             onClick={() => minimizeWindow(win.id)}
           >
-            <Minus size={14} strokeWidth={2} />
+            <PixelGlyph sprite="minimize" />
           </TitleButton>
           {/* Maximize — hidden on mobile (auto-maximised already) */}
           {!isMobile && (
@@ -275,11 +277,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
               label={win.isMaximized ? S.window.restore : S.window.maximize}
               onClick={() => maximizeWindow(win.id)}
             >
-              {win.isMaximized ? (
-                <Copy size={13} strokeWidth={2} />
-              ) : (
-                <Square size={12} strokeWidth={2.2} />
-              )}
+              <PixelGlyph sprite={win.isMaximized ? "restore" : "maximize"} />
             </TitleButton>
           )}
           <TitleButton
@@ -287,7 +285,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
             danger
             onClick={() => closeWindow(win.id)}
           >
-            <X size={16} strokeWidth={2} />
+            <PixelGlyph sprite="close" />
           </TitleButton>
         </div>
       </div>
@@ -308,8 +306,9 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
             width: 16,
             height: 16,
             cursor: "nwse-resize",
+            // A stepped grip, three blocks on the diagonal.
             background:
-              "linear-gradient(135deg, transparent 0%, transparent 50%, var(--os-border) 50%, var(--os-border) 60%, transparent 60%, transparent 70%, var(--os-border) 70%, var(--os-border) 80%, transparent 80%)",
+              "linear-gradient(var(--os-border-strong),var(--os-border-strong)) 12px 4px/4px 4px no-repeat, linear-gradient(var(--os-border-strong),var(--os-border-strong)) 8px 8px/4px 4px no-repeat, linear-gradient(var(--os-border-strong),var(--os-border-strong)) 12px 8px/4px 4px no-repeat, linear-gradient(var(--os-border-strong),var(--os-border-strong)) 4px 12px/4px 4px no-repeat, linear-gradient(var(--os-border-strong),var(--os-border-strong)) 8px 12px/4px 4px no-repeat, linear-gradient(var(--os-border-strong),var(--os-border-strong)) 12px 12px/4px 4px no-repeat",
           }}
           title={S.window.resize}
         />

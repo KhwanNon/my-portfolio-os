@@ -27,34 +27,7 @@ export function DesktopSurface() {
           <DesktopIcon key={node.id} node={node} label={label} />
         ))}
       </div>
-
-      <SystemReadout />
     </div>
   );
 }
 
-/**
- * The one line of atmosphere: a prompt, a caret and a build number in the
- * corner. Quiet enough to be missed, and hidden on a phone where the corner is
- * a thumb's.
- */
-function SystemReadout() {
-  const S = useStrings();
-  return (
-    <div
-      aria-hidden
-      className="font-os-mono pointer-events-none absolute bottom-3 right-4 hidden select-none text-right text-[10px] leading-relaxed tracking-[0.18em] sm:block"
-      style={{ color: "var(--os-text-faint)", opacity: 0.6 }}
-    >
-      <div>
-        {S.start.title} · BUILD 2026.10
-      </div>
-      <div>
-        {S.start.status}
-        <span className="mx-2 opacity-50">/</span>
-        <span style={{ color: "var(--os-accent)" }}>knt@portfolio:~$</span>
-        <span className="os-caret ml-1 inline-block h-2.5 w-1.5 translate-y-px bg-current" />
-      </div>
-    </div>
-  );
-}

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /*
- * Design tokens for the one theme this OS has: a cyberpunk terminal —
- * black ground, phosphor green. Every component consumes a role (primary,
+ * Design tokens for the one theme this OS has: a pixel game in a cyberpunk
+ * terminal — black ground, phosphor green, square corners, hard shadows. Every component consumes a role (primary,
  * tonal surface staircase, text ramp, outline, container pair), never a hex.
  * The surface staircase is black stepped toward green; the text ramp is green
  * -tinted white; green is the only hue, so the few signals that must differ
@@ -46,11 +46,13 @@
   --os-icon-ink: #d8ffe4;
   --os-icon-neutral: #6fb887;
 
-  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4);
-  --shadow-3: 0 14px 36px rgba(0, 0, 0, 0.7), 0 4px 10px rgba(0, 0, 0, 0.45);
-  /* The one glow: a window you are working in, and nothing else. */
-  --glow-window: 0 0 0 1px rgba(80, 255, 130, 0.08), 0 0 28px -6px rgba(57, 232, 117, 0.35);
+  --shadow-1: 2px 2px 0 0 rgba(0, 0, 0, 0.5);
+  --shadow-2: 4px 4px 0 0 rgba(0, 0, 0, 0.55);
+  --shadow-3: 6px 6px 0 0 rgba(0, 0, 0, 0.6);
+  /* Pixel art throws no soft light: a shadow is a block of black, offset. */
+  --shadow-hard: 6px 6px 0 0 rgba(0, 0, 0, 0.6);
+  /* Text on the accent itself — a lit title bar, a selected label. */
+  --os-on-accent: #021a0c;
 
   /* The taskbar across the foot. */
   --os-dock-h: 48px;
@@ -67,6 +69,7 @@
 @theme inline {
   --color-os-bg: var(--os-bg);
   --color-os-accent: var(--os-accent);
+  --color-os-on-accent: var(--os-on-accent);
   --color-os-primary: var(--os-primary);
   --color-os-accent-container: var(--os-accent-container);
   --color-os-on-accent-container: var(--os-on-accent-container);
@@ -83,45 +86,109 @@
   --color-os-error: var(--os-error);
   --color-os-tertiary: var(--os-tertiary);
   --color-os-featured: var(--os-featured);
-  /*
-   * Both voices end in the Thai face. Roboto carries no Thai glyphs, so the
-   * browser falls through to Noto Sans Thai for those characters and for those
-   * only — Latin keeps its metrics whichever language is set, and the mono
-   * voice keeps its monospaced Latin while Thai inside a `.txt` file still
-   * renders as type rather than as boxes.
-   */
-  --font-os-sans: var(--font-roboto), var(--font-noto-thai), system-ui,
-    sans-serif;
-  --font-os-mono: var(--font-jetbrains-mono), var(--font-roboto-mono),
-    var(--font-noto-thai), ui-monospace, monospace;
 }
 
 /*
  * Shape scale — patches Tailwind's own `--radius-*` namespace (not `inline`), so
- * every `rounded-*` utility across the app retunes at once. Corners are 2–6px:
- * a window is a rectangle with its edges eased, not a card.
+ * every `rounded-*` utility across the app squares off at once. A pixel has no
+ * curve: corners are cut by `.pixel-box`, never rounded.
  */
 @theme {
-  --radius-xs: 2px;
-  --radius-sm: 2px;
-  --radius-md: 3px;
-  --radius-lg: 4px;
-  --radius-xl: 4px;
-  --radius-2xl: 6px;
-  --radius-3xl: 6px;
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
 }
 
+/*
+ * The three voices, declared on `body` because that is where next/font puts the
+ * faces they name — declared any higher, `var(--font-roboto)` would not exist
+ * yet and the whole stack would fall back to the system font. (They are not in
+ * `@theme inline`, which inlines values into utilities but never emits the
+ * variables themselves.)
+ *
+ * Every voice ends in the Thai face: none of the Latin faces carry Thai glyphs,
+ * so the browser falls through to Noto Sans Thai for those characters only.
+ */
 body {
+  --font-os-sans: var(--font-roboto), var(--font-noto-thai), system-ui,
+    sans-serif;
+  --font-os-mono: var(--font-jetbrains-mono), var(--font-roboto-mono),
+    var(--font-noto-thai), ui-monospace, monospace;
+  --font-os-pixel: var(--font-pixelify), var(--font-noto-thai), ui-monospace,
+    monospace;
   background-color: var(--os-bg);
   color: var(--os-text);
   font-family: var(--font-os-sans);
   overflow: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
+  /* A pixel arrow, green with a black outline. */
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='33' viewBox='0 0 11 16.5' shape-rendering='crispEdges'><path d='M0 0h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-4v1h1v2h1v2h-2v-2h-1v-2h-1v1h-1v1h-1v1h-1z' fill='%23020906'/><path d='M1 2h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-3v1h1v2h1v2h-1v-2h-1v-2h-1v1h-1v1h-1z' fill='%2355ff88'/></svg>") 0 0, auto;
 }
 
-/* Mono voice — terminal, boot screen, file paths, clock/stat readouts only. */
+/* Mono voice — terminal, file contents, code-like readouts. */
 .font-os-mono {
   font-family: var(--font-os-mono);
+}
+
+/* Pixel voice — all chrome: labels, menus, title bars, headings. */
+.font-os-pixel {
+  font-family: var(--font-os-pixel);
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* Something to click wears the same arrow, lit solid. */
+.cursor-pointer,
+button:not(:disabled),
+[role="button"] {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='33' viewBox='0 0 11 16.5' shape-rendering='crispEdges'><path d='M0 0h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-4v1h1v2h1v2h-2v-2h-1v-2h-1v1h-1v1h-1v1h-1z' fill='%23020906'/><path d='M1 2h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-3v1h1v2h1v2h-1v-2h-1v-2h-1v1h-1v1h-1z' fill='%23e8fff0'/></svg>") 0 0, pointer;
+}
+
+/* Pixel art is scaled by the block, never smoothed. */
+.pixelated {
+  image-rendering: pixelated;
+}
+
+/*
+ * The pixel frame: a border drawn as four offset shadows, which leaves each
+ * corner one block short — the stepped corner every sprite box has — plus a
+ * hard drop shadow. Set `--pb-color` to light it.
+ */
+.pixel-box {
+  --pb: 3px;
+  --pb-color: var(--os-border-strong);
+  box-shadow:
+    0 calc(var(--pb) * -1) 0 0 var(--pb-color),
+    0 var(--pb) 0 0 var(--pb-color),
+    calc(var(--pb) * -1) 0 0 0 var(--pb-color),
+    var(--pb) 0 0 0 var(--pb-color),
+    calc(var(--pb) * 3) calc(var(--pb) * 3) 0 0 rgba(0, 0, 0, 0.55);
+}
+
+/* A window's frame: lit for the window in use, banked down for the rest. */
+.os-window {
+  --pb-color: #1e5a36;
+}
+.os-window[data-active="true"] {
+  --pb-color: var(--os-accent);
+}
+
+/* A raised game button: light on the top-left edge, dark on the bottom-right.
+   Pressed (or `data-pressed`) swaps them, so it sinks into the bar. */
+.pixel-btn {
+  box-shadow:
+    inset -2px -2px 0 0 rgba(0, 0, 0, 0.6),
+    inset 2px 2px 0 0 rgba(232, 255, 240, 0.14);
+}
+.pixel-btn:active,
+.pixel-btn[data-pressed="true"] {
+  box-shadow:
+    inset 2px 2px 0 0 rgba(0, 0, 0, 0.6),
+    inset -2px -2px 0 0 rgba(232, 255, 240, 0.08);
 }
 
 /*
@@ -250,18 +317,10 @@ body {
     linear-gradient(to top, rgba(2, 9, 6, 0.55), transparent 14%);
 }
 
-@keyframes os-caret {
-  50% {
-    opacity: 0;
-  }
-}
-.os-caret {
-  animation: os-caret 1.1s steps(1) infinite;
-}
 
-/* The neon, spent in one place: the glyph of whatever is being pointed at. */
+/* A sprite's hard shadow, for a glyph sitting on a lit surface. */
 .os-glow {
-  filter: drop-shadow(0 0 6px rgba(57, 232, 117, 0.45));
+  filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.7));
 }
 
 /* A shelf of project covers: square tiles that fill the window's width. */
@@ -277,14 +336,20 @@ body {
   outline-offset: 2px;
 }
 
-/* Custom scrollbar (already used by file/folder panes). Neutral outline tone —
-   chrome, not an active/focus state, so it doesn't borrow the accent. */
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+/* Scrollbar as a game's: a square track and a bevelled block for a thumb. */
+.custom-scrollbar {
+  scrollbar-color: var(--os-accent-container) transparent;
+}
+.custom-scrollbar::-webkit-scrollbar { width: 10px; height: 10px; }
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.35);
+}
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--os-border-strong);
-  border-radius: 2px;
+  background: var(--os-accent-container);
+  box-shadow:
+    inset -2px -2px 0 0 rgba(0, 0, 0, 0.6),
+    inset 2px 2px 0 0 rgba(85, 255, 136, 0.35);
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--os-text-faint);
+  background: #11552b;
 }

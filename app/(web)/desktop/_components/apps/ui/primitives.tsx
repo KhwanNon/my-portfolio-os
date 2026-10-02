@@ -5,12 +5,19 @@ export function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-4">
       <div
-        className="text-xs font-bold tracking-[0.2em] uppercase"
-        style={{ color: "var(--os-accent)" }}
+        className="font-os-pixel text-[15px] font-bold tracking-[0.16em] uppercase"
+        style={{ color: "var(--os-accent)", textShadow: "2px 2px 0 #000" }}
       >
         {children}
       </div>
-      <div className="mt-1 h-px" style={{ background: "var(--os-border)" }} />
+      {/* A dotted rule, one block high: a game's divider, not a hairline. */}
+      <div
+        className="mt-1.5 h-[3px]"
+        style={{
+          background:
+            "repeating-linear-gradient(to right, var(--os-border-strong) 0 3px, transparent 3px 6px)",
+        }}
+      />
     </div>
   );
 }
@@ -18,7 +25,7 @@ export function SectionTitle({ children }: { children: React.ReactNode }) {
 export function Badge({ text, icon }: { text: string; icon?: React.ReactNode }) {
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] rounded-md mr-1 mb-1"
+      className="pixel-btn font-os-pixel mr-1 mb-1 inline-flex items-center gap-1.5 px-2.5 py-1 text-[13px]"
       style={{
         color: "var(--os-on-accent-container)",
         background: "var(--os-accent-container)",

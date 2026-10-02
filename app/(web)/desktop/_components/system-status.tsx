@@ -9,6 +9,7 @@ import {
   BatteryFull,
   BatteryLow,
   BatteryMedium,
+  Volume2,
   Wifi,
   WifiOff,
 } from "lucide-react";
@@ -17,27 +18,16 @@ import { TIME_ZONE } from "../_data/identity";
 import { useSystemStatus } from "../_lib/use-system-status";
 
 /**
- * The readouts as one object, in one size and one colour — the clock is not
- * more important than the charge, and sizing it up said it was. Colour is spent
- * on trouble only: offline, or nearly flat and not charging.
- *
- * No surface of its own: it rides in the dock, which is already a surface, and
- * a chip drawn on a bar is a box inside a box. It knows nothing about where it
- * sits — the bar placing it owns that.
- *
- * `dim`, the tier under body copy. These readings are chrome and should not
- * compete with the workspace, but the hour and the charge are things a visitor
- * reads, and the two tiers below this one are for text you scan past — `subtle`
- * gives up AA outright and may not carry a number that has to be legible.
+ * One row, read left to right: the tray icons in the accent, then the hour and
+ * the date, each set off by a thin rule. No surface of its own — it rides on
+ * the taskbar, which is already one. Colour other than the accent is spent on
+ * trouble only: offline, or nearly flat and not charging.
  */
 export function SystemStatus() {
   return (
     <div
-      className="font-os-mono flex shrink-0 items-center gap-3 px-3 text-[11px] sm:gap-4 sm:px-4"
-      style={{
-        color: "var(--os-text-dim)",
-        borderLeft: "1px solid var(--os-border)",
-      }}
+      className="font-os-pixel flex shrink-0 items-center gap-3 px-3 text-[14px] sm:gap-4 sm:px-4"
+      style={{ color: "var(--os-text)" }}
     >
       <SystemTray />
       <Clock />
@@ -45,33 +35,54 @@ export function SystemStatus() {
   );
 }
 
-/** Network and charge — the two things the machine knows that you did not ask. */
+/** The thin upright rule between the readings. */
+function Divider({ className = "" }: { className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={`h-4 w-px shrink-0 ${className}`}
+      style={{ background: "var(--os-border-strong)" }}
+    />
+  );
+}
+
+/**
+ * Network, sound and charge. Network and charge are live readings; the speaker
+ * is the tray's furniture — this machine plays nothing, so it has no state to
+ * show and no control behind it.
+ */
 function SystemTray() {
   const { online, battery } = useSystemStatus();
   const S = useStrings();
   const flat = battery !== null && battery.level <= 15 && !battery.charging;
 
   return (
-    <div className="flex shrink-0 items-center gap-2.5">
+    <div
+      className="flex shrink-0 items-center gap-3"
+      style={{ color: "var(--os-accent)" }}
+    >
       <span
         title={online ? S.status.online : S.status.offline}
         style={online ? undefined : { color: "var(--os-error)" }}
       >
         {online ? (
-          <Wifi size={14} strokeWidth={1.8} />
+          <Wifi size={16} strokeWidth={2.2} />
         ) : (
-          <WifiOff size={14} strokeWidth={1.8} />
+          <WifiOff size={16} strokeWidth={2.2} />
         )}
+      </span>
+
+      <span aria-hidden className="max-sm:hidden">
+        <Volume2 size={16} strokeWidth={2.2} />
       </span>
 
       {battery && (
         <span
-          className="flex items-center gap-1"
           title={S.status.battery(battery.level, battery.charging)}
+          aria-label={S.status.battery(battery.level, battery.charging)}
           style={flat ? { color: "var(--os-error)" } : undefined}
         >
           <BatteryGlyph level={battery.level} charging={battery.charging} />
-          <span className="tabular-nums max-sm:hidden">{battery.level}%</span>
         </span>
       )}
     </div>
@@ -91,7 +102,7 @@ function BatteryGlyph({
   level: number;
   charging: boolean;
 }) {
-  const props = { size: 14, strokeWidth: 1.8 } as const;
+  const props = { size: 18, strokeWidth: 2.2 } as const;
   if (charging) return <BatteryCharging {...props} />;
   if (level >= 90) return <BatteryFull {...props} />;
   if (level >= 40) return <BatteryMedium {...props} />;
@@ -99,28 +110,23 @@ function BatteryGlyph({
 }
 
 /**
- * The last word: the hour over the date, stacked and set flush right so both
- * readings share one edge and the eye takes them in a single stop.
- *
- * Same size and colour for both lines — stacking already says which is the hour
- * you glanced down for, and spending type on top of that would say it twice.
- * The date used to be held back below `sm`, where the row could not hold it
- * without truncating; two lines cost width instead of taking it, so it stays on
- * at every size now.
+ * The last word: the hour, then the date, on one line with a rule between
+ * them and before them. On a phone the row has no room for the date, so it
+ * keeps the hour and leaves the date to the tooltip.
  */
 function Clock() {
   const { date, weekday, time } = useClock(useStrings().status.dateLocale);
 
   return (
     <div
-      className="flex shrink-0 flex-col items-end leading-tight"
-      // Weekday first: it is the one thing the two lines do not already say,
-      // and "Jul 29, 2026, Sat" trails it off the end of a date that has just
-      // finished reading itself out.
+      className="flex shrink-0 items-center gap-3 whitespace-nowrap sm:gap-4"
+      // Weekday first: it is the one thing the row does not already say.
       title={weekday ? `${weekday}, ${date}` : undefined}
     >
+      <Divider />
       <span className="tabular-nums">{time}</span>
-      <span>{date}</span>
+      <Divider className="max-sm:hidden" />
+      <span className="max-sm:hidden">{date}</span>
     </div>
   );
 }

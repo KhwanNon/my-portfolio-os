@@ -1,11 +1,11 @@
 "use client";
 import { useMemo, useState } from "react";
-import { ArrowLeft, Home } from "lucide-react";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { useStrings } from "@/app/shared/hooks/use-locale";
 import { FileIcon } from "../file-icon";
 import { CoverTile } from "../cover-tile";
+import { PixelGlyph } from "../pixel-glyph";
 import { coverOf } from "../../_lib/cover";
 import { useDesktopData } from "../../_lib/use-desktop-data";
 import {
@@ -96,10 +96,10 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
           the only label the contents need — and it sits where the reader is
           already looking after pressing Back. */}
       <header
-        className="flex shrink-0 items-center gap-2 px-4 py-3"
+        className="flex shrink-0 items-center gap-2 px-3 py-2"
         style={{
           background: "var(--os-surface-1)",
-          borderBottom: "1px solid var(--os-border)",
+          borderBottom: "3px solid #0f3a22",
         }}
       >
         <IconButton
@@ -107,16 +107,18 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
           onClick={goBack}
           disabled={back.length === 0}
         >
-          <ArrowLeft size={17} strokeWidth={1.8} />
+          <PixelGlyph sprite="back" />
         </IconButton>
 
         <nav
           aria-label={S.folder.breadcrumb}
-          className="font-os-mono custom-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto text-[12px]"
+          // Sunk into the header like a game's text field.
+          className="font-os-pixel custom-scrollbar flex h-8 min-w-0 flex-1 items-center gap-1 overflow-x-auto px-2 text-[14px]"
+          style={{ background: "#000", boxShadow: "inset 2px 2px 0 0 rgba(0,0,0,0.8), inset -2px -2px 0 0 #1e5a36" }}
         >
           <Crumb active={path.length === 0} onClick={() => navigateToCrumb(-1)}>
-            <Home size={13} strokeWidth={1.9} />
-            <span className="font-os-mono">~</span>
+            <PixelGlyph sprite="home" />
+            <span>~</span>
           </Crumb>
           {path.map((seg, i) => (
             <span key={i} className="flex shrink-0 items-center gap-1">
@@ -183,8 +185,8 @@ function IconButton({
       disabled={disabled}
       title={label}
       aria-label={label}
-      className="focus-ring grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-sm transition-colors duration-200 hover:bg-os-accent/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
-      style={{ color: "var(--os-text-dim)" }}
+      className="focus-ring pixel-btn grid h-8 w-8 shrink-0 cursor-pointer place-items-center bg-os-surface-3 hover:bg-os-accent-container disabled:cursor-default disabled:opacity-30 disabled:hover:bg-os-surface-3"
+      style={{ color: "var(--os-text)" }}
     >
       {children}
     </button>
@@ -204,10 +206,9 @@ function Crumb({
     <button
       onClick={onClick}
       disabled={active}
-      className="focus-ring flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 transition-colors duration-150 hover:bg-os-accent/10 disabled:cursor-default disabled:hover:bg-transparent"
+      className="focus-ring flex shrink-0 cursor-pointer items-center gap-1 px-1 hover:bg-os-accent-container disabled:cursor-default disabled:hover:bg-transparent"
       style={{
         color: active ? "var(--os-accent)" : "var(--os-text-dim)",
-        fontWeight: active ? 500 : 400,
       }}
     >
       {children}
@@ -218,7 +219,7 @@ function Crumb({
 function CenterMessage({ text }: { text: string }) {
   return (
     <div
-      className="flex h-full items-center justify-center text-[13px]"
+      className="font-os-pixel flex h-full items-center justify-center text-[15px]"
       style={{ color: "var(--os-text-faint)" }}
     >
       {text}

@@ -23,22 +23,23 @@ export function DesktopIcon({ node, label }: DesktopIconProps) {
       {...interaction}
       title={label}
       onClick={(e) => (touch ? interaction.onDoubleClick(e) : interaction.onClick(e))}
-      className={`focus-ring group flex h-fit w-[84px] cursor-default select-none flex-col items-center gap-1 border px-1 py-2 transition-colors duration-150 ${
-        selected
-          ? "border-os-border-strong bg-os-accent/15"
-          : "border-transparent hover:bg-os-accent/10"
-      }`}
+      className="focus-ring group flex h-fit w-[90px] cursor-default select-none flex-col items-center gap-1 px-1 py-2"
     >
+      {/* A hop of one block on hover, the way a sprite reacts. */}
       <IconTile
         icon={node.icon}
         size="xl"
-        className="transition-[filter] duration-200 group-hover:[filter:drop-shadow(0_0_8px_rgba(57,232,117,0.55))]"
+        className="pixelated os-glow group-hover:-translate-y-1"
       />
+      {/* Selected, the label inverts, as a game marks the item under its cursor. */}
       <span
-        className="font-os-mono line-clamp-2 break-all text-center text-[11px] leading-tight"
+        className={`font-os-pixel line-clamp-2 break-words px-1 text-center text-[13px] leading-tight ${
+          selected ? "" : "group-hover:bg-black/60"
+        }`}
         style={{
-          color: "var(--os-text)",
-          textShadow: "0 1px 3px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)",
+          color: selected ? "var(--os-on-accent)" : "var(--os-text)",
+          background: selected ? "var(--os-accent)" : undefined,
+          textShadow: selected ? "none" : "2px 2px 0 #000",
         }}
       >
         {label}

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import {
   JetBrains_Mono,
   Noto_Sans_Thai,
+  Pixelify_Sans,
   Roboto,
   Roboto_Mono,
   VT323,
@@ -30,6 +31,13 @@ const robotoMono = Roboto_Mono({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
+});
+
+/** The pixel voice: every piece of chrome — labels, title bars, menus, headings. */
+const pixelify = Pixelify_Sans({
+  variable: "--font-pixelify",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 /** Pixel terminal face for the boot screen only (see `.boot-shell`). */
@@ -103,7 +111,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOTSTRAP }} />
       </head>
       <body
-        className={`${roboto.variable} ${robotoMono.variable} ${jetbrainsMono.variable} ${vt323.variable} ${notoSansThai.variable} antialiased`}
+        className={`${roboto.variable} ${robotoMono.variable} ${jetbrainsMono.variable} ${pixelify.variable} ${vt323.variable} ${notoSansThai.variable} antialiased`}
       >
         {children}
       </body>

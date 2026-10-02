@@ -22,15 +22,16 @@ export function CoverTile({ node, src, onOpen }: CoverTileProps) {
       {...interaction}
       onClick={() => onOpen(node)}
       aria-label={node.name.replace(/\.ui$/, "")}
-      className="focus-ring group relative aspect-square cursor-pointer select-none overflow-hidden rounded-sm transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-(--glow-window)"
-      style={{ border: "1px solid var(--os-border-strong)" }}
+      // A cartridge on a shelf: it hops a block when pointed at.
+      className="focus-ring pixel-box group relative aspect-square cursor-pointer select-none overflow-hidden hover:-translate-y-1"
+      
     >
       <Image
         src={src}
         alt=""
         fill
         sizes="(min-width: 640px) 220px, 45vw"
-        className="object-cover"
+        className="pixelated object-cover"
       />
       {leadsToFeatured(node) && (
         <span className="absolute right-2 top-2">

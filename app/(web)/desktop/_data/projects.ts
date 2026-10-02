@@ -27,6 +27,7 @@ export const PROJECT_IDS = [
   "proj-c-docs",
   "proj-dataq",
   "proj-portfolio-os",
+  "proj-jinn",
   "proj-hajin-ai-cognix",
 ] as const;
 
@@ -59,6 +60,7 @@ const COVER_SLUG: Record<ProjectId, string> = {
   "proj-c-docs": "c-docs",
   "proj-dataq": "dataq",
   "proj-portfolio-os": "portfolio",
+  "proj-jinn": "jinn",
   "proj-hajin-ai-cognix": "hajin-ai-cognix",
 };
 
@@ -674,6 +676,42 @@ function personalWeb(L: Localize): FileNode[] {
       year: "2026",
       platform: L("Web", "เว็บ"),
       links: [{ label: "GitHub", url: "https://github.com/KhwanNon" }],
+    }),
+    makeProject("proj-jinn", {
+      name: "Jinn",
+      type: L("Web · Personal", "เว็บ · โปรเจกต์ส่วนตัว"),
+      description: L(
+        "An AI chat assistant with a small workspace beside it — notes, documents and a calendar — so what a conversation produces has somewhere to go. The product around the chat is built out: sign-in, settings, billing and usage, in Thai and English. The model behind it is not connected yet; replies are placeholders streamed the way a real answer would arrive.",
+        "ผู้ช่วยแชท AI ที่มีพื้นที่ทำงานเล็ก ๆ อยู่ข้างกัน ทั้งโน้ต เอกสาร และปฏิทิน ให้สิ่งที่ได้จากบทสนทนามีที่ไปต่อ ส่วนที่ห่อรอบแชทสร้างไว้ครบแล้ว ทั้งการเข้าสู่ระบบ การตั้งค่า การเรียกเก็บเงินและการใช้งาน รองรับทั้งภาษาไทยและอังกฤษ ส่วนโมเดลข้างหลังยังไม่ได้เชื่อมต่อ คำตอบตอนนี้เป็นข้อความตัวอย่างที่สตรีมออกมาแบบเดียวกับคำตอบจริง",
+      ),
+      highlights: L(
+        [
+          "Chat built for a streaming model: replies arrive a few characters at a time, the greeting included, so swapping the placeholder for a real model call changes one function, not the screen",
+          "Conversations with favorites and recents, rename and delete, a greeting that knows the time of day, and a voice-mode toggle in the composer",
+          "A workspace of three apps beside the chat — Notes with an optional 4-digit PIN lock (salted SHA-256), a Markdown documents editor with KaTeX, Mermaid, autosave and undo history, and a calendar with month and year views and browser-notification reminders",
+          "The product around it: sign-in through the Hajin portal over OAuth, plans, credits and usage, sessions, privacy and cookie consent, and settings for theme, chat font, language and motion",
+          "Feature-sliced Next.js front end, with a FastAPI service started beside it for the backend the mocks are waiting on",
+        ],
+        [
+          "แชทที่ออกแบบมาสำหรับโมเดลแบบสตรีม คำตอบทยอยมาทีละไม่กี่ตัวอักษร รวมถึงคำทักทายด้วย เมื่อเปลี่ยนจากข้อความตัวอย่างเป็นการเรียกโมเดลจริง จึงแก้แค่ฟังก์ชันเดียว ไม่ต้องแก้หน้าจอ",
+          "บทสนทนามีรายการโปรดและล่าสุด เปลี่ยนชื่อและลบได้ คำทักทายรู้ว่าเป็นช่วงไหนของวัน และมีปุ่มเปิดโหมดเสียงในช่องพิมพ์",
+          "มีพื้นที่ทำงานสามแอปอยู่ข้างแชท ได้แก่ โน้ตที่ล็อกด้วย PIN 4 หลักได้ (แฮช SHA-256 พร้อม salt) โปรแกรมแก้เอกสาร Markdown ที่รองรับ KaTeX, Mermaid บันทึกอัตโนมัติ และประวัติการย้อนกลับ และปฏิทินที่ดูได้ทั้งรายเดือนและรายปี พร้อมเตือนผ่านการแจ้งเตือนของเบราว์เซอร์",
+          "ส่วนที่ห่อรอบผลิตภัณฑ์ ทั้งเข้าสู่ระบบผ่านพอร์ทัลของ Hajin ด้วย OAuth แพ็กเกจ เครดิตและการใช้งาน เซสชัน ความเป็นส่วนตัวและการยินยอมคุกกี้ และการตั้งค่าธีม ฟอนต์ในแชท ภาษา และการเคลื่อนไหว",
+          "ฝั่งหน้าบ้านเป็น Next.js ที่แบ่งโค้ดตามฟีเจอร์ และเริ่มทำเซอร์วิส FastAPI ไว้ข้างกันสำหรับ backend ที่ส่วนจำลองทั้งหลายกำลังรออยู่",
+        ],
+      ),
+      stack: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "FastAPI",
+        "Python",
+      ],
+      status: L("In Development", "กำลังพัฒนา"),
+      year: "2026",
+      platform: L("Web", "เว็บ"),
+      images: shots("jinn", 5),
     }),
     makeProject("proj-hajin-ai-cognix", {
       name: "Hajin AI Cognix",
