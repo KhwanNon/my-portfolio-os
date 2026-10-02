@@ -46,8 +46,8 @@ export function companionLines(L: Localize): CompanionLine[] {
     {
       speaker: "khwan",
       text: L(
-        "Want to talk? Contact.txt has every way to reach me. Have fun!",
-        "อยากคุยกัน? เปิด Contact.txt ได้ทุกช่องทางเลย ขอให้สนุกนะ!",
+        "Want to talk? Contact has every way to reach me. Have fun!",
+        "อยากคุยกัน? เปิด Contact ได้ทุกช่องทางเลย ขอให้สนุกนะ!",
       ),
     },
   ];

@@ -9,17 +9,15 @@ import { IconTile } from "./file-graphic";
 
 interface DesktopIconProps {
   node: FileNode;
-  /** The name the desktop knows the file by, where it differs from the drive's. */
-  label: string;
 }
 
-export function DesktopIcon({ node, label }: DesktopIconProps) {
+export function DesktopIcon({ node }: DesktopIconProps) {
   const { selected, interaction } = useFileInteraction(node);
 
   return (
     <div
       {...interaction}
-      title={label}
+      title={node.name}
       className="focus-ring group flex h-fit w-[90px] cursor-default select-none flex-col items-center gap-1 px-1 py-2"
     >
       {/* A hop of one block on hover, the way a sprite reacts. */}
@@ -39,7 +37,7 @@ export function DesktopIcon({ node, label }: DesktopIconProps) {
           textShadow: selected ? "none" : "2px 2px 0 #000",
         }}
       >
-        {label}
+        {node.name}
       </span>
     </div>
   );

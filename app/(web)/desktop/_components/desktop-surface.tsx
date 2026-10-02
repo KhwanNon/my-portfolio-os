@@ -24,8 +24,8 @@ export function DesktopSurface() {
         className="grid grid-cols-4 content-start gap-1 p-3 sm:auto-cols-[92px] sm:grid-flow-col sm:grid-cols-none sm:grid-rows-[repeat(auto-fill,minmax(98px,98px))] sm:p-2"
         style={{ height: "100%" }}
       >
-        {desktopIcons.map(({ label, node }) => (
-          <DesktopIcon key={node.id} node={node} label={label} />
+        {desktopIcons.map((node) => (
+          <DesktopIcon key={node.id} node={node} />
         ))}
       </div>
 

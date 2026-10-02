@@ -113,23 +113,12 @@ const recycleBin: FileNode = {
   data: { kind: "folder", children: [] },
 };
 
-/**
- * A launcher lying on the desktop: a file on the drive under the name the
- * desktop knows it by. The drive keeps its own names — search, the terminal and
- * `cd` all walk those — so "Skills.dll" is a label on the Skills folder, not a
- * second file.
- */
-export interface DesktopIconSpec {
-  label: string;
-  node: FileNode;
-}
-
 /** Everything the shell reads off the drive, in one language. */
 export interface DesktopData {
   /** The drive itself — what search, the terminal and Properties walk. */
   fileSystem: FileNode[];
   /** The icons lying on the desktop, top to bottom. */
-  desktopIcons: DesktopIconSpec[];
+  desktopIcons: FileNode[];
   /** What the Start menu lists under Apps. */
   startApps: FileNode[];
   /** The projects cabinet, for the card that asks it which one is featured. */
@@ -188,22 +177,21 @@ function build(locale: Locale): DesktopData {
      * are, the work, what they can do, where they have been, how to reach them,
      * then the two loose documents and the bin.
      *
-     * The labels borrow executable and library names for flavour, but every
-     * entry opens the real file it stands for. skill.md is the craft file —
-     * the statement of the standard the rest was built to.
+     * Every icon is the file itself, under its own name — the desktop never
+     * calls a thing something the drive, search and terminal do not.
      */
     desktopIcons: [
-      { label: "My Portfolio", node: cDrive },
-      { label: "About.exe", node: profile },
-      { label: "Projects", node: projects },
-      { label: "Skills.dll", node: skills },
-      { label: "Experience", node: experience },
-      { label: "Contact.txt", node: contact },
-      { label: "Resume.pdf", node: resumePdf },
-      { label: "skill.md", node: craft },
-      { label: "Terminal", node: systemCommand },
-      { label: "Preferences", node: preferences },
-      { label: "Recycle Bin", node: recycleBin },
+      cDrive,
+      profile,
+      projects,
+      skills,
+      experience,
+      contact,
+      resumePdf,
+      craft,
+      systemCommand,
+      preferences,
+      recycleBin,
     ],
 
     /* What the Start menu lists: the machine's own tools and the drive. */
