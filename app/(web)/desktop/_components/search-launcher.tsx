@@ -58,7 +58,7 @@ export function SearchLauncher() {
         className="focus-ring font-os-pixel pixel-btn flex h-full shrink-0 cursor-pointer items-center gap-2 px-3 text-[15px] font-bold tracking-[0.12em] hover:brightness-110 sm:px-4"
         style={{
           color: "var(--os-on-accent)",
-          background: open ? "#2fcf63" : "var(--os-accent)",
+          background: open ? "#1a9e4a" : "#22b956",
         }}
       >
         <PixelGlyph sprite="search" />

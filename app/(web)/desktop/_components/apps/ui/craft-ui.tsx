@@ -100,7 +100,7 @@ export function CraftUI({
     >
       <div className="grid grid-cols-[minmax(0,1fr)] gap-6 p-5 @2xl:grid-cols-[minmax(0,5fr)_minmax(0,9fr)] @2xl:p-6">
         {/* ── Left: portrait, the five principles, the quote ───────────── */}
-        <div className="flex flex-col gap-5 @2xl:sticky @2xl:top-0 @2xl:self-start">
+        <div className="flex flex-col gap-5">
           {photo && <Portrait src={photo} />}
 
           {principles.length > 0 && (

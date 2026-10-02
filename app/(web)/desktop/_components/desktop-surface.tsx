@@ -6,6 +6,7 @@
 import { useStrings } from "@/app/shared/hooks/use-locale";
 import { useDesktopData } from "../_lib/use-desktop-data";
 import { DesktopIcon } from "./desktop-icon";
+import { Companion } from "./companion";
 
 export function DesktopSurface() {
   const { desktopIcons } = useDesktopData();
@@ -27,6 +28,8 @@ export function DesktopSurface() {
           <DesktopIcon key={node.id} node={node} label={label} />
         ))}
       </div>
+
+      <Companion />
     </div>
   );
 }
