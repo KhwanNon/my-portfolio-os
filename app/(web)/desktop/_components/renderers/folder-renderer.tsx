@@ -1,11 +1,13 @@
 "use client";
 import { useMemo, useState } from "react";
-import { ArrowLeft, Home, LayoutGrid, List } from "lucide-react";
+import { ArrowLeft, Home } from "lucide-react";
 import { FileGraphic } from "../file-graphic";
 import type { FileNode } from "@/app/shared/types/file-system";
 import { useWindowManager } from "@/app/modules/desktop/context/window-manager-context";
 import { useStrings } from "@/app/shared/hooks/use-locale";
 import { FileIcon } from "../file-icon";
+import { CoverTile } from "../cover-tile";
+import { coverOf } from "../../_lib/cover";
 import { useDesktopData } from "../../_lib/use-desktop-data";
 import {
   findPath,
@@ -17,8 +19,6 @@ import {
 interface FolderRendererProps {
   fileNode: FileNode;
 }
-
-type ViewMode = "grid" | "list";
 
 /** What a folder window shows for a given path, or null where nothing lives. */
 function childrenAt(tree: FileNode[], path: Path): FileNode[] | null {
@@ -80,11 +80,15 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
 
   const [path, setPath] = useState<Path>(initialPath);
   const [back, setBack] = useState<Path[]>([]);
-  // List by default: a folder here holds a handful of named things to read, not
-  // artwork to browse, and the dense rows put the whole shelf on screen at once.
-  const [view, setView] = useState<ViewMode>("list");
 
   const children = childrenAt(fileSystem, path);
+  // A shelf of projects is browsed by its covers; any other folder is a list of
+  // names. Decided by what the folder holds, so there is nothing to toggle.
+  const covers =
+    children && children.length > 0
+      ? children.map(coverOf)
+      : null;
+  const isShelf = covers !== null && covers.every((c) => c !== null);
   const places = useMemo(
     () => placesOf(fileSystem, S.folder.home),
     [fileSystem, S.folder.home],
@@ -170,25 +174,6 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
           ))}
         </nav>
 
-        <div
-          className="flex shrink-0 items-center gap-0.5 rounded-sm p-0.5"
-          style={{ background: "var(--os-surface-3)" }}
-        >
-          <ViewButton
-            label={S.folder.gridView}
-            active={view === "grid"}
-            onClick={() => setView("grid")}
-          >
-            <LayoutGrid size={15} strokeWidth={1.8} />
-          </ViewButton>
-          <ViewButton
-            label={S.folder.listView}
-            active={view === "list"}
-            onClick={() => setView("list")}
-          >
-            <List size={15} strokeWidth={1.8} />
-          </ViewButton>
-        </div>
       </header>
 
       <div className="flex min-h-0 flex-1">
@@ -238,13 +223,13 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
           <CenterMessage text={S.folder.notFound} />
         ) : children.length === 0 ? (
           <CenterMessage text={S.folder.empty} />
-        ) : view === "grid" ? (
-          <div className="file-grid">
-            {children.map((child) => (
-              <FileIcon
+        ) : isShelf ? (
+          <div className="cover-grid">
+            {children.map((child, i) => (
+              <CoverTile
                 key={child.id}
-                fileNode={child}
-                layout="card"
+                node={child}
+                src={covers![i]!}
                 onOpen={handleChildClick}
               />
             ))}
@@ -286,34 +271,6 @@ function IconButton({
       aria-label={label}
       className="focus-ring grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-sm transition-colors duration-200 hover:bg-os-accent/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
       style={{ color: "var(--os-text-dim)" }}
-    >
-      {children}
-    </button>
-  );
-}
-
-function ViewButton({
-  label,
-  active,
-  onClick,
-  children,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      title={label}
-      aria-label={label}
-      aria-pressed={active}
-      className="focus-ring grid h-7 w-7 cursor-pointer place-items-center rounded-sm transition-colors duration-200"
-      style={{
-        background: active ? "var(--os-surface-1)" : "transparent",
-                color: active ? "var(--os-accent)" : "var(--os-text-faint)",
-      }}
     >
       {children}
     </button>

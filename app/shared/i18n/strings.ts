@@ -64,8 +64,6 @@ const EN = {
   folder: {
     back: "Back",
     breadcrumb: "Breadcrumb",
-    gridView: "Grid view",
-    listView: "List view",
     places: "Places",
     home: "Home",
     notFound: "Path not found",
@@ -318,8 +316,6 @@ const TH: Strings = {
   folder: {
     back: "ย้อนกลับ",
     breadcrumb: "เส้นทางโฟลเดอร์",
-    gridView: "มุมมองตาราง",
-    listView: "มุมมองรายการ",
     places: "ตำแหน่ง",
     home: "หน้าแรก",
     notFound: "ไม่พบเส้นทางนี้",

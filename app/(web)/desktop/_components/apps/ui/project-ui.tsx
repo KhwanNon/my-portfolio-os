@@ -25,6 +25,8 @@ interface ProjectUIProps {
   delivered?: boolean;
   year?: string;
   platform?: string;
+  /** The square tile that stands for this project in a folder of projects. */
+  cover?: string;
   /** Public paths to screenshots, rendered as a horizontal strip. */
   images?: string[];
   /** Caveat shown under the screenshot strip — for demo shots that stand in

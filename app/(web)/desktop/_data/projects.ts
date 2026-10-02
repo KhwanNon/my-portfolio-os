@@ -37,6 +37,31 @@ export type ProjectId = (typeof PROJECT_IDS)[number];
  * together. `featured` is authored once here and read twice — by the window,
  * and by the folders above it, which inherit the mark.
  */
+/**
+ * The cover tile of each project: `/assets/images/<slug>.png`. Listed rather
+ * than derived from the id, because the slugs are the image files' names and
+ * those predate — and don't match — the ids.
+ */
+const COVER_SLUG: Record<ProjectId, string> = {
+  "proj-gov-meeting": "nsc-meeting",
+  "proj-ailearn": "ailearn",
+  "proj-mol-portal": "mol",
+  "proj-myorder": "myorder",
+  "proj-mypinmall": "my-pinmall",
+  "proj-vn": "vn",
+  "proj-enfagrow": "enfagrow",
+  "proj-g2g": "g2g",
+  "proj-evp": "evp",
+  "proj-swu-ai": "swu-ai",
+  "proj-the-blacklist": "the-blacklist",
+  "proj-langridge": "langridge",
+  "proj-pdf-drawing": "pdf-drawing",
+  "proj-c-docs": "c-docs",
+  "proj-dataq": "dataq",
+  "proj-portfolio-os": "portfolio",
+  "proj-hajin-ai-cognix": "hajin-ai-cognix",
+};
+
 function makeProject(
   id: ProjectId,
   props: UiComponentProps<"ProjectUI">,
@@ -44,7 +69,7 @@ function makeProject(
   return uiNode(
     { id, name: `${props.name}.ui`, featured: props.featured },
     "ProjectUI",
-    props,
+    { cover: `/assets/images/${COVER_SLUG[id]}.png`, ...props },
   );
 }
 
