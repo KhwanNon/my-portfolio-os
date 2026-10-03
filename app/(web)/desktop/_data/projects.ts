@@ -28,7 +28,7 @@ export const PROJECT_IDS = [
   "proj-dataq",
   "proj-portfolio-os",
   "proj-jinn",
-  "proj-hajin-ai-cognix",
+  "proj-hajin-apix",
 ] as const;
 
 export type ProjectId = (typeof PROJECT_IDS)[number];
@@ -61,7 +61,7 @@ const COVER_SLUG: Record<ProjectId, string> = {
   "proj-dataq": "dataq",
   "proj-portfolio-os": "portfolio",
   "proj-jinn": "jinn",
-  "proj-hajin-ai-cognix": "hajin-ai-cognix",
+  "proj-hajin-apix": "hajin-apix",
 };
 
 function makeProject(
@@ -714,8 +714,8 @@ function personalWeb(L: Localize): FileNode[] {
       featured: true,
       images: shots("jinn", 5),
     }),
-    makeProject("proj-hajin-ai-cognix", {
-      name: "Hajin AI Cognix",
+    makeProject("proj-hajin-apix", {
+      name: "Hajin apiX",
       type: L("Web · Personal", "เว็บ · โปรเจกต์ส่วนตัว"),
       description: L(
         "A middle layer between an application and the model providers behind it: the app calls one API, and which provider answers — with what context — is decided here rather than in the app. Early work. The console around it is drafted far enough to see the shape; the concept underneath is still being worked out.",
@@ -743,7 +743,7 @@ function personalWeb(L: Localize): FileNode[] {
       year: "2026",
       platform: L("Web", "เว็บ"),
       featured: true,
-      images: shots("hajin-ai-cognix", 6),
+      images: shots("hajin-apix", 6),
     }),
   ];
 }
