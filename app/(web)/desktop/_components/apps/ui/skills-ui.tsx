@@ -30,12 +30,12 @@ export function SkillsUI({ title, items = [] }: SkillsUIProps) {
   return (
     <div
       className="custom-scrollbar @container h-full w-full overflow-y-auto"
-      style={{ background: "#020a05", color: "var(--os-text)" }}
+      style={{ background: "var(--os-surface-1)", color: "var(--os-text)" }}
     >
       <div className="space-y-3 p-5">
         <h1
           className="font-os-pixel pb-1 text-[22px] font-bold uppercase tracking-wide text-os-accent"
-          style={{ textShadow: "2px 2px 0 #000" }}
+          style={{ textShadow: "var(--os-text-shadow)" }}
         >
           {title ?? S.section.skills}
         </h1>

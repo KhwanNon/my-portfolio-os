@@ -57,8 +57,8 @@ export function SearchLauncher() {
         data-pressed={open}
         className="focus-ring font-os-pixel pixel-btn flex h-full shrink-0 cursor-pointer items-center gap-2 px-3 text-[15px] font-bold tracking-[0.12em] hover:brightness-110 sm:px-4"
         style={{
-          color: "var(--os-on-accent)",
-          background: open ? "#1a9e4a" : "#22b956",
+          color: "var(--os-text)",
+          background: open ? "var(--os-button-pressed)" : "var(--os-button)",
         }}
       >
         <PixelGlyph sprite="search" />
@@ -132,7 +132,7 @@ function Prompt({
         transition={{ duration: 0.12, ease: STEPPED }}
         className="os-window pixel-box flex max-h-[72vh] w-full max-w-[640px] flex-col overflow-hidden p-6"
         data-active="true"
-        style={{ background: "#020a05" }}
+        style={{ background: "var(--os-surface-1)" }}
       >
         <p
           className="font-os-pixel text-center text-[22px] font-semibold"
@@ -142,7 +142,7 @@ function Prompt({
         </p>
 
         {/* The field: one plain frame that lights when it has the caret. */}
-        <div className="mt-5 flex h-12 shrink-0 items-center gap-3 border-2 border-os-border-strong bg-black px-4 focus-within:border-os-accent">
+        <div className="mt-5 flex h-12 shrink-0 items-center gap-3 border-2 border-os-border-strong bg-os-surface-2 px-4 focus-within:border-os-accent">
           <PixelGlyph sprite="search" color="var(--os-text-faint)" />
           <input
             ref={inputRef}

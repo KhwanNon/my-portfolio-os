@@ -76,7 +76,7 @@ export const MatrixRain = ({
         styles.getPropertyValue(name).trim() || fallback;
 
       const bgColor = readVar("--os-bg", "#000");
-      const accentColor = readVar("--os-accent", "#00ff41");
+      const accentColor = readVar("--os-accent", "#e6b969");
       // The two ends of the fall. A host that names neither gets its accent at
       // both stops, which is a flat colour — the gradient costs it nothing.
       const fromColor = readVar("--os-rain-from", accentColor);

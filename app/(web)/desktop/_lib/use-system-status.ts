@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /** What the shell can honestly report about the machine it is running on. */
-export interface SystemStatus {
+interface SystemStatus {
   online: boolean;
   /**
    * Charge and whether it is climbing, or `null` where the browser won't say —

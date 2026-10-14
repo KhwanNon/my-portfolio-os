@@ -29,33 +29,55 @@ export function useBootSequence() {
   useEffect(() => {
     if (!playing) return;
 
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let progressAnimation: ReturnType<typeof animate> | undefined;
+    const pause = (duration: number) =>
+      new Promise<void>((resolve) => {
+        timer = setTimeout(resolve, duration);
+      });
+
     const runSequence = async () => {
-      await new Promise((r) => setTimeout(r, 400));
+      await pause(400);
+      if (cancelled) return;
       setCurrentStep(1);
 
-      await new Promise((r) => setTimeout(r, 400));
+      await pause(400);
+      if (cancelled) return;
       setCurrentStep(2);
 
       // Framer Motion shared animation logic
-      await animate(0, 100, {
+      progressAnimation = animate(0, 100, {
         duration: 1.2,
-        onUpdate: (v) => setPercent(Math.floor(v)),
+        onUpdate: (v) => {
+          if (!cancelled) setPercent(Math.floor(v));
+        },
       });
+      await progressAnimation;
+      if (cancelled) return;
 
       setCurrentStep(3);
-      await new Promise((r) => setTimeout(r, 600));
+      await pause(600);
+      if (cancelled) return;
       setCurrentStep(4);
-      await new Promise((r) => setTimeout(r, 500));
+      await pause(500);
+      if (cancelled) return;
       setCurrentStep(LAST_STEP);
 
       // Nothing to press any more, so this beat is the only thing standing
       // between the final step appearing and the desktop replacing it. Shorten
       // it and `WELCOME_ADMIN` is gone before it can be read.
-      await new Promise((r) => setTimeout(r, 500));
+      await pause(500);
+      if (cancelled) return;
       setIsReady(true);
     };
 
     runSequence();
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      progressAnimation?.stop();
+    };
   }, [playing]);
 
   const step = playing ? currentStep : LAST_STEP;

@@ -24,8 +24,8 @@ export default function BootScreen() {
   }, [isReady, router]);
 
   return (
-    // Fixed black-and-green palette, set by `boot-shell` (see app/globals.css) —
-    // the machine powering on, before any theme applies.
+    // A dark amber palette, set by `boot-shell` (see app/globals.css) —
+    // the original terminal boot, warmed to match the desktop.
     <main className="boot-shell fixed inset-0 z-50 flex flex-col bg-os-bg text-os-text-dim font-os-mono overflow-hidden uppercase">
       {/* Rain is the lowest layer; the clear patch and vignette sit over it but
           under the content, so the middle stays readable. Motion-only layers
@@ -45,7 +45,7 @@ export default function BootScreen() {
         isSyncing={currentStep === 2}
       />
 
-      <BootFooter isComplete={currentStep === 5} />
+      <BootFooter />
     </main>
   );
 }

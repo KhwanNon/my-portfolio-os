@@ -111,7 +111,7 @@ export function FolderRenderer({ fileNode }: FolderRendererProps) {
   return (
     <div
       className="@container flex h-full w-full flex-col"
-      style={{ background: "#020a05", color: "var(--os-text)" }}
+      style={{ background: "var(--os-surface-1)", color: "var(--os-text)" }}
     >
       {/* ── Bar: back, where you are, and a search of this folder ────────── */}
       <header

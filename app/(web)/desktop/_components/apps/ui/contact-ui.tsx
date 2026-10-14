@@ -7,7 +7,7 @@
 import { PixelGlyph, type PixelSprite } from "../../pixel-glyph";
 import { Globe, Portrait, QuoteBox, SHEET_BOX } from "./sheet";
 
-export interface ContactLink {
+interface ContactLink {
   /** Which sprite marks the row. */
   icon: PixelSprite;
   label: string;
@@ -41,7 +41,7 @@ export function ContactUI({
   return (
     <div
       className="custom-scrollbar @container h-full w-full overflow-y-auto"
-      style={{ background: "#020a05", color: "var(--os-text)" }}
+      style={{ background: "var(--os-surface-1)", color: "var(--os-text)" }}
     >
       <div className="flex flex-col gap-5 p-5 @2xl:p-6">
         {/* ── Heading ─────────────────────────────────────────────────────── */}
@@ -58,7 +58,7 @@ export function ContactUI({
             </p>
             <h1
               className="font-os-pixel mt-2 text-[clamp(28px,6cqw,56px)] font-bold leading-none tracking-wide text-os-accent"
-              style={{ textShadow: "3px 3px 0 #000" }}
+              style={{ textShadow: "var(--os-text-shadow)" }}
             >
               {heading}
               <span aria-hidden className="boot-cursor">

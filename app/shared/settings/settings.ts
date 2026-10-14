@@ -26,7 +26,7 @@ export type Motion = "full" | "reduced";
 export type Startup = "boot" | "instant";
 
 /** The choice that names no value and defers to the machine instead. */
-export const SYSTEM = "system";
+const SYSTEM = "system";
 type System = typeof SYSTEM;
 
 /** What each preference may be set to. */
@@ -40,7 +40,7 @@ export type Choices = {
 export type PreferenceId = keyof Choices;
 
 /** What a choice comes out as once "system" has been asked. */
-export type Value<I extends PreferenceId> = Exclude<Choices[I], System>;
+type Value<I extends PreferenceId> = Exclude<Choices[I], System>;
 
 // ─── The declarations ────────────────────────────────────────────────────────
 

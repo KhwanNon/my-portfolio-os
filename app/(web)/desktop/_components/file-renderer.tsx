@@ -61,7 +61,7 @@ function ErrorView({ message }: { message: string }) {
   return (
     <div
       className="h-full flex items-center justify-center p-6 font-os-mono text-xs text-center"
-      style={{ color: "#ff6b6b", background: "var(--os-surface)" }}
+      style={{ color: "var(--os-error)", background: "var(--os-surface)" }}
     >
       <div>
         <div className="text-sm mb-2">[ ERROR ]</div>

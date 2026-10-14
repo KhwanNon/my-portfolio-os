@@ -96,7 +96,7 @@ export function CraftUI({
   return (
     <div
       className="custom-scrollbar @container h-full w-full overflow-y-auto"
-      style={{ background: "#020a05", color: "var(--os-text)" }}
+      style={{ background: "var(--os-surface-1)", color: "var(--os-text)" }}
     >
       <div className="grid grid-cols-[minmax(0,1fr)] gap-6 p-5 @2xl:grid-cols-[minmax(0,5fr)_minmax(0,9fr)] @2xl:p-6">
         {/* ── Left: portrait, the five principles, the quote ───────────── */}
@@ -145,7 +145,7 @@ export function CraftUI({
             <div className="min-w-0 flex-1">
               <h1
                 className="font-os-pixel flex items-center gap-3 text-[clamp(24px,4.2cqw,40px)] font-bold leading-none tracking-wide text-os-accent"
-                style={{ textShadow: "3px 3px 0 #000" }}
+                style={{ textShadow: "var(--os-text-shadow)" }}
               >
                 <span aria-hidden className="text-os-accent/80">
                   &gt;

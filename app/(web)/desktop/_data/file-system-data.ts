@@ -23,7 +23,7 @@ function profileUi(L: Localize): FileNode {
     { id: "profile", name: "Profile.ui", icon: ICONS.me },
     "ProfileUI",
     {
-      photo: "/assets/images/profile.webp",
+      photo: "/assets/images/profile-valley.webp",
       heading: "SYSTEM USER DATA",
       file: "PROFILE.UI",
       version: "v1.0",

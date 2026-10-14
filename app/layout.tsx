@@ -4,7 +4,6 @@ import {
   Noto_Sans_Thai,
   Pixelify_Sans,
   Roboto,
-  Roboto_Mono,
   VT323,
 } from "next/font/google";
 import { SETTINGS_BOOTSTRAP } from "@/app/shared/settings/settings";
@@ -13,18 +12,13 @@ import "./globals.css";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#020906",
+  themeColor: "#e8bd75",
 };
 
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
-});
-
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
-  subsets: ["latin"],
 });
 
 /** The system voice: desktop labels, taskbar, title bars, terminal. */
@@ -63,11 +57,7 @@ const TITLE = "Portfolio OS — Khwanchai Nontawichit";
 const DESCRIPTION =
   "An interactive desktop operating system built as a portfolio. Window manager, virtual filesystem, terminal, and more — by Khwan, Mobile Developer (Flutter).";
 
-/**
- * The tab and home-screen icons come from `app/icon.png` and
- * `app/apple-icon.png` by file convention — Next writes those link tags itself,
- * so the only mark named here is the one a link preview unfurls.
- */
+/** Explicit icon metadata keeps both browser and home-screen icons in public/assets. */
 /**
  * Where the logo resolves from when a card is unfurled. A preview is fetched by
  * something that is not this browser, so a relative path is not enough — and no
@@ -84,17 +74,21 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  icons: {
+    icon: { url: "/assets/icon-valley.webp", type: "image/webp", sizes: "64x64" },
+    apple: { url: "/assets/apple-icon-valley.jpg", type: "image/jpeg", sizes: "180x180" },
+  },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
     type: "website",
-    images: [{ url: "/assets/logo-og.png", width: 879, height: 872 }],
+    images: [{ url: "/assets/logo-valley.webp", width: 512, height: 512 }],
   },
   twitter: {
     card: "summary",
     title: TITLE,
     description: DESCRIPTION,
-    images: ["/assets/logo-og.png"],
+    images: ["/assets/logo-valley.webp"],
   },
 };
 
@@ -111,7 +105,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOTSTRAP }} />
       </head>
       <body
-        className={`${roboto.variable} ${robotoMono.variable} ${jetbrainsMono.variable} ${pixelify.variable} ${vt323.variable} ${notoSansThai.variable} antialiased`}
+        className={`${roboto.variable} ${jetbrainsMono.variable} ${pixelify.variable} ${vt323.variable} ${notoSansThai.variable} antialiased`}
       >
         {children}
       </body>

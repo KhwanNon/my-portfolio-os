@@ -41,7 +41,7 @@ export function craftFile(L: Localize): FileNode {
     { id: "khwan-craft-md", name: "skill.md", icon: ICONS.txt },
     "CraftUI",
     {
-      photo: "/assets/images/cat-man.webp",
+      photo: "/assets/images/cat-man-valley.webp",
       heading: "KHWAN-CRAFT",
       file: "SKILL.MD",
       version: "v1.0",

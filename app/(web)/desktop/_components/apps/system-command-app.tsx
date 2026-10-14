@@ -584,7 +584,7 @@ export function SystemCommandApp() {
     // surface its title bar uses.
     <div
       className="h-full flex flex-col font-os-mono text-xs"
-      style={{ background: "var(--os-bg)" }}
+      style={{ background: "var(--os-surface-1)" }}
       onMouseDown={(e) => {
         if (e.target !== inputRef.current) {
           e.preventDefault();
@@ -615,7 +615,7 @@ export function SystemCommandApp() {
       {/* Input row */}
       <div
         className="flex items-center px-4 py-3 shrink-0 gap-2"
-        style={{ borderTop: "1px solid var(--os-border)", background: "var(--os-bg)" }}
+        style={{ borderTop: "2px solid var(--os-border)", background: "var(--os-surface-3)" }}
       >
         <span className="opacity-70 shrink-0 whitespace-nowrap" style={{ color: "var(--os-accent)" }}>
           {prompt}

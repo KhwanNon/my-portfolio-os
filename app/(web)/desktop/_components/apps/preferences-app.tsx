@@ -87,7 +87,7 @@ function OsVersionSection({ S }: { S: Strings }) {
         <div className="min-w-0">
           <h2
             className="font-os-pixel text-[clamp(28px,7cqw,48px)] font-bold leading-none text-os-accent"
-            style={{ textShadow: "3px 3px 0 #000" }}
+            style={{ textShadow: "var(--os-text-shadow)" }}
           >
             Portfolio OS
           </h2>
@@ -245,7 +245,7 @@ function SettingCard({
       }`}
     >
       <span
-        className={`grid w-16 shrink-0 place-items-center border-r-[3px] bg-black py-3 @lg:w-20 ${
+        className={`grid w-16 shrink-0 place-items-center border-r-[3px] bg-os-surface-3 py-3 @lg:w-20 ${
           active
             ? "border-os-accent text-os-accent"
             : "border-os-border-strong text-os-text-subtle group-hover:text-os-text-faint"
@@ -378,7 +378,7 @@ export function PreferencesApp() {
   };
 
   return (
-    <div className="flex h-full" style={{ background: "#020a05", color: "var(--os-text)" }}>
+    <div className="flex h-full" style={{ background: "var(--os-surface-1)", color: "var(--os-text)" }}>
       {/* Sidebar: one row per page, the open one boxed in the accent. */}
       <nav
         aria-label={S.prefs.title}

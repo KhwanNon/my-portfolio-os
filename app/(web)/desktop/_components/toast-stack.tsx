@@ -41,7 +41,7 @@ export function ToastStack({ toasts }: { toasts: Toast[] }) {
               {
                 "--pb-color": c.border,
                 color: c.fg,
-                background: "#020a05",
+                background: "var(--os-surface-1)",
                 minWidth: 200,
                 maxWidth: 360,
               } as React.CSSProperties

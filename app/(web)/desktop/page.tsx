@@ -85,14 +85,10 @@ function Desktop() {
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url(/assets/images/bg.webp)" }}
+          style={{ backgroundImage: "url(/assets/images/bg-valley.webp)", imageRendering: "pixelated" }}
         />
-        {/* A light shade under the icons and the taskbar so labels read against
-            the brightest part of the city, then scanlines and grain. All three
-            sit under the desktop, so nothing a window says is ever dimmed. */}
+        {/* The landscape stays behind both the desktop and every window. */}
         <div aria-hidden className="os-wallpaper-shade pointer-events-none absolute inset-0" />
-        <div aria-hidden className="os-scanlines pointer-events-none absolute inset-0" />
-        <div aria-hidden className="os-grain pointer-events-none absolute inset-0" />
 
         {/* ── Desktop: the surface windows open from ───────────────────── */}
         <motion.main

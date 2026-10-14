@@ -3,7 +3,7 @@ import type { Localize } from "@/app/shared/i18n/locale";
 /** Who is talking: the owner, or the cat who keeps him company. */
 export type Speaker = "khwan" | "cat";
 
-export interface CompanionLine {
+interface CompanionLine {
   speaker: Speaker;
   text: string;
 }

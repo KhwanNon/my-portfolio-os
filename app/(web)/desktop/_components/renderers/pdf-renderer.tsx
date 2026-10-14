@@ -175,7 +175,7 @@ export function PdfRenderer({ data }: { data: PdfFileData }) {
   return (
     <div
       className="@container flex h-full w-full flex-col"
-      style={{ background: "#020a05", color: "var(--os-text)" }}
+      style={{ background: "var(--os-surface-1)", color: "var(--os-text)" }}
     >
       {/* ── Header: the file, and the two ways to take it away. On a narrow
           window the two buttons keep their icons and drop their words. ── */}
@@ -312,7 +312,7 @@ export function PdfRenderer({ data }: { data: PdfFileData }) {
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 mix-blend-multiply"
-                  style={{ background: "#dcf5e3" }}
+                  style={{ background: "var(--os-surface-1)" }}
                 />
               </div>
             ))

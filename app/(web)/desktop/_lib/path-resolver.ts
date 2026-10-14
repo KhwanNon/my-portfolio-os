@@ -3,7 +3,7 @@ import type { FileNode } from "@/app/shared/types/file-system";
 // A path is a list of folder segments from root. Root itself is the empty array.
 export type Path = string[];
 
-export type WalkResult =
+type WalkResult =
   | { kind: "root"; children: FileNode[] }
   | { kind: "node"; node: FileNode; parentChildren: FileNode[] };
 
@@ -98,7 +98,7 @@ export function getDisplayPath(root: FileNode[], path: Path): string {
   return "~/" + canonicalizePath(root, path).join("/");
 }
 
-export interface CompletionContext {
+interface CompletionContext {
   /** Children of the directory the user is completing inside. */
   directoryChildren: FileNode[];
   /** The partial segment being completed (may be empty). */

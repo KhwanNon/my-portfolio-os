@@ -81,7 +81,7 @@ const LoadingBar: FC = () => (
       <div className="relative h-4 md:h-5">
         {/* The empty track, then the same row lit and uncovered from the left
             a whole block at a time. */}
-        <Blocks className="bg-[#0b2415]" />
+        <Blocks className="bg-os-surface-3" />
         <motion.div
           className="absolute inset-0"
           initial={{ clipPath: "inset(0 100% 0 0)" }}

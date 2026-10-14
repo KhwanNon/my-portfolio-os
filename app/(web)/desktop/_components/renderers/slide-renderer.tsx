@@ -28,7 +28,7 @@ export function SlideRenderer({ data }: { data: SlideFileData }) {
       style={{ background: "var(--os-surface)" }}
     >
       {/* Image area */}
-      <div className="flex-1 relative overflow-hidden flex items-center justify-center bg-black">
+      <div className="flex-1 relative overflow-hidden flex items-center justify-center bg-os-surface-3">
         <Image
           src={slide.src}
           alt={slide.caption ?? `Slide ${current + 1}`}

@@ -1,65 +1,44 @@
 @import "tailwindcss";
 
-/*
- * Design tokens for the one theme this OS has: a pixel game in a cyberpunk
- * terminal — black ground, phosphor green, square corners, hard shadows. Every component consumes a role (primary,
- * tonal surface staircase, text ramp, outline, container pair), never a hex.
- * The surface staircase is black stepped toward green; the text ramp is green
- * -tinted white; green is the only hue, so the few signals that must differ
- * (error, featured star) are the only things that arrive from outside it.
- */
+/* Countryside game materials: parchment, walnut, honey gold, sky and berry. */
 :root {
-  --os-bg: #020906;
-  --os-accent: #55ff88;
-  --os-surface-1: #03110b;
-  --os-surface-2: #061a10;
-  --os-surface-3: #0a2417;
-  --os-header: var(--os-surface-3);
+  --os-bg: #f7e2b5;
+  --os-accent: #86502c;
+  --os-surface-1: #fff4d8;
+  --os-surface-2: #ffedc5;
+  --os-surface-3: #efd5a2;
+  --os-header: #e8bd75;
   --os-surface: var(--os-surface-2);
-
-  --os-text: #e8fff0;
-  --os-text-dim: #b9dcc5;
-  --os-text-faint: #86b598;
-  --os-text-subtle: #4a8a62;
-
-  --os-border: rgba(80, 255, 130, 0.18);
-  --os-border-strong: rgba(80, 255, 130, 0.35);
-
-  --os-accent-container: #0a3a1c;
-  --os-on-accent-container: #b6ffcb;
-  --os-primary: var(--os-on-accent-container);
-
-  --os-tertiary: #9be564;
-  --os-error: #ff5f5f;
-  --os-success: #55ff88;
-
-  /* The star on the project to open first — the one yellow-ish shape. */
-  --os-featured: #e6ff3f;
-
-    /* Icon palette: every hue is a green, so a chip still means "this launches"
-     without bringing a colour the theme doesn't have. */
-  --os-icon-blue: #39ff6a;
-  --os-icon-purple: #7dffa0;
-  --os-icon-yellow: #c8ff3f;
-  --os-icon-red: #ff5f5f;
-  --os-icon-green: #55ff88;
-  --os-icon-ink: #d8ffe4;
-  --os-icon-neutral: #6fb887;
-
-  --shadow-1: 2px 2px 0 0 rgba(0, 0, 0, 0.5);
-  --shadow-2: 4px 4px 0 0 rgba(0, 0, 0, 0.55);
-  --shadow-3: 6px 6px 0 0 rgba(0, 0, 0, 0.6);
-  /* Pixel art throws no soft light: a shadow is a block of black, offset. */
-  --shadow-hard: 6px 6px 0 0 rgba(0, 0, 0, 0.6);
-  /* Text on the accent itself — a lit title bar, a selected label. */
-  --os-on-accent: #021a0c;
-
-  /* The taskbar across the foot. */
-  --os-dock-h: 48px;
-
-  --background: var(--os-bg);
-  --foreground: var(--os-text);
-  color-scheme: dark;
+  --os-text: #493024;
+  --os-text-dim: #664733;
+  --os-text-faint: #76543a;
+  --os-text-subtle: #806047;
+  --os-border: #c9a16a;
+  --os-border-strong: #95633f;
+  --os-accent-container: #f1cf88;
+  --os-on-accent-container: #623b24;
+  --os-tertiary: #386b92;
+  --os-error: #a63643;
+  --os-success: #326581;
+  --os-featured: #99611c;
+  --os-icon-blue: #497a9d;
+  --os-icon-purple: #856193;
+  --os-icon-yellow: #ac761c;
+  --os-icon-red: #b45449;
+  --os-icon-coral: #a84b50;
+  --os-icon-ink: #574031;
+  --os-icon-neutral: #896544;
+  --os-wood: #a86f3f;
+  --os-wood-dark: #6c432a;
+  --os-wood-light: #f4d699;
+  --os-button: #e8b760;
+  --os-button-pressed: #d7a44f;
+  --os-on-accent: #fff4d8;
+  --os-desktop-label: #fff0cd;
+  --os-text-shadow: 1px 1px 0 #fff8e5;
+  --shadow-3: 6px 6px 0 0 rgba(73, 48, 36, 0.32);
+  --os-dock-h: 52px;
+  color-scheme: light;
 }
 
 /*
@@ -70,11 +49,12 @@
   --color-os-bg: var(--os-bg);
   --color-os-accent: var(--os-accent);
   --color-os-on-accent: var(--os-on-accent);
-  --color-os-primary: var(--os-primary);
   --color-os-accent-container: var(--os-accent-container);
   --color-os-on-accent-container: var(--os-on-accent-container);
   --color-os-surface: var(--os-surface);
   --color-os-surface-1: var(--os-surface-1);
+  --color-os-surface-2: var(--os-surface-2);
+  --color-os-success: var(--os-success);
   --color-os-surface-3: var(--os-surface-3);
   --color-os-header: var(--os-header);
   --color-os-border: var(--os-border);
@@ -116,7 +96,7 @@
 body {
   --font-os-sans: var(--font-roboto), var(--font-noto-thai), system-ui,
     sans-serif;
-  --font-os-mono: var(--font-jetbrains-mono), var(--font-roboto-mono),
+  --font-os-mono: var(--font-jetbrains-mono),
     var(--font-noto-thai), ui-monospace, monospace;
   --font-os-pixel: var(--font-pixelify), var(--font-noto-thai), ui-monospace,
     monospace;
@@ -125,8 +105,8 @@ body {
   font-family: var(--font-os-sans);
   overflow: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
-  /* A pixel arrow, green with a black outline. */
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='33' viewBox='0 0 11 16.5' shape-rendering='crispEdges'><path d='M0 0h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-4v1h1v2h1v2h-2v-2h-1v-2h-1v1h-1v1h-1v1h-1z' fill='%23020906'/><path d='M1 2h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-3v1h1v2h1v2h-1v-2h-1v-2h-1v1h-1v1h-1z' fill='%2355ff88'/></svg>") 0 0, auto;
+  /* A parchment arrow with a walnut outline. */
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='33' viewBox='0 0 11 16.5' shape-rendering='crispEdges'><path d='M0 0h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-4v1h1v2h1v2h-2v-2h-1v-2h-1v1h-1v1h-1v1h-1z' fill='%23493024'/><path d='M1 2h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-3v1h1v2h1v2h-1v-2h-1v-2h-1v1h-1v1h-1z' fill='%23f3cb7e'/></svg>") 0 0, auto;
 }
 
 /* Mono voice — terminal, file contents, code-like readouts. */
@@ -145,7 +125,7 @@ body {
 .cursor-pointer,
 button:not(:disabled),
 [role="button"] {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='33' viewBox='0 0 11 16.5' shape-rendering='crispEdges'><path d='M0 0h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-4v1h1v2h1v2h-2v-2h-1v-2h-1v1h-1v1h-1v1h-1z' fill='%23020906'/><path d='M1 2h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-3v1h1v2h1v2h-1v-2h-1v-2h-1v1h-1v1h-1z' fill='%23e8fff0'/></svg>") 0 0, pointer;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='33' viewBox='0 0 11 16.5' shape-rendering='crispEdges'><path d='M0 0h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-4v1h1v2h1v2h-2v-2h-1v-2h-1v1h-1v1h-1v1h-1z' fill='%23493024'/><path d='M1 2h1v1h1v1h1v1h1v1h1v1h1v1h1v1h-3v1h1v2h1v2h-1v-2h-1v-2h-1v1h-1v1h-1z' fill='%23fff4d8'/></svg>") 0 0, pointer;
 }
 
 /* Pixel art is scaled by the block, never smoothed. */
@@ -166,29 +146,31 @@ button:not(:disabled),
     0 var(--pb) 0 0 var(--pb-color),
     calc(var(--pb) * -1) 0 0 0 var(--pb-color),
     var(--pb) 0 0 0 var(--pb-color),
-    calc(var(--pb) * 3) calc(var(--pb) * 3) 0 0 rgba(0, 0, 0, 0.55);
+    calc(var(--pb) * 3) calc(var(--pb) * 3) 0 0 rgba(73, 48, 36, 0.3);
 }
 
 /* A window's frame: lit for the window in use, banked down for the rest. */
 .os-window {
-  --pb-color: #1e5a36;
+  --pb-color: var(--os-wood);
+  border: 2px solid var(--os-wood);
 }
 .os-window[data-active="true"] {
-  --pb-color: var(--os-accent);
+  --pb-color: var(--os-wood-dark);
+  border-color: var(--os-wood-dark);
 }
 
 /* A raised game button: light on the top-left edge, dark on the bottom-right.
    Pressed (or `data-pressed`) swaps them, so it sinks into the bar. */
 .pixel-btn {
   box-shadow:
-    inset -2px -2px 0 0 rgba(0, 0, 0, 0.6),
-    inset 2px 2px 0 0 rgba(232, 255, 240, 0.14);
+    inset -2px -2px 0 0 rgba(108, 67, 42, 0.4),
+    inset 2px 2px 0 0 rgba(255, 248, 221, 0.75);
 }
 .pixel-btn:active,
 .pixel-btn[data-pressed="true"] {
   box-shadow:
-    inset 2px 2px 0 0 rgba(0, 0, 0, 0.6),
-    inset -2px -2px 0 0 rgba(232, 255, 240, 0.08);
+    inset 2px 2px 0 0 rgba(108, 67, 42, 0.4),
+    inset -2px -2px 0 0 rgba(255, 248, 221, 0.45);
 }
 
 /*
@@ -215,34 +197,27 @@ button:not(:disabled),
 
 /* ─── Boot sequence ─────────────────────────────────────────────────────────── */
 
-/*
- * The boot screen's own palette: fixed black and green, whichever theme the
- * desktop is in. The sequence is the machine powering on, before any user
- * setting applies, so it overrides the tokens it uses rather than inheriting.
- * The rain reads --os-rain-* through `getComputedStyle`, so those are literals
- * (see app/shared/components/matrix-rain.tsx).
- */
+/* The original terminal boot, with amber light on a warm dark ground.
+   These tokens are scoped to boot; the parchment desktop keeps its palette. */
 .boot-shell {
-  --os-bg: #030603;
-  --os-accent: #39ff6a;
-  --os-text: #39ff6a;
-  --os-text-dim: #1fa84a;
-  --os-text-faint: #2fd45c;
-  --os-text-subtle: #1a7a38;
-  --os-rain-from: #39ff6a;
-  --os-rain-to: #0b5a22;
+  --os-bg: #100d0a;
+  --os-accent: #e6b969;
+  --os-text: #f3dba6;
+  --os-text-dim: #cab187;
+  --os-text-faint: #dbbb83;
+  --os-text-subtle: #a68a64;
+  --os-surface-3: #302416;
+  --os-border-strong: #78563b;
+  --os-wood: #78563b;
+  --os-wood-dark: #c99a56;
+  --os-rain-from: #e6b969;
+  --os-rain-to: #61452b;
   font-family: var(--font-vt323), var(--font-os-mono);
+  color-scheme: dark;
 }
-
-/* The line that has to carry the screen, lifted the way a sprite is: a hard
-   shadow a block down and right, never a blur. */
 .boot-glow {
-  text-shadow:
-    3px 3px 0 #0b5a22,
-    6px 6px 0 rgba(0, 0, 0, 0.8);
+  text-shadow: 3px 3px 0 #4b3420, 6px 6px 0 rgba(0, 0, 0, 0.8);
 }
-
-/* Fine CRT scanlines — boot screen only (see app/(web)/boot/page.tsx). */
 .bg-scanlines {
   background-image: repeating-linear-gradient(
     to bottom,
@@ -252,29 +227,19 @@ button:not(:disabled),
     transparent 3px
   );
 }
-
-/* Film grain: a small inline SVG noise tile, no asset request. */
 .bg-boot-grain {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 1 0 0 0 0 0.3 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.7 0 0 0 0 0.4 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
-
-/* Clears the middle so the rain never competes with the text. */
 .bg-boot-clear {
   background: radial-gradient(
     ellipse 55% 38% at 50% 50%,
-    rgba(3, 6, 3, 0.92) 0%,
-    rgba(3, 6, 3, 0.6) 55%,
+    rgba(16, 13, 10, 0.92) 0%,
+    rgba(16, 13, 10, 0.6) 55%,
     transparent 100%
   );
 }
-
-/* Tube vignetting at the corners. */
 .bg-boot-vignette {
-  background: radial-gradient(
-    ellipse at center,
-    transparent 55%,
-    rgba(0, 0, 0, 0.75) 100%
-  );
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.75) 100%);
 }
 
 @keyframes boot-cursor {
@@ -293,35 +258,17 @@ button:not(:disabled),
   height: 100%;
 }
 
-/*
- * The screen's own texture, laid over the wallpaper and under every window so
- * the type in a window stays clean. Scanlines at ~4% and grain at ~2% — enough
- * to read as a tube, not enough to be seen as an effect.
- */
-.os-scanlines {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.16) 0px,
-    rgba(0, 0, 0, 0.16) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-}
-.os-grain {
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.4 0 0 0 0 1 0 0 0 0 0.5 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-}
-/* Darkens the left edge the icons sit on, and the foot the taskbar rises from. */
+/* A soft parchment shade keeps desktop labels readable over the landscape. */
 .os-wallpaper-shade {
-  background:
-    linear-gradient(to right, rgba(2, 9, 6, 0.72), transparent 22%),
-    linear-gradient(to top, rgba(2, 9, 6, 0.55), transparent 14%);
+  background: linear-gradient(to right, rgba(255, 240, 205, 0.28), transparent 30%);
 }
-
-
+.os-wood-bar {
+  background: var(--os-header);
+  box-shadow: inset 0 3px var(--os-wood-light), inset 0 -3px var(--os-wood);
+}
 /* A sprite's hard shadow, for a glyph sitting on a lit surface. */
 .os-glow {
-  filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.7));
+  filter: drop-shadow(2px 2px 0 rgba(73, 48, 36, 0.3));
 }
 
 /* A folder's contents as numbered cards, as wide as the window allows. */
@@ -346,18 +293,18 @@ button:not(:disabled),
 
 /* Scrollbar as a game's: a square track and a bevelled block for a thumb. */
 .custom-scrollbar {
-  scrollbar-color: var(--os-accent-container) transparent;
+  scrollbar-color: var(--os-wood) var(--os-surface-3);
 }
 .custom-scrollbar::-webkit-scrollbar { width: 10px; height: 10px; }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.35);
+  background: var(--os-surface-3);
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--os-accent-container);
+  background: var(--os-wood);
   box-shadow:
-    inset -2px -2px 0 0 rgba(0, 0, 0, 0.6),
-    inset 2px 2px 0 0 rgba(85, 255, 136, 0.35);
+    inset -2px -2px 0 0 rgba(108, 67, 42, 0.4),
+    inset 2px 2px 0 0 rgba(255, 244, 216, 0.65);
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #11552b;
+  background: var(--os-wood-dark);
 }

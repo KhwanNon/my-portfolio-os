@@ -28,13 +28,12 @@ export function DesktopIcon({ node }: DesktopIconProps) {
       />
       {/* Selected, the label inverts, as a game marks the item under its cursor. */}
       <span
-        className={`font-os-pixel line-clamp-2 break-words px-1 text-center text-[13px] leading-tight ${
-          selected ? "" : "group-hover:bg-black/60"
+        className={`font-os-pixel line-clamp-2 break-words border px-1.5 py-0.5 text-center text-[13px] leading-tight ${
+          selected ? "border-os-accent" : "border-os-border group-hover:border-os-accent"
         }`}
         style={{
           color: selected ? "var(--os-on-accent)" : "var(--os-text)",
-          background: selected ? "var(--os-accent)" : undefined,
-          textShadow: selected ? "none" : "2px 2px 0 #000",
+          background: selected ? "var(--os-accent)" : "var(--os-desktop-label)",
         }}
       >
         {node.name}

@@ -31,12 +31,10 @@ export function Taskbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.2, duration: 0.3, ease: (t: number) => Math.ceil(t * 4) / 4 }}
       // A game's HUD strip: solid, with a thick lit edge along the top.
-      className="relative z-300 flex shrink-0 items-stretch gap-1 px-1 py-1"
+      className="os-wood-bar relative z-300 flex shrink-0 items-stretch gap-1 px-1 py-1"
       style={{
         height: "var(--os-dock-h)",
-        background: "#020a05",
-        borderTop: "3px solid var(--os-accent)",
-        boxShadow: "inset 0 3px 0 0 #0f3a22",
+        borderTop: "3px solid var(--os-wood-dark)",
       }}
     >
       <SearchLauncher />
@@ -111,8 +109,8 @@ function TaskSlot({
       data-pressed={active}
       className="focus-ring font-os-pixel pixel-btn relative flex shrink-0 cursor-pointer items-center gap-2 px-2.5 text-[14px] hover:bg-os-accent-container sm:min-w-[132px] sm:px-3"
       style={{
-        color: active ? "var(--os-accent)" : "var(--os-text-dim)",
-        background: active ? "#0b2e18" : "var(--os-surface-3)",
+        color: "var(--os-text)",
+        background: active ? "var(--os-button-pressed)" : "var(--os-surface-2)",
       }}
     >
       <FileGraphic icon={node.icon} size={22} className="pixelated" />

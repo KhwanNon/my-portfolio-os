@@ -10,28 +10,25 @@ import { uiNode } from "./ui-node";
  * the work it produced — is checked by the compiler instead of failing silently
  * at runtime as a chip that opens nothing.
  */
-export const PROJECT_IDS = [
-  "proj-gov-meeting",
-  "proj-ailearn",
-  "proj-mol-portal",
-  "proj-myorder",
-  "proj-mypinmall",
-  "proj-vn",
-  "proj-enfagrow",
-  "proj-g2g",
-  "proj-evp",
-  "proj-swu-ai",
-  "proj-the-blacklist",
-  "proj-langridge",
-  "proj-pdf-drawing",
-  "proj-c-docs",
-  "proj-dataq",
-  "proj-portfolio-os",
-  "proj-jinn",
-  "proj-hajin-apix",
-] as const;
-
-export type ProjectId = (typeof PROJECT_IDS)[number];
+export type ProjectId =
+  | "proj-gov-meeting"
+  | "proj-ailearn"
+  | "proj-mol-portal"
+  | "proj-myorder"
+  | "proj-mypinmall"
+  | "proj-vn"
+  | "proj-enfagrow"
+  | "proj-g2g"
+  | "proj-evp"
+  | "proj-swu-ai"
+  | "proj-the-blacklist"
+  | "proj-langridge"
+  | "proj-pdf-drawing"
+  | "proj-c-docs"
+  | "proj-dataq"
+  | "proj-portfolio-os"
+  | "proj-jinn"
+  | "proj-hajin-apix";
 
 /**
  * One project = one .ui file: description, screenshots, stack, and link
@@ -44,24 +41,24 @@ export type ProjectId = (typeof PROJECT_IDS)[number];
  * those predate — and don't match — the ids.
  */
 const COVER_SLUG: Record<ProjectId, string> = {
-  "proj-gov-meeting": "nsc-meeting",
-  "proj-ailearn": "ailearn",
-  "proj-mol-portal": "mol",
-  "proj-myorder": "myorder",
-  "proj-mypinmall": "my-pinmall",
-  "proj-vn": "vn",
-  "proj-enfagrow": "enfagrow",
-  "proj-g2g": "g2g",
-  "proj-evp": "evp",
-  "proj-swu-ai": "swu-ai",
-  "proj-the-blacklist": "the-blacklist",
-  "proj-langridge": "langridge",
-  "proj-pdf-drawing": "pdf-drawing",
-  "proj-c-docs": "c-docs",
-  "proj-dataq": "dataq",
-  "proj-portfolio-os": "portfolio",
-  "proj-jinn": "jinn",
-  "proj-hajin-apix": "hajin-apix",
+  "proj-gov-meeting": "nsc-meeting-valley",
+  "proj-ailearn": "ailearn-valley",
+  "proj-mol-portal": "mol-valley",
+  "proj-myorder": "myorder-valley",
+  "proj-mypinmall": "my-pinmall-valley",
+  "proj-vn": "vn-valley",
+  "proj-enfagrow": "enfagrow-valley",
+  "proj-g2g": "g2g-valley",
+  "proj-evp": "evp-valley",
+  "proj-swu-ai": "swu-ai-valley",
+  "proj-the-blacklist": "the-blacklist-valley",
+  "proj-langridge": "langridge-valley",
+  "proj-pdf-drawing": "pdf-drawing-valley",
+  "proj-c-docs": "c-docs-valley",
+  "proj-dataq": "dataq-valley",
+  "proj-portfolio-os": "portfolio-valley",
+  "proj-jinn": "jinn-valley",
+  "proj-hajin-apix": "hajin-apix-valley",
 };
 
 function makeProject(

@@ -32,7 +32,7 @@ export function EducationUI({ entries = [] }: EducationUIProps) {
   return (
     <div
       className="custom-scrollbar @container h-full w-full overflow-y-auto"
-      style={{ background: "#020a05", color: "var(--os-text)" }}
+      style={{ background: "var(--os-surface-1)", color: "var(--os-text)" }}
     >
       <div className="space-y-5 p-5 @2xl:p-6">
         {/* ── Header: the page's name, and the line that sums it up ─────── */}
@@ -44,7 +44,7 @@ export function EducationUI({ entries = [] }: EducationUIProps) {
             <div className="min-w-0">
               <h1
                 className="font-os-pixel text-[clamp(28px,6cqw,52px)] font-bold uppercase leading-none tracking-wide text-os-accent"
-                style={{ textShadow: "3px 3px 0 #000" }}
+                style={{ textShadow: "var(--os-text-shadow)" }}
               >
                 {S.section.education}
               </h1>

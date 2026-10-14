@@ -212,7 +212,7 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       transition={{ duration: 0.16, ease: STEPPED }}
       className="os-window pixel-box absolute flex flex-col overflow-hidden"
       data-active={isActive}
-      style={{ ...style, background: "#020a05" }}
+      style={{ ...style, background: "var(--os-surface-1)" }}
       onMouseDown={() => {
         focusWindow(win.id);
         setTimeout(() => {
@@ -231,11 +231,11 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
       <div
         // Lit like a game's dialog header when this is the window in use;
         // banked down to the surface when it is not.
-        className="flex shrink-0 select-none items-center justify-between gap-2 pl-2 pr-1.5"
+        className="os-wood-bar flex shrink-0 select-none items-center justify-between gap-2 pl-2 pr-1.5"
         style={{
-          height: 32,
-          background: isActive ? "var(--os-accent)" : "var(--os-surface-3)",
-          borderBottom: `3px solid ${isActive ? "#1e8a4a" : "#0f3a22"}`,
+          height: 36,
+          background: isActive ? "var(--os-header)" : "var(--os-surface-3)",
+          borderBottom: "3px solid var(--os-wood)",
           cursor: effectivelyMaximized ? "default" : "move",
         }}
         onMouseDown={handleTitleBarMouseDown}
@@ -249,14 +249,14 @@ export function WindowFrame({ window: win, children }: WindowFrameProps) {
         <div className="flex min-w-0 items-center gap-2">
           <span
             className="grid h-[22px] w-[22px] shrink-0 place-items-center"
-            style={{ background: isActive ? "var(--os-on-accent)" : "transparent" }}
+            style={{ background: "var(--os-surface-1)" }}
           >
             <FileGraphic icon={win.fileNode.icon} size={18} className="pixelated" />
           </span>
           <span
             className="font-os-pixel truncate text-[14px] font-semibold tracking-wide"
             style={{
-              color: isActive ? "var(--os-on-accent)" : "var(--os-text-faint)",
+              color: isActive ? "var(--os-text)" : "var(--os-text-faint)",
             }}
           >
             {win.fileNode.name}

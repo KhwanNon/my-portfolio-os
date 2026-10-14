@@ -15,8 +15,8 @@ import { useDesktopData } from "../_lib/use-desktop-data";
 import { PixelGlyph } from "./pixel-glyph";
 
 const PORTRAIT: Record<Speaker, string> = {
-  khwan: "/assets/logo.webp",
-  cat: "/assets/images/cat.webp",
+  khwan: "/assets/logo-valley.webp",
+  cat: "/assets/images/cat-valley.webp",
 };
 
 /** Remembered for the visit only: a new visit is a new hello. */
@@ -103,7 +103,7 @@ export function Companion() {
           transition={{ duration: 0.18, ease: STEPPED }}
           onClick={(e) => e.stopPropagation()}
           onDoubleClick={(e) => e.stopPropagation()}
-          className="pixel-box os-window absolute bottom-4 right-4 z-30 w-[min(520px,calc(100%-2rem))] bg-[#020a05] max-sm:left-4 max-sm:right-4 max-sm:w-auto"
+          className="pixel-box os-window absolute bottom-4 right-4 z-30 w-[min(520px,calc(100%-2rem))] bg-os-surface-1 max-sm:left-4 max-sm:right-4 max-sm:w-auto"
           data-active="true"
         >
           {/* Name tab, like a game's speaker plate. */}
@@ -124,7 +124,7 @@ export function Companion() {
             <button
               onClick={openSpeaker}
               title={line.speaker === "khwan" ? "Profile.ui" : "C-DRIVE"}
-              className="focus-ring group relative h-20 w-20 shrink-0 cursor-pointer overflow-hidden border-2 border-os-border-strong bg-black hover:border-os-accent sm:h-24 sm:w-24"
+              className="focus-ring group relative h-20 w-20 shrink-0 cursor-pointer overflow-hidden border-2 border-os-border-strong bg-os-surface-3 hover:border-os-accent sm:h-24 sm:w-24"
             >
               <AnimatePresence mode="wait">
                 <motion.span

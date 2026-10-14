@@ -57,26 +57,24 @@ const REGISTRY: Record<string, IconSpec> = {
   // Apps. System Command is the one solid chip in the set — a terminal is a
   // surface you type into, and drawing it as ink makes it the anchor the other
   // three are read against; they keep the same footprint on a washed chip.
-  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",    finish: "filled", image: "/assets/icon/command.webp" },
-  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)",   finish: "chip",   image: "/assets/icon/c-drive.webp"},
-  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-purple)", finish: "chip",   image: "/assets/icon/setting.webp" },
-  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip",   image: "/assets/icon/bin.webp"},
-  contact: { glyph: MailGlyph,     tone: "var(--os-icon-green)",  finish: "chip",   image: "/assets/icon/contact.webp" },
+  sysCmd:  { glyph: TerminalGlyph, tone: "var(--os-icon-ink)",    finish: "filled", image: "/assets/icon/command-harvest.webp" },
+  cdrive:  { glyph: DriveGlyph,    tone: "var(--os-icon-blue)",   finish: "chip",   image: "/assets/icon/c-drive-harvest.webp"},
+  prefs:   { glyph: SlidersGlyph,  tone: "var(--os-icon-purple)", finish: "chip",   image: "/assets/icon/setting-harvest.webp" },
+  recycle: { glyph: TrashGlyph,    tone: "var(--os-icon-yellow)", finish: "chip",   image: "/assets/icon/bin-harvest.webp"},
+  contact: { glyph: MailGlyph,     tone: "var(--os-icon-coral)",  finish: "chip",   image: "/assets/icon/contact-harvest.webp" },
 
   // Documents. Red on the PDF is the one hue a glyph keeps — the format's own
   // signal. Folder, text and PDF ship artwork; the rest keep their glyphs.
-  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",    finish: "plain", image: "/assets/icon/pdf.webp" },
-  folder:  { glyph: FolderGlyph,   tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/folder.webp" },
-  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/text.webp" },
-  me:      { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/me.webp" },
+  pdf:     { glyph: PdfGlyph,      tone: "var(--os-icon-red)",    finish: "plain", image: "/assets/icon/pdf-harvest.webp" },
+  folder:  { glyph: FolderGlyph,   tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/folder-harvest.webp" },
+  txt:     { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/text-harvest.webp" },
+  me:      { glyph: DocumentGlyph, tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/me-harvest.webp" },
   slide:   { glyph: SlideGlyph,    tone: NEUTRAL,                 finish: "plain"  },
-  ui:      { glyph: LayersGlyph,   tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/text.webp" },
+  ui:      { glyph: LayersGlyph,   tone: NEUTRAL,                 finish: "plain", image: "/assets/icon/text-harvest.webp" },
   link:    { glyph: LinkGlyph,     tone: NEUTRAL,                 finish: "plain"  },
   about:   { glyph: InfoGlyph,     tone: NEUTRAL,                 finish: "plain"  },
   file:    { glyph: FileGlyph,     tone: NEUTRAL,                 finish: "plain"  },
 };
-
-export type IconKey = keyof typeof REGISTRY | string;
 
 const FALLBACK: IconSpec = REGISTRY.file;
 
@@ -84,7 +82,7 @@ function specOf(icon?: string): IconSpec {
   return (icon ? REGISTRY[icon] : undefined) ?? FALLBACK;
 }
 
-export function iconTone(icon?: string): string {
+function iconTone(icon?: string): string {
   return specOf(icon).tone;
 }
 
@@ -98,7 +96,7 @@ const wash = (tone: string, percent: number) =>
  * Kept faint on purpose — the drawing is what carries the colour, and a chip
  * strong enough to be a swatch turns a row of apps into a row of paint chips.
  */
-export function iconSurface(icon?: string): string {
+function iconSurface(icon?: string): string {
   const tone = iconTone(icon);
   return `linear-gradient(150deg, ${wash(tone, 9)}, ${wash(tone, 4)})`;
 }

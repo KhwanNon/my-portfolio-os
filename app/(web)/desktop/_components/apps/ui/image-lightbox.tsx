@@ -2,7 +2,7 @@
 // Full-size screenshot viewer. The strip inside a project window can only ever
 // show a thumbnail — a phone screenshot at 224px is proof the app exists, not
 // something anyone can read — so the strip is the index and this is the view.
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,6 +15,11 @@ import { useStrings } from "@/app/shared/hooks/use-locale";
  * answers to the window that opened it.
  */
 const LAYER = 8500;
+
+// The portal needs the browser DOM; hydration must start with the server snapshot.
+const subscribeToDom = () => () => {};
+const hasClientDom = () => true;
+const hasServerDom = () => false;
 
 interface ImageLightboxProps {
   images: string[];
@@ -63,9 +68,8 @@ export function ImageLightbox({
   // The overlay is mounted into `body`, so it escapes the window's own stacking
   // context and its `overflow` — a viewer clipped to the pane it opened from
   // would be a thumbnail again.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
+  const canPortal = useSyncExternalStore(subscribeToDom, hasClientDom, hasServerDom);
+  if (!canPortal) return null;
 
   return createPortal(
     <AnimatePresence>

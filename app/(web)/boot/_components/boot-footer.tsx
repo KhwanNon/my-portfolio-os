@@ -1,11 +1,7 @@
 // src/components/boot/boot-footer.tsx
 import { FC } from "react";
 
-interface BootFooterProps {
-  isComplete: boolean;
-}
-
-export const BootFooter: FC<BootFooterProps> = () => (
+export const BootFooter: FC = () => (
   <footer className="w-full relative z-20">
     <div className="flex justify-between items-end text-sm md:text-lg p-6 text-os-text-dim tracking-widest">
       <div className="flex gap-8">

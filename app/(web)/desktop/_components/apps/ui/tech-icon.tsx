@@ -110,7 +110,7 @@ const TECH_ICONS: Record<string, SimpleIcon> = {
 };
 
 /** Whether `name` has a logo to draw — for surfaces that put something else in its place. */
-export function hasTechIcon(name: string): boolean {
+function hasTechIcon(name: string): boolean {
   return name.trim().toLowerCase() in TECH_ICONS;
 }
 

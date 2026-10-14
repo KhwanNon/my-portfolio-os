@@ -30,7 +30,7 @@ export function contactApp(L: Localize): FileNode {
     { id: "contact", name: "Contact", icon: ICONS.contact },
     "ContactUI",
     {
-      photo: "/assets/images/man.webp",
+      photo: "/assets/images/man-valley.webp",
       file: "PORTFOLIO_OS / CONTACT",
       heading: "LET'S CONNECT",
       subheading: L(

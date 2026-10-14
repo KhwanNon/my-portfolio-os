@@ -205,7 +205,7 @@ function reducer(
 
 // ─── Toast / context-menu / terminal-intent types ────────────────────────────
 
-export type ToastKind = "info" | "success" | "error";
+type ToastKind = "info" | "success" | "error";
 
 export interface Toast {
   id: number;
@@ -228,7 +228,7 @@ export interface ContextMenuState {
   items: ContextMenuItem[];
 }
 
-export interface TerminalCdRequest {
+interface TerminalCdRequest {
   token: number;
   path: string[];
 }

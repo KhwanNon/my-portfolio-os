@@ -127,7 +127,7 @@ export function ProjectUI({
     <div
       ref={scrollRef}
       className="custom-scrollbar @container h-full w-full overflow-y-auto"
-      style={{ background: "#020a05", color: "var(--os-text)" }}
+      style={{ background: "var(--os-surface-1)", color: "var(--os-text)" }}
     >
       <div className="space-y-4 p-4 @2xl:p-5">
         {/* ── Header: mark, name, status ───────────────────────────────── */}
@@ -141,7 +141,7 @@ export function ProjectUI({
             <div className="min-w-0">
               <h1
                 className="font-os-pixel flex items-center gap-3 text-[clamp(22px,4.4cqw,34px)] font-bold leading-tight text-os-accent"
-                style={{ textShadow: "2px 2px 0 #000" }}
+                style={{ textShadow: "var(--os-text-shadow)" }}
               >
                 {name}
                 {featured && <FeaturedStar size={20} />}
@@ -194,7 +194,7 @@ export function ProjectUI({
         </header>
 
         {/* ── Tabs: they jump to a part, and light as you scroll past it ──── */}
-        <nav className={`${BOX} sticky top-0 z-10 flex overflow-x-auto bg-[#020a05]`}>
+        <nav className={`${BOX} sticky top-0 z-10 flex overflow-x-auto bg-os-surface-1`}>
           {tabs.map(({ id, label, Icon }) => (
             <button
               key={id}

@@ -1,4 +1,4 @@
-export type FileType = "txt" | "pdf" | "link" | "slide" | "ui" | "folder" | "program";
+type FileType = "txt" | "pdf" | "link" | "slide" | "ui" | "folder" | "program";
 
 export interface FileNode {
   id: string;
@@ -11,7 +11,7 @@ export interface FileNode {
   data?: FileData;
 }
 
-export type FileData =
+type FileData =
   | TxtFileData
   | PdfFileData
   | LinkFileData
@@ -31,7 +31,7 @@ export interface PdfFileData {
   filename?: string;
 }
 
-export interface LinkFileData {
+interface LinkFileData {
   kind: "link";
   url: string;
 }
@@ -42,19 +42,19 @@ export interface SlideFileData {
   title?: string;
 }
 
-export interface UiFileData {
+interface UiFileData {
   kind: "ui";
   component: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props?: Record<string, any>;
 }
 
-export interface FolderData {
+interface FolderData {
   kind: "folder";
   children: FileNode[];
 }
 
-export interface ProgramData {
+interface ProgramData {
   kind: "program";
   component: string;
 }
